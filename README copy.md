@@ -1,10 +1,7 @@
 # 🐶🐱 Pet Station Shop - Build a Website for Pet Toys
 
 ## 👥 Team Members
-- **[Tran Long Vu]** - Team Leader
-- **[Mach Ngoc Xuan]** - Member
-- **[Vo Ngoc Thuy Vy]** - Member
-- **[Phan Nguuyen Vu]** - Member
+
 
 ## 🏪 Introduction to Pet Station Shop
 **Pet Station Shop** is an e-commerce website specializing in pet toys for dogs and cats. Our platform provides a seamless shopping experience, offering a variety of high-quality toys that ensure your furry friends stay happy and entertained.
@@ -49,15 +46,12 @@ _(Coming soon)_
 git clone [https://github.com/your-repo/pet-station-shop.git](https://github.com/penguinguci/project_webs_selling_dog_and_cat_toys_gr19)
 
 # Install dependencies
-cd project_webs_selling_dog_and_cat_toys_gr19
+cd Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A
 npm install
 
 # Run the development server
 npm run dev
 ```
-
-## 📩 Contact
-For any inquiries or collaborations, feel free to contact us at **vutkd23405@gmail.com**.
 
 ---
 🐾 *Happy Shopping for Your Furry Friends!* 🐾

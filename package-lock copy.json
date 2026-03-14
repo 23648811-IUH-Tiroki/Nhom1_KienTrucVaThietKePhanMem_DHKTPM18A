@@ -1,11 +1,11 @@
 {
-  "name": "project_webs_selling_dog_and_cat_toys_gr19",
+  "name": "Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A",
   "version": "0.0.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "project_webs_selling_dog_and_cat_toys_gr19",
+      "name": "Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A",
       "version": "0.0.0",
       "dependencies": {
         "@google/generative-ai": "^0.24.0",
