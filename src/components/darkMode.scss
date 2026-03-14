@@ -1,0 +1,143 @@
+:root {
+  /* Light theme colors */
+  --bg-primary: white;
+  --bg-secondary: #f9fafb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --active-bg: #eff6ff;
+  --active-text: #2563eb;
+  --active-bg-dark: #3b82f6;
+}
+
+.dark-theme {
+  /* Dark theme colors */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --hover-bg: #374151;
+  --active-bg: #1e3a8a;
+  --active-text: #93c5fd;
+  --active-bg-dark: #1d4ed8;
+}
+
+/* Apply styles to body */
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Sidebar specific styles */
+aside {
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar-header {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h1 {
+  color: var(--text-primary);
+}
+
+.sidebar-toggle-btn {
+  color: var(--text-secondary);
+}
+
+.sidebar-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+.nav-item {
+  color: var(--text-secondary);
+  border-radius: 0.5rem;
+}
+
+.nav-item:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.nav-item-active {
+  background-color: var(--active-bg);
+  color: var(--active-text);
+  border-radius: 0.5rem;
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--border-color);
+}
+
+.user-name {
+  color: var(--text-primary);
+}
+
+.user-email {
+  color: var(--text-secondary);
+}
+
+.notification-btn {
+  color: var(--text-secondary);
+}
+
+.notification-btn:hover {
+  color: var(--text-primary);
+}
+
+.logout-btn {
+  color: var(--text-secondary);
+}
+
+.logout-btn:hover {
+  color: var(--text-primary);
+}
+
+.theme-toggle-btn {
+  color: var(--text-secondary);
+}
+
+.theme-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Main content area */
+main {
+  background-color: var(--bg-secondary);
+}
+
+/* Cards and content elements */
+.card, 
+.bg-white {
+  background-color: var(--bg-primary);
+}
+
+/* Apply dark theme to other components */
+.dark-theme .text-gray-800 {
+  color: var(--text-primary);
+}
+
+.dark-theme .text-gray-600 {
+  color: var(--text-secondary);
+}
+
+.dark-theme .border-gray-200 {
+  border-color: var(--border-color);
+}
+
+/* Handle inputs and form elements */
+input, select, textarea {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark-theme input, 
+.dark-theme select, 
+.dark-theme textarea {
+  background-color: var(--bg-secondary);
+}
