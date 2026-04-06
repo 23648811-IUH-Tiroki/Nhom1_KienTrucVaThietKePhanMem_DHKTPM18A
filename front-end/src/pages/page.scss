@@ -1,0 +1,153 @@
+// CSS cho Register & Login Page
+.input-container {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px 10px 5px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease, background-size 0.3s ease;
+  background: linear-gradient(to right, #c4925c, #c4925c) no-repeat left bottom;
+  background-size: 0% 2px;
+}
+
+.input-container input:focus {
+  border-bottom-color: transparent;
+  background-size: 100% 2px;
+}
+
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label {
+  transform: translateY(-40px);
+  font-size: 0.85rem;
+  color: #e17100;
+}
+
+.input-container label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.input-container .error-message {
+  position: absolute;
+  bottom: -20px;
+  left: 10px;
+  color: red;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.input-container input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 10px 10px 5px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease, background-size 0.3s ease;
+  background: linear-gradient(to right, #e17100, #e17100) no-repeat left bottom;
+  background-size: 0% 2px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.input-container input[type="date"]:focus {
+  border-bottom-color: transparent;
+  background-size: 100% 2px;
+}
+
+.input-container input[type="date"]:focus ~ label,
+.input-container input[type="date"]:valid ~ label {
+  transform: translateY(-30px);
+  font-size: 0.85rem;
+  color: #e17100;
+}
+
+/* Ẩn nút tăng/giảm của input type="number" */
+.custom-number-input::-webkit-inner-spin-button,
+.custom-number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-number-input {
+  -moz-appearance: textfield; /* Ẩn trên Firefox */
+}
+
+.bg-brown {
+  background: #e17100;
+}
+
+.bg-brown-hover:hover {
+  background: #d06a03;
+}
+
+.text-brown {
+  color: #e17100;
+}
+
+.text-brown-hover:hover {
+  color: #d06a03;
+}
+
+.border-brown {
+  border: none;
+  border-bottom: 3px solid #e17100;
+}
+
+.border-brown-hover:hover {
+  background-color: #e17100;
+}
+
+.text-white-hover:hover {
+  color: white;
+}
+
+//checkout
+.bg-blue-0 {
+  background-color: #338dbc;
+}
+.border-blue-0 {
+  border: 1px solid #338dbc;
+}
+//dialog cart
+.cart-dialog::before {
+  content: "";
+  border-width: 30px 40px;
+  border-style: solid;
+  border-image: initial;
+  border-color: red;
+  position: absolute;
+  right: -26px;
+  top: 20px;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent transparent;
+}
+@keyframes growth {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.cart-dialog-animation {
+  transform-origin: 90% top;
+  animation: growth ease-in 0.3s;
+  will-change: opacity, transform;
+}
