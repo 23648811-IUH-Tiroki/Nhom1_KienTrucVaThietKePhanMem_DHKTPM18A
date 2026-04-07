@@ -84,20 +84,20 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
           navigate("/login");
           return;
         }
 
-        const res = await axiosInstance.get(`/api/users/${user._id}`);
+        const res = await axiosInstance.get("/api/users/profile");
 
         const userData = res.data;
         userData.avatar = convertBase64ToImage(userData.avatar);
         setUser(userData);
         setLoggedIn(true);
 
-        fetchUserOrders(user._id);
+        fetchUserOrders(userData._id);
       } catch (err) {
         setError(err.message);
         setLoading(false);

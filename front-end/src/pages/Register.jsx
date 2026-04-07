@@ -87,7 +87,7 @@ const Register = () => {
     try {
       // Kiểm tra trùng lặp email và số điện thoại
       const { phone, email } = formData;
-      const checkDuplicateResponse = await axiosInstance.post("/api/users/check-duplicate",
+      const checkDuplicateResponse = await axiosInstance.post("/api/auth/check-duplicate",
         {
           phone,
           email,
@@ -124,9 +124,15 @@ const Register = () => {
 
       console.log("defaultAvatarBase64:", defaultAvatarBase64);
 
+      // Split fullName into firstName and lastName
+      const nameParts = formData.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || nameParts[0]; // If only one name, use it for both
+
       // Tạo người dùng mới
       const userData = {
-        fullName: formData.fullName,
+        firstName: firstName,
+        lastName: lastName,
         phone: formData.phone,
         email: formData.email,
         birthDate: formData.birthDate,
@@ -135,7 +141,7 @@ const Register = () => {
         avatar: defaultAvatarBase64.split(",")[1],
       };
 
-      const res = await axiosInstance.post("/api/users/signup",
+      const res = await axiosInstance.post("/api/auth/signup",
         userData
       );
 

@@ -25,11 +25,10 @@ const Login = () => {
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        window.location.reload();
         navigate("/");
         setErrors({});
         setSuccess(false);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [success, navigate]);
@@ -77,7 +76,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/api/users/signin", {
+      const res = await axiosInstance.post("/api/auth/signin", {
         phone: formData.phone,
         password: formData.password,
       });
