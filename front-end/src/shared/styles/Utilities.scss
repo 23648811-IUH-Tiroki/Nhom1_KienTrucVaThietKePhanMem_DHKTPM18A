@@ -1,0 +1,35 @@
+// ===================================
+// Global Utility Classes
+// ===================================
+
+// Background color utilities
+.bg-brown {
+  background: #e17100;
+}
+
+.bg-brown-hover:hover {
+  background: #d06a03;
+}
+
+// Text color utilities
+.text-brown {
+  color: #e17100;
+}
+
+.text-brown-hover:hover {
+  color: #d06a03;
+}
+
+.text-white-hover:hover {
+  color: white;
+}
+
+// Border utilities
+.border-brown {
+  border: none;
+  border-bottom: 3px solid #e17100;
+}
+
+.border-brown-hover:hover {
+  background-color: #e17100;
+}
