@@ -11,7 +11,6 @@ import {
   MdOutlineRemoveRedEye,
   MdOutlineStar,
 } from "react-icons/md";
-import image1 from "../assets/images/image1.jpg";
 import Slider from "react-slick";
 import { useEffect, useState } from "react";
 import DialogProduct from "../components/DialogProduct";
@@ -30,6 +29,7 @@ import { addToCart } from "../stores/cartSlice";
 import { ScaleLoader } from "react-spinners";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
+import Breadcrumb2 from "../components/Breadcrumb2";
 
 const services = [
   {
@@ -197,7 +197,7 @@ const ProductDetail = () => {
 
   return (
     <MainLayout>
-      <ul className="gap-10 border-b-[1px] justify-center border-[#c49a6c] items-center hidden md:flex">
+      <ul className="hidden items-center justify-center gap-10 border-b border-[#c49a6c] md:flex">
         <Link className="font-bold text-blue-900">Cam kết</Link>
         {services.map((service, index) => (
           <li key={index} className="py-3">
@@ -209,32 +209,21 @@ const ProductDetail = () => {
         ))}
       </ul>
 
-      <div className="relative">
-        <img className="h-32 md:w-full md:h-full" src={image1} alt="" />
-        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-base md:text-[20px] text-white font-bold text-center">
-          <h1
-            style={{ color: "white" }}
-            className="mb-4 text-2xl hidden md:block"
-          >
-            {productDetail.name}
-          </h1>
-          <div>
-            <Link to="/" className="hover:text-[#c49a6c]">
-              Trang chủ
-            </Link>
-            <span> &gt; </span>
-            <Link to="/shop-meo" className="hover:text-[#c49a6c]">
-              {productDetail.category_id?.type}
-            </Link>
-            <span> &gt; </span>
-            <span className="text-[#e17100] font-semibold">
-              {productDetail.name}
-            </span>
-          </div>
-        </div>
-      </div>
+      <Breadcrumb2
+        links={[
+          { label: "Trang chủ", href: "/" },
+          {
+            label: productDetail.category_id?.name || "Danh muc",
+            href: productDetail.category_id?.slug
+              ? `/categories/${productDetail.category_id.slug}`
+              : "/",
+          },
+          { label: productDetail.name, href: `/product/${productDetail.slug}` },
+        ]}
+        banner={productDetail.images?.[0]}
+      />
 
-      <div className="max-w-[1350px] mx-auto flex flex-col gap-5 px-5">
+      <div className="mx-auto flex max-w-337.5 flex-col gap-5 px-5">
         <div className="flex gap-5 mt-5">
           <div className="w-full md:w-8/10 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="bg-white shadow-md rounded-lg p-4">
@@ -251,7 +240,7 @@ const ProductDetail = () => {
                   setSelectedImage(productDetail.images[swiper.activeIndex]);
                   setSelectedImageId(swiper.activeIndex);
                 }}
-                className="mySwiper2 h-[300px] md:h-[400px] w-full rounded-lg overflow-hidden"
+                className="mySwiper2 h-75 w-full overflow-hidden rounded-lg md:h-100"
               >
                 {productDetail?.images?.map((image, index) => (
                   <SwiperSlide
@@ -276,25 +265,23 @@ const ProductDetail = () => {
                 freeMode={true}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
-                className="mySwiper h-[80px] md:h-[100px] box-border py-[10px] mt-4"
+                className="mySwiper mt-4 box-border h-20 py-2.5 md:h-25"
               >
                 {productDetail?.images?.map((image, index) => (
                   <SwiperSlide
                     key={index}
-                    className={`w-[25%] h-full transition-opacity duration-200 cursor-pointer ${
-                      selectedImageId === index
+                    className={`w-[25%] h-full transition-opacity duration-200 cursor-pointer ${selectedImageId === index
                         ? "border-2 border-amber-500 rounded-lg"
                         : "border-2 border-transparent"
-                    }`}
+                      }`}
                     onClick={() => handleThumbnailClick(image, index)}
                   >
                     <img
                       src={image}
-                      className={`block w-full h-full object-cover rounded-lg ${
-                        selectedImageId === index
+                      className={`block w-full h-full object-cover rounded-lg ${selectedImageId === index
                           ? "opacity-100"
                           : "opacity-75 hover:opacity-100"
-                      }`}
+                        }`}
                       alt={`Thumbnail ${index}`}
                     />
                   </SwiperSlide>
@@ -429,9 +416,8 @@ const ProductDetail = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === tab.id ? "bg-brown text-white" : "text-gray-500"
-                }`}
+                className={`px-4 py-2 text-sm font-medium ${activeTab === tab.id ? "bg-brown text-white" : "text-gray-500"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -549,8 +535,8 @@ const ProductDetail = () => {
             {products.map((product, index) => (
               <div key={index} className="p-3">
                 <div>
-                <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block">
-                  <div className="relative group hover:cursor-pointer">
+                  <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block">
+                    <div className="relative group hover:cursor-pointer">
                       <Link to={`/product/${product.slug}`}>
                         <img
                           className="hover:opacity-70 w-full h-48 object-cover"
@@ -580,7 +566,7 @@ const ProductDetail = () => {
                       <Link
                         to={`/product/${product.slug}`}
                         className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
-                        >
+                      >
                         {product.name}
                       </Link>
                       <div>

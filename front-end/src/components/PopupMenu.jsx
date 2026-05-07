@@ -36,11 +36,9 @@ const PopupMenu = ({ trigger, options, menuType }) => {
 
       {/* Popup menu */}
       <div
-        className={`popup-menu absolute left-0 ${
-          menuType === "menuOptionsCategories" ? "w-65" : "w-55"
-        } mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50 ${
-          isOpen ? "open" : ""
-        }`}
+        className={`popup-menu absolute left-0 ${menuType === "menuOptionsCategories" ? "w-65" : "w-55"
+          } mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-120 ${isOpen ? "open" : ""
+          }`}
       >
         <ul className="py-2">
           {options.map((option, index) => (
@@ -48,7 +46,7 @@ const PopupMenu = ({ trigger, options, menuType }) => {
               {menuType === "menuOptionsCategories" ? (
                 <Link
                   to={option.href}
-                  className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-brown-hover flex items-center border-brown-hover text-white-hover"
+                  className="flex w-full items-center px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-brown-hover border-brown-hover text-white-hover"
                   onClick={() => handleItemClick(option.onClick)}
                 >
                   <FaAngleRight className="mr-3 text-white-hover" />
@@ -58,7 +56,7 @@ const PopupMenu = ({ trigger, options, menuType }) => {
                 <Link
                   to={option.href}
                   onClick={() => handleItemClick(option.onClick)}
-                  className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-brown-hover flex items-center"
+                  className="flex w-full items-center px-4 py-2 text-left text-gray-700 hover:bg-gray-100 text-brown-hover"
                 >
                   {option.icon}
                   <span className="ml-1" style={{ fontSize: "15px" }}>

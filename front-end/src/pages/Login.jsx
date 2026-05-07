@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Breadcrumb from "../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -25,11 +24,10 @@ const Login = () => {
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        window.location.reload();
         navigate("/");
         setErrors({});
         setSuccess(false);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [success, navigate]);
@@ -77,12 +75,12 @@ const Login = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/api/users/signin", {
+      const res = await axiosInstance.post("/api/auth/signin", {
         phone: formData.phone,
         password: formData.password,
       });
 
-      const { accessToken, message } = res.data;
+      const { accessToken } = res.data;
 
       if (!accessToken) {
         setErrors({
@@ -93,6 +91,13 @@ const Login = () => {
 
       // Save JWT token
       localStorage.setItem("accessToken", accessToken);
+
+      // Load and save user profile for screens that depend on user id in localStorage
+      const profileResponse = await axiosInstance.get("/api/users/profile");
+      if (profileResponse?.data) {
+        localStorage.setItem("user", JSON.stringify(profileResponse.data));
+      }
+
       setSuccess(true);
       toast.success("Đăng nhập thành công!");
       setTimeout(() => {
@@ -138,9 +143,9 @@ const Login = () => {
             </button>
           </div>
           <div className="flex items-center my-6">
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
             <span className="mx-4 text-gray-500">hoặc</span>
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
           </div>
           {errors.general && (
             <div
@@ -192,7 +197,7 @@ const Login = () => {
               Đăng nhập
             </button>
           </form>
-          
+
           <p className="text-center text-gray-600 mt-6">
             Bạn chưa có tài khoản?{" "}
             <Link to="/register" className="text-brown font-semibold">

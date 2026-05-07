@@ -90,7 +90,7 @@ const images = [
 ];
 
 const Home = () => {
-  const { categories: productCategory, productSale } = useSelector((state) => state.products);
+  const { categories: productCategory, productSale, load, error } = useSelector((state) => state.products);
 
   const targetDate = new Date();
   targetDate.setHours(targetDate.getHours() + 12);
@@ -105,13 +105,26 @@ const Home = () => {
     pauseOnHover: true,
   };
 
-  if(!productCategory || !productSale){
+  if (load) {
     return (
       <div className="h-screen w-screen flex justify-center items-center">
         <ScaleLoader />
       </div>
-    )
+    );
   }
+
+  if (error) {
+    return (
+      <MainLayout>
+        <div className="mx-auto mt-10 max-w-300 rounded-2xl border border-red-100 bg-red-50 p-6 text-red-700">
+          Khong the tai san pham luc nay. Vui long thu lai sau.
+        </div>
+      </MainLayout>
+    );
+  }
+
+  const dogProducts = productCategory?.["shop-cho-cun"] || [];
+  const catProducts = productCategory?.["shop-cho-meo"] || [];
 
   return (
     <MainLayout>
@@ -119,8 +132,14 @@ const Home = () => {
         <Banner />
         <SliderCategory />
       </div>
-      <div className="max-w-[1200px] mx-auto flex flex-col gap-10 px-5">
-        <ListProduct products={productCategory["shop-cho-cun"]} title={"Shop cho cún"} />
+      <div className="mx-auto flex max-w-300 flex-col gap-10 px-5">
+        {dogProducts.length > 0 ? (
+          <ListProduct products={dogProducts} title={"Shop cho cún"} />
+        ) : (
+          <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 text-center text-gray-600">
+            Hien chua co san pham cho cun.
+          </div>
+        )}
 
         <div className="bg-brown p-5 rounded-[10px]">
           <div className="flex flex-col md:flex-row gap-3 md:gap-7 mb-5">
@@ -138,37 +157,43 @@ const Home = () => {
             </Marquee>
             <CountdownTimer targetDate={targetDate} />
           </div>
-          <SaleProduct productSale = {productSale}/>
+          <SaleProduct productSale={productSale} />
         </div>
 
-        <ListProduct products={productCategory["shop-cho-meo"]} title={"Shop cho mèo"} />
-
-
-<div className="p-5">
-        <div className="flex flex-row justify-between">
-          <div className="flex items-center gap-2 bg-gradient-to-r from-orange-400 to-yellow-300 px-6 py-3 rounded-xl shadow-md text-white text-2xl font-bold">
-            <h2>Tin tức</h2>
+        {catProducts.length > 0 ? (
+          <ListProduct products={catProducts} title={"Shop cho mèo"} />
+        ) : (
+          <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 text-center text-gray-600">
+            Hien chua co san pham cho meo.
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          {articles.map((article) => (
-            <Link
-              key={article.id}
-              to={`/blogs/news/${article.slug}`}
-              className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block"
-            >
-              <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
-              <div className="p-4">
-                <p className="text-gray-500 text-sm">
-                  📅 {article.date} • Đăng bởi:{" "}
-                  <strong>{article.author}</strong>
-                </p>
-                <h2 className="text-lg font-semibold mt-2">{article.title}</h2>
-                <p className="text-gray-600 mt-2">{article.excerpt}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        )}
+
+
+        <div className="p-5">
+          <div className="flex flex-row justify-between">
+            <div className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-400 to-yellow-300 px-6 py-3 text-2xl font-bold text-white shadow-md">
+              <h2>Tin tức</h2>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            {articles.map((article) => (
+              <Link
+                key={article.id}
+                to={`/blogs/news/${article.slug}`}
+                className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block"
+              >
+                <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
+                <div className="p-4">
+                  <p className="text-gray-500 text-sm">
+                    📅 {article.date} • Đăng bởi:{" "}
+                    <strong>{article.author}</strong>
+                  </p>
+                  <h2 className="text-lg font-semibold mt-2">{article.title}</h2>
+                  <p className="text-gray-600 mt-2">{article.excerpt}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </MainLayout>

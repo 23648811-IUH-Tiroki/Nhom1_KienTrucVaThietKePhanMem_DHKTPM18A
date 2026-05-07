@@ -78,26 +78,29 @@ const UserProfile = () => {
   };
 
   const convertBase64ToImage = (base64) => {
-    return `data:image/jpeg;base64,${base64}`;
+    const value = (base64 || "").toString().trim();
+    if (!value || value === "undefined" || value === "null") return "/avatar.png";
+    if (value.startsWith("data:image")) return value;
+    return `data:image/jpeg;base64,${value}`;
   };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
           navigate("/login");
           return;
         }
 
-        const res = await axiosInstance.get(`/api/users/${user._id}`);
+        const res = await axiosInstance.get("/api/users/profile");
 
         const userData = res.data;
         userData.avatar = convertBase64ToImage(userData.avatar);
         setUser(userData);
         setLoggedIn(true);
 
-        fetchUserOrders(user._id);
+        fetchUserOrders(userData._id);
       } catch (err) {
         setError(err.message);
         setLoading(false);
@@ -164,7 +167,7 @@ const UserProfile = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await axiosInstance.post("/api/users/signout");
+      await axiosInstance.post("/api/auth/signout");
       toast.success("Đăng xuất thành công!");
 
       localStorage.removeItem("accessToken");
@@ -385,9 +388,8 @@ const UserProfile = () => {
                 <a
                   href="#thong-tin-ca-nhan"
                   onClick={() => handleTabChange("profile")}
-                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${
-                    activeTab === "profile" ? "bg-blue-50 text-blue-500" : ""
-                  }`}
+                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${activeTab === "profile" ? "bg-blue-50 text-blue-500" : ""
+                    }`}
                 >
                   <FaUser className="mr-2" />
                   Thông tin cá nhân
@@ -397,9 +399,8 @@ const UserProfile = () => {
                 <a
                   href="#don-hang-cua-ban"
                   onClick={() => handleTabChange("orders")}
-                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${
-                    activeTab === "orders" ? "bg-blue-50 text-blue-500" : ""
-                  }`}
+                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${activeTab === "orders" ? "bg-blue-50 text-blue-500" : ""
+                    }`}
                 >
                   <FaShoppingBag className="mr-2" />
                   Đơn hàng của bạn
@@ -409,9 +410,8 @@ const UserProfile = () => {
                 <a
                   href="#lich-su-mua-hang"
                   onClick={() => handleTabChange("history")}
-                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${
-                    activeTab === "history" ? "bg-blue-50 text-blue-500" : ""
-                  }`}
+                  className={`text-brown-hover cursor-pointer w-full flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-lg ${activeTab === "history" ? "bg-blue-50 text-blue-500" : ""
+                    }`}
                 >
                   <FaHistory className="mr-2" />
                   Lịch sử mua hàng
@@ -465,8 +465,8 @@ const UserProfile = () => {
                         user.gender === true
                           ? "male"
                           : user.gender === false
-                          ? "female"
-                          : ""
+                            ? "female"
+                            : ""
                       }
                       onChange={(e) =>
                         setUser({
@@ -564,8 +564,8 @@ const UserProfile = () => {
               <div id="#don-hang-cua-ban">
                 <h1 className="text-2xl font-bold mb-4">Đơn hàng của bạn</h1>
                 {pendingOrders.length === 0 &&
-                processingOrders.length === 0 &&
-                shippingOrders.length === 0 ? (
+                  processingOrders.length === 0 &&
+                  shippingOrders.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <p>Bạn chưa có đơn hàng nào đang xử lý.</p>
                     <Link
@@ -829,8 +829,8 @@ const UserProfile = () => {
               <div id="#lich-su-mua-hang">
                 <h1 className="text-2xl font-bold mb-4">Lịch sử mua hàng</h1>
                 {deliveredOrders.length === 0 &&
-                completedOrders.length === 0 &&
-                canceledOrders.length === 0 ? (
+                  completedOrders.length === 0 &&
+                  canceledOrders.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <p>Bạn chưa có đơn hàng nào đã hoàn thành.</p>
                   </div>
@@ -1156,7 +1156,7 @@ const UserProfile = () => {
                     <div className="mt-6 flex justify-end">
                       <button
                         onClick={() => setShowOrderModal(false)}
-                        className="bg-gradient-to-r from-[#e17100] to-[#e17100] text-white py-3 px-6 rounded-lg hover:from-[#e17100] hover:to-[#b75e05] shadow-md transition-transform transform hover:scale-105 cursor-pointer"
+                        className="bg-linear-to-r from-[#e17100] to-[#e17100] text-white py-3 px-6 rounded-lg hover:from-[#e17100] hover:to-[#b75e05] shadow-md transition-transform transform hover:scale-105 cursor-pointer"
                       >
                         Đóng
                       </button>

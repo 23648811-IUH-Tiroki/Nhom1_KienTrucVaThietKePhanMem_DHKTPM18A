@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Breadcrumb from "../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -87,12 +86,12 @@ const Register = () => {
     try {
       // Kiểm tra trùng lặp email và số điện thoại
       const { phone, email } = formData;
-      const checkDuplicateResponse = await axiosInstance.post("/api/users/check-duplicate",
+      const checkDuplicateResponse = await axiosInstance.post("/api/auth/check-duplicate",
         {
           phone,
           email,
         }
-      ); 
+      );
 
       if (checkDuplicateResponse.data.duplicateEmail) {
         setErrors({ email: "Email đã tồn tại." });
@@ -124,9 +123,15 @@ const Register = () => {
 
       console.log("defaultAvatarBase64:", defaultAvatarBase64);
 
+      // Split fullName into firstName and lastName
+      const nameParts = formData.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || nameParts[0]; // If only one name, use it for both
+
       // Tạo người dùng mới
       const userData = {
-        fullName: formData.fullName,
+        firstName: firstName,
+        lastName: lastName,
         phone: formData.phone,
         email: formData.email,
         birthDate: formData.birthDate,
@@ -135,7 +140,7 @@ const Register = () => {
         avatar: defaultAvatarBase64.split(",")[1],
       };
 
-      const res = await axiosInstance.post("/api/users/signup",
+      const res = await axiosInstance.post("/api/auth/signup",
         userData
       );
 
@@ -184,9 +189,9 @@ const Register = () => {
             </button>
           </div>
           <div className="flex items-center my-6">
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
             <span className="mx-4 text-gray-500">hoặc</span>
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
           </div>
           {/* form */}
           <form onSubmit={handleRegister}>

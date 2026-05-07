@@ -3,8 +3,10 @@ import { CiMenuFries } from "react-icons/ci";
 
 const TopNavigation = ({ setMobileSidebarOpen, currentUser }) => {
   const convertBase64ToImage = (base64) => {
-    if (!base64) return "/avarar.png";
-    return `data:image/jpeg;base64,${base64}`;
+    const value = (base64 || "").toString().trim();
+    if (!value || value === "undefined" || value === "null") return "/avatar.png";
+    if (value.startsWith("data:image")) return value;
+    return `data:image/jpeg;base64,${value}`;
   };
 
   return (

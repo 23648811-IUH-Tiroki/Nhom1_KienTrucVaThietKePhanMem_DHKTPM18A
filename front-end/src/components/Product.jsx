@@ -5,15 +5,17 @@ import DialogProduct from "./DialogProduct";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
-import { useDispatch } from "react-redux";
+import cart1 from "../assets/images/cart1.png";
 
 function Product({ product }) {
   const [open, setOpen] = useState(false);
   const [openQuantityPopup, setOpenQuantityPopup] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch();
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const image = product?.images?.[0] || cart1;
+  const shortDescription = product?.description || "Thuc an thu cung chat luong cao";
+  const categoryName = product?.category_id?.name || "Danh muc thu cung";
 
   // const handleAddToCart = async (product) => {
   //   const user = JSON.parse(localStorage.getItem("user"));
@@ -86,49 +88,48 @@ function Product({ product }) {
 
   return (
     <div>
-      <div
-        className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block"
-      >
+      <div className="group overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         <div className="relative group hover:cursor-pointer">
           <Link to={`/product/${product.slug}`}>
             <img
-              className="hover:opacity-70 w-screen"
-              src={product.images[0]}
-              alt={product.name}
+              className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              src={image}
+              alt={product?.name}
             />
           </Link>
-          <div className="flex gap-3 absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100">
+          <span className="absolute left-3 top-3 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+            {categoryName}
+          </span>
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <button
               onClick={() => setOpen(true)}
-              className="bg-amber-50 p-2 rounded-[5px] group hover:bg-gray-400"
+              className="rounded-lg bg-white p-2 shadow hover:bg-gray-100"
             >
-              <MdOutlineRemoveRedEye className="hover:text-white" size={25} />
+              <MdOutlineRemoveRedEye className="text-gray-700" size={22} />
             </button>
             <button
               onClick={handleAddToCart}
-              className="bg-amber-50 p-2 rounded-[5px] group hover:bg-gray-400"
+              className="rounded-lg bg-white p-2 shadow hover:bg-gray-100"
             >
-              <IoMdCart className="hover:text-white" size={25} />
+              <IoMdCart className="text-gray-700" size={22} />
             </button>
           </div>
         </div>
-        <div className="py-3 px-4 flex flex-col gap-1 justify-between h-[170px]">
+        <div className="flex h-47.5 flex-col justify-between p-4">
           <Link
-            to={"/product/2"}
-            className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
+            to={`/product/${product.slug}`}
+            className="line-clamp-2 text-[15px] font-semibold text-gray-800 hover:text-[#c49a6c]"
           >
             {product.name}
           </Link>
+          <p className="line-clamp-2 text-sm text-gray-500">{shortDescription}</p>
           <div>
-            <span className="text-1xl text-[#c49a6c] text-start">
+            <span className="text-xl font-bold text-[#c49a6c]">
               {product.price.toLocaleString("vi-VN") + "₫"}
             </span>
             <button
-              text-xl
-              font-bold
               onClick={handleBuyNow}
-              style={{}}
-              className="mt-3 mb-2 bg-[#e17100] text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium cursor-pointer"
+              className="mt-3 w-full rounded-xl border border-[#e17100] bg-[#e17100] py-2 font-semibold text-white transition-colors duration-200 hover:bg-white text-brown-hover"
             >
               Mua ngay
             </button>
@@ -143,8 +144,8 @@ function Product({ product }) {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <div className="mb-4">
               <img
-                src={product.images[0]}
-                className="w-full h-48 object-contain mb-2 gap-1 border-1 border-[#e17100] rounded-[5px]"
+                src={image}
+                className="w-full h-48 object-contain mb-2 gap-1 border border-[#e17100] rounded-[5px]"
                 alt={product.name}
               />
               <h2 className="text-lg font-semibold text-[#e17100] line-clamp-2">

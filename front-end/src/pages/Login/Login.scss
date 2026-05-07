@@ -1,0 +1,59 @@
+// ===================================
+// Login Page Styles
+// ===================================
+
+// Input container with animated underline
+.input-container {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px 10px 5px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease, background-size 0.3s ease;
+  background: linear-gradient(to right, #c4925c, #c4925c) no-repeat left bottom;
+  background-size: 0% 2px;
+
+  &:focus {
+    border-bottom-color: transparent;
+    background-size: 100% 2px;
+
+    ~ label {
+      transform: translateY(-40px);
+      font-size: 0.85rem;
+      color: #e17100;
+    }
+  }
+
+  &:not(:placeholder-shown) ~ label {
+    transform: translateY(-40px);
+    font-size: 0.85rem;
+    color: #e17100;
+  }
+}
+
+.input-container label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.input-container .error-message {
+  position: absolute;
+  bottom: -20px;
+  left: 10px;
+  color: red;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0;
+  white-space: nowrap;
+}

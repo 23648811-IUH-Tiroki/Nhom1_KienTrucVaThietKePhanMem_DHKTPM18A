@@ -16,6 +16,8 @@ export const CartProvider = ({ children }) => {
       const response = await axiosInstance.get(`/api/carts/${userId}`);
       if (response?.data?.status === "success") {
         setCartItems(response?.data?.data?.items || []);
+      } else if (response?.data?.status === "empty") {
+        setCartItems([]);
       }
     } catch (error) {
       console.error("Lỗi khi tải giỏ hàng:", error);
@@ -34,11 +36,15 @@ export const CartProvider = ({ children }) => {
     try {
       // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
       const cartResponse = await axiosInstance.get(`/api/carts/${userId}`);
-      const existingCartItem = cartResponse.data?.data?.items?.find(
-        (item) => item.product_id === productId
-      ) || cartResponse.data?.items?.find(
-        (item) => item.product_id === productId
-      );
+      const cartItemsData =
+        cartResponse?.data?.data?.items || cartResponse?.data?.items || [];
+      const existingCartItem = cartItemsData.find((item) => {
+        const id =
+          typeof item.product_id === "string"
+            ? item.product_id
+            : item.product_id?._id;
+        return id === productId;
+      });
 
       if (existingCartItem) {
         // Nếu sản phẩm đã tồn tại, cập nhật số lượng

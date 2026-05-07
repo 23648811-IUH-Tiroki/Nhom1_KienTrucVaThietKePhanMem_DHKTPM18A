@@ -24,6 +24,7 @@ import OrderManagement from "./pages/OrderManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import SmoothScrollContainer from "./layout/SmoothScrollContainer";
 import ContactUs from "./pages/ContactUs";
+import ChatWidget from "./components/chat/ChatWidget";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,6 +73,7 @@ function App() {
             />
             <Route path="/contactus" element={<ContactUs />} />
           </Routes>
+          <ChatWidget />
         </CartProvider>
       </BrowserRouter>
     </SmoothScrollContainer>

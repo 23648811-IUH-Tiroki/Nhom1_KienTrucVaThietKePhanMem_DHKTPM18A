@@ -27,7 +27,7 @@ const CartButton = ({ idUser }) => {
   // Gọi API lấy giỏ hàng
   const fetchCartData = useCallback(async () => {
     if (!idUser) {
-      setError("Vui lòng đăng nhập để xem giỏ hàng.");
+      setError("");
       return;
     }
 
@@ -35,15 +35,9 @@ const CartButton = ({ idUser }) => {
     setError("");
 
     try {
-      await fetchCart(idUser); // Sử dụng hàm fetchCart từ context
+      await fetchCart(idUser);
     } catch (err) {
-      if (err.response?.status === 404) {
-        console.warn("Giỏ hàng trống hoặc không tồn tại cho user này.");
-        setError("Giỏ hàng trống.");
-      } else {
-        console.error("Lỗi khi gọi API:", err);
-        setError("Đã xảy ra lỗi khi tải giỏ hàng. Vui lòng thử lại.");
-      }
+      console.error("Lỗi khi gọi API:", err);
     } finally {
       setLoading(false);
     }
@@ -51,8 +45,10 @@ const CartButton = ({ idUser }) => {
 
   // Gọi API khi idUser thay đổi
   useEffect(() => {
-    fetchCartData();
-  }, [idUser, fetchCartData]);
+    if (idUser) {
+      fetchCartData();
+    }
+  }, [idUser]);
 
   // Tính tổng số lượng sản phẩm
   const cartTotalQuantity = useMemo(() => {

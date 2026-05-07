@@ -1,5 +1,5 @@
 import logo from "/pet.png";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import "./component.scss";
 import { FaCaretDown, FaPhone } from "react-icons/fa6";
 import {
@@ -50,18 +50,34 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef(null);
 
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 100) {
+  //       setIsScrolled(true);
+  //     } else {
+  //       setIsScrolled(false);
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []); 
+
+
   useEffect(() => {
+    // Skip scroll effect on login/register pages
+    if (window.location.pathname === '/login' || window.location.pathname === '/register') {
+      return;
+    }
+
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      const shouldScroll = window.scrollY > 100;
+      setIsScrolled(shouldScroll);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []); 
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,10 +89,12 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const convertBase64ToImage = (base64) => {
-    if (!base64) return "/avatar.png";
-    return `data:image/jpeg;base64,${base64}`;
-  };
+  const convertBase64ToImage = useCallback((base64) => {
+    const value = (base64 || "").toString().trim();
+    if (!value || value === "undefined" || value === "null") return "/avatar.png";
+    if (value.startsWith("data:image")) return value;
+    return `data:image/jpeg;base64,${value}`;
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -85,6 +103,11 @@ const Header = () => {
         setCategories(data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
+        // Don't redirect on error - categories loading failure shouldn't affect navigation
+        if (err.response?.status === 401) {
+          // Silently ignore 401 for public endpoints
+          return;
+        }
       }
     };
 
@@ -94,30 +117,33 @@ const Header = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("accessToken");
-      if (token) {
-        try {
-          const { data } = await axiosInstance.get("/api/users/profile");
-          const userData = data;
+      if (!token) return; // Don't call API if no token
 
-          userData.avatar = convertBase64ToImage(userData.avatar);
-          setUser({
-            name: userData.fullName,
-            avatar: userData.avatar,
-            role: userData.role,
-            id: userData._id,
-          });
+      try {
+        const { data } = await axiosInstance.get("/api/users/profile");
+        const userData = data;
 
-          if (userData.role === "admin") {
-            setIsAdmin(true);
-          }
+        userData.avatar = convertBase64ToImage(userData.avatar);
+        setUser({
+          name: userData.fullName,
+          avatar: userData.avatar,
+          role: userData.role,
+          id: userData._id,
+        });
 
-          setLoggedIn(true);
-        } catch (err) {
-          console.error("API Error:", err.response?.data || err.message);
-          // Token invalid, clear localStorage
-          localStorage.removeItem("accessToken");
-          setLoggedIn(false);
+        if (userData.role === "admin") {
+          setIsAdmin(true);
         }
+
+        setLoggedIn(true);
+      } catch (err) {
+        // Only log unexpected errors
+        if (err.response?.status !== 401) {
+          console.error("API Error:", err.response?.data || err.message);
+        }
+        // Token invalid, clear localStorage
+        localStorage.removeItem("accessToken");
+        setLoggedIn(false);
       }
     };
     fetchUserData();
@@ -127,7 +153,7 @@ const Header = () => {
     if (user?.id) {
       fetchCart(user.id);
     }
-  }, [user?.id, fetchCart]);
+  }, [user?.id]);
 
   const fetchSearchResults = async (query) => {
     if (!query.trim()) {
@@ -212,7 +238,7 @@ const Header = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await axiosInstance.post("/api/users/signout");
+      await axiosInstance.post("/api/auth/signout");
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
@@ -300,7 +326,7 @@ const Header = () => {
     {
       label: "Tài khoản của bạn",
       icon: <FaUser className="mr-2" />,
-      href: `/userProfile/`,
+      href: `/userProfile`,
     },
     {
       label: "Đăng xuất",
@@ -313,7 +339,7 @@ const Header = () => {
     {
       label: "Tài khoản của bạn",
       icon: <FaUser className="mr-2" />,
-      href: `/userProfile/`,
+      href: `/userProfile`,
     },
     {
       label: "Thống kê",
@@ -335,18 +361,16 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-white shadow-md sticky top-0 z-25 transition-all duration-300 ${
-        isScrolled ? "h-[60px] overflow-hidden" : "h-auto"
-      }`}
+      className={`bg-white shadow-md sticky top-0 z-25 transition-all duration-300 ${isScrolled ? "h-20 overflow-hidden" : "h-auto"
+        }`}
       ref={headerRef}
     >
       <LoadingOverlay isVisible={isLoggingOut} />
       <div
-        className={`transition-all duration-300 ${
-          isScrolled
-            ? "-translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
-        }`}
+        className={`transition-all duration-300 ${isScrolled
+          ? "-translate-y-full opacity-0"
+          : "translate-y-0 opacity-100"
+          } relative z-40`}
       >
         <div className="container mx-auto flex flex-wrap items-center justify-evenly py-2 px-4 md:px-8 lg:px-16">
           {/* logo */}
@@ -473,9 +497,8 @@ const Header = () => {
       </div>
 
       <div
-        className={`transition-all duration-300 ${
-          isScrolled ? "fixed top-0 left-0 right-0 bg-white shadow-md" : ""
-        }`}
+        className={`transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0 z-20 bg-white shadow-md" : "relative z-20"
+          }`}
       >
         {/* nav bar */}
         <nav className={`border-none ${isMobile ? "hidden" : ""}`}>

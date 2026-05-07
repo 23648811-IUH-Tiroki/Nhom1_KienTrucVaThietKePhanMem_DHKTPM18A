@@ -20,8 +20,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
   });
 
   const convertBase64ToImage = (base64) => {
-    if (!base64) return "/avatar.png";
-    return `data:image/jpeg;base64,${base64}`;
+    const value = (base64 || "").toString().trim();
+    if (!value || value === "undefined" || value === "null") return "/avatar.png";
+    if (value.startsWith("data:image")) return value;
+    return `data:image/jpeg;base64,${value}`;
   };
 
   const handleLogout = async () => {
@@ -92,9 +94,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
     <>
       <LoadingOverlay isVisible={isLoggingOut} />
       <aside
-        className={`${
-          sidebarOpen ? "w-64" : "w-20"
-        } hidden md:flex flex-col transition-all duration-300 ease-in-out`}
+        className={`${sidebarOpen ? "w-64" : "w-20"
+          } hidden md:flex flex-col transition-all duration-300 ease-in-out`}
       >
         <div className="flex items-center justify-between p-4 sidebar-header">
           {sidebarOpen ? (
@@ -124,11 +125,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`flex items-center p-2 ${
-                    location.pathname === item.path
+                  className={`flex items-center p-2 ${location.pathname === item.path
                       ? "nav-item-active"
                       : "nav-item"
-                  }`}
+                    }`}
                 >
                   {item.icon}
                   {sidebarOpen && item.label}

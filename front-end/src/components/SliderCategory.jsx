@@ -14,27 +14,32 @@ function SliderCategory() {
   const dispatch = useDispatch();
   const { categories } = useSelector(state => state.categories)
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchCategoryBySlug("shop-cho-cun"));
   }, [dispatch])
+
+  const getSlidesToShow = (maxSlides) => {
+    if (!categories?.length) return 1;
+    return Math.min(categories.length, maxSlides);
+  };
 
   const CustomPrevArrow = (props) => {
     const { onClick } = props;
     return (
-      <MdOutlineArrowBackIos className="absolute text-[#e17100] top-1/2 left-0 -translate-y-1/2 z-10 hover:cursor-pointer" size={30} onClick={onClick}/>
+      <MdOutlineArrowBackIos className="absolute text-[#e17100] top-1/2 left-0 -translate-y-1/2 z-10 hover:cursor-pointer" size={30} onClick={onClick} />
     );
   };
 
   const CustomNextArrow = (props) => {
     const { onClick } = props;
     return (
-      <MdOutlineArrowForwardIos className="absolute text-[#e17100] top-1/2 right-0 -translate-y-1/2 hover:cursor-pointer" size={30} onClick={onClick}/>
+      <MdOutlineArrowForwardIos className="absolute text-[#e17100] top-1/2 right-0 -translate-y-1/2 hover:cursor-pointer" size={30} onClick={onClick} />
     );
   };
 
   var settings = {
-    infinite: true,
-    slidesToShow: 5,
+    infinite: categories.length > getSlidesToShow(5),
+    slidesToShow: getSlidesToShow(5),
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -45,38 +50,41 @@ function SliderCategory() {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: getSlidesToShow(4),
+          infinite: categories.length > getSlidesToShow(4),
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: getSlidesToShow(3),
+          infinite: categories.length > getSlidesToShow(3),
         },
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: getSlidesToShow(2),
+          infinite: categories.length > getSlidesToShow(2),
         },
       },
     ],
   };
 
   return (
-    <div className="relative md:bottom-20 z-20 max-w-[1200px] mx-auto bg-amber-50 border-1 border-amber-500">
+    <div className="relative z-20 mx-auto w-full overflow-hidden rounded-2xl border border-amber-400 bg-linear-to-r from-amber-50 to-orange-50 shadow-sm md:-mt-20">
       <Slider {...settings}>
-      {
-        categories.map((item, index) => (
-          <div key={index}>
-            <div onClick={()=>navigate(`/categories/${item.slug.replace(/(-cho-cun|-cho-meo)$/, "")}`)} className=" h-30 md:h-40 flex flex-col justify-center items-center border-l-1 border-amber-500 group hover:cursor-pointer">
-              <img src={item.image} alt="" className="size-16 md:size-20 transition-transform duration-500 group-hover:rotate-y-[360deg]"/>
-              <span className="group-hover:text-amber-700 text-[12px] md:text-base">{item.name.replace(/( cho cún| cho mèo)$/, "")}
-              </span>
+        {
+          categories.map((item, index) => (
+            <div key={index}>
+              <div onClick={() => navigate(`/categories/${item.slug.replace(/(-cho-cun|-cho-meo)$/, "")}`)} className="group flex h-30 flex-col items-center justify-center border-l border-amber-300 px-2 md:h-40 hover:cursor-pointer hover:bg-white/55">
+                <img src={item.image} alt="" className="size-16 md:size-20 transition-transform duration-500 group-hover:rotate-y-360" />
+                <span className="mt-2 line-clamp-2 text-center text-[12px] md:text-base group-hover:text-amber-700">{item.name.replace(/( cho cún| cho mèo)$/, "")}
+                </span>
+              </div>
             </div>
-          </div>
-        ))
-      }
+          ))
+        }
       </Slider>
     </div>
   )
