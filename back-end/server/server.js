@@ -11,9 +11,9 @@ const envPath = path.resolve(__dirname, '../.env');
 console.log("📂 Loading .env from:", envPath);
 const result = dotenv.config({ path: envPath });
 if (result.error) {
-    console.error("❌ Failed to load .env file:", result.error);
+  console.error("❌ Failed to load .env file:", result.error);
 } else {
-    console.log("✅ .env file loaded successfully");
+  console.log("✅ .env file loaded successfully");
 }
 
 import authRoutes from "./routes/authRoutes.js";
@@ -22,16 +22,50 @@ import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
-import settingRoutes from "./routes/settingRoutes.js"; 
+import settingRoutes from "./routes/settingRoutes.js";
 import dashboadRoutes from "./routes/dashboardRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 import { protectedRoute } from "./middleware/authMiddleware.js";
 
 const app = express();
 // eslint-disable-next-line no-undef
-const PORT = process.env.VITE_PORT || 5000;
+const PORT = process.env.PORT || process.env.VITE_PORT || 5000;
+
+const configuredOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+
+  if (configuredOrigins.includes(origin)) {
+    return true;
+  }
+
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === "localhost" || hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+};
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
+app.options("*", cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -57,6 +91,9 @@ app.use("/api/auth", authRoutes);
 // Product and category routes (viewing only)
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+
+// AI chat route (public)
+app.use("/api/ai", aiRoutes);
 
 // ===== PROTECTED ROUTES (Authentication required) =====
 // Apply middleware to protect these routes
