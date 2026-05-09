@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import ProductDetail from "./pages/ProductDetail"; 
+import ProductDetail from "./pages/ProductDetail";
 import Search from "./pages/Search";
 import CartShop from "./pages/CartShop";
 import CheckOut from "./pages/CheckOut";
@@ -24,12 +24,12 @@ import OrderManagement from "./pages/OrderManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import SmoothScrollContainer from "./layout/SmoothScrollContainer";
 import ContactUs from "./pages/ContactUs";
-import ChatWidget from "./components/chat/ChatWidget";
+import ChatbotKitWidget from "./components/chatbot/ChatbotKitWidget";
 
 function App() {
   const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchProducts())
   }, [dispatch])
 
@@ -73,7 +73,7 @@ function App() {
             />
             <Route path="/contactus" element={<ContactUs />} />
           </Routes>
-          <ChatWidget />
+          <ChatbotKitWidget />
         </CartProvider>
       </BrowserRouter>
     </SmoothScrollContainer>

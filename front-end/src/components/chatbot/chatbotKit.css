@@ -1,0 +1,192 @@
+.chatbot-kit-shell .react-chatbot-kit-chat-container {
+    width: 100%;
+    max-width: 380px;
+    border: 1px solid #ffedd5;
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-inner-container {
+    background: #ffffff;
+}
+
+.chatbot-kit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #f97316, #f59e0b);
+    color: #ffffff;
+    padding: 12px 16px;
+}
+
+.chatbot-kit-header__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chatbot-kit-header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-kit-header__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chatbot-kit-header__status {
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.chatbot-kit-header__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #6ee7b7;
+}
+
+.chatbot-kit-header__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 4px;
+    color: rgba(255, 255, 255, 0.9);
+    transition: background 0.2s ease;
+}
+
+.chatbot-kit-header__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-message-container {
+    background: #f9fafb;
+    padding: 8px 4px;
+    gap: 12px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-message {
+    background: #ffffff;
+    color: #374151;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    padding: 10px 12px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message {
+    background: #f97316;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 10px 12px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message-arrow {
+    border-left: 8px solid #f97316;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-input-container {
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+    padding: 12px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-input {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-input:focus {
+    outline: none;
+    border-color: #fdba74;
+    box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.18);
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-btn-send {
+    background: #f97316;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-btn-send:hover {
+    background: #ea580c;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-btn-send-icon {
+    fill: #ffffff;
+}
+
+.chatbot-kit-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+}
+
+.chatbot-kit-avatar--bot {
+    background: #ffedd5;
+    color: #f97316;
+}
+
+.chatbot-kit-avatar--user {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message-container,
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-message-container {
+    align-items: flex-start;
+    gap: 2px;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-message-container,
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message-container {
+    justify-content: flex-start;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-message-container {
+    justify-content: flex-start;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message-container {
+    justify-content: flex-end;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-avatar-container,
+.chatbot-kit-shell .react-chatbot-kit-user-avatar-container {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-avatar-container {
+    margin-right: 2px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-user-avatar-container {
+    margin-left: 2px;
+}
+
+.chatbot-kit-shell .react-chatbot-kit-chat-bot-message,
+.chatbot-kit-shell .react-chatbot-kit-user-chat-message {
+    margin-left: 0;
+}

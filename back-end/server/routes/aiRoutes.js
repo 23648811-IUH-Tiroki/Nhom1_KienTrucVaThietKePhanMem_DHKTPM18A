@@ -11,6 +11,14 @@ class HttpError extends Error {
   }
 }
 
+const tryImport = async (specifier) => {
+  try {
+    return await import(specifier);
+  } catch {
+    return null;
+  }
+};
+
 const isPlaceholderKey = (value) => {
   const v = (value || "").toString().trim();
   if (!v) return true;
@@ -187,6 +195,37 @@ async function chatWithOpenAI({ systemPrompt, userPrompt }) {
   }
   const model = process.env.OPENAI_MODEL || "gpt-5.4";
 
+  // Prefer using the OpenAI SDK if available (installed via `openai` npm package).
+  const openaiMod = await tryImport("openai");
+  const OpenAI = openaiMod?.default;
+  if (typeof OpenAI === "function") {
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const resp = await client.responses.create({
+      model,
+      input: [
+        { role: "developer", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      max_output_tokens: 350,
+    });
+
+    if (typeof resp?.output_text === "string" && resp.output_text.trim()) {
+      return resp.output_text.trim();
+    }
+
+    const output = Array.isArray(resp?.output) ? resp.output : [];
+    const chunks = [];
+    for (const item of output) {
+      if (item?.type !== "message") continue;
+      const content = Array.isArray(item?.content) ? item.content : [];
+      for (const c of content) {
+        if (c?.type === "output_text" && typeof c?.text === "string") chunks.push(c.text);
+      }
+    }
+    return chunks.join("\n").trim();
+  }
+
+  // Fallback (no SDK): call OpenAI REST API directly.
   const resp = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
@@ -229,6 +268,17 @@ async function chatWithGemini({ systemPrompt, userPrompt }) {
     throw new HttpError(400, "Missing GEMINI_API_KEY");
   }
   const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+
+  // Prefer using Gemini SDK if available (installed via `@google/generative-ai`).
+  const geminiMod = await tryImport("@google/generative-ai");
+  const GoogleGenerativeAI = geminiMod?.GoogleGenerativeAI;
+  if (typeof GoogleGenerativeAI === "function") {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const gemini = genAI.getGenerativeModel({ model });
+    const result = await gemini.generateContent(`${systemPrompt}\n\n${userPrompt}`);
+    const text = typeof result?.response?.text === "function" ? result.response.text() : "";
+    return (text || "").trim();
+  }
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
     model
@@ -326,6 +376,12 @@ router.post("/chat", async (req, res) => {
   } catch (err) {
     const status = err?.status;
     const httpStatus = Number.isFinite(status) && status >= 400 && status <= 599 ? status : 500;
+    if (httpStatus === 429) {
+      res.json({
+        text: "He thong dang ban. Ban vui long cho vai giay roi thu lai nhe.",
+      });
+      return;
+    }
     res.status(httpStatus).json({ error: "ai_error", message: err?.message || "AI provider error" });
   }
 });
