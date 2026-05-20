@@ -89,16 +89,16 @@ function SaleProduct({ productSale }) {
   return (
     <div>
       <Slider {...settings}>
-        {productSale?.map((product, index) => (
+        {productSale?.filter(Boolean).map((product, index) => (
           <div key={index} className="px-3">
             <div>
               <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer block">
                 <div className="relative group hover:cursor-pointer">
-                  <Link to={`/product/${product.slug}`}>
+                  <Link to={`/product/${product?.slug || ""}`}>
                     <img
                       className={`hover:opacity-70 w-screen`}
-                      src={product.images[0]}
-                      alt=""
+                      src={product?.images?.[0] || "/pet.png"}
+                      alt={product?.name || "Sản phẩm"}
                     />
                   </Link>
                   <div className="flex gap-3 absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100">
@@ -120,21 +120,21 @@ function SaleProduct({ productSale }) {
                   </div>
                 </div>
 
-                <div className="py-3 px-4 flex flex-col gap-1 h-[170px] justify-between">
+                <div className="py-3 px-4 flex flex-col gap-1 h-42.5 justify-between">
                   <Link
-                    to={"/product/2"}
+                    to={`/product/${product?.slug || ""}`}
                     className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
                   >
-                    {product.name}
+                    {product?.name || "Sản phẩm không có tên"}
                   </Link>
                   <div>
                     <span className="text-1xl text-[#c49a6c] text-start">
-                      {product.price.toLocaleString("vi-VN") + "₫"}
+                      {(product?.price || 0).toLocaleString("vi-VN") + "₫"}
                     </span>
                     <button
                       onClick={() => handleBuyNow(product)}
                       style={{}}
-                      className="mt-3 mb-2 bg-[#e17100] cursor-pointer text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium mt-2"
+                      className="mt-3 mb-2 bg-[#e17100] cursor-pointer text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium"
                     >
                       Mua ngay
                     </button>

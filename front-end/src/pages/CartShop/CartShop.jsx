@@ -17,17 +17,37 @@ const CartShop = () => {
   const { cartItems, updateCartItemQuantity, removeFromCart, clearCart } =
     useCart();
   const [isClearing, setIsClearing] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   // Tính tổng tiền
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + (item.product_id?.price || 0) * item.quantity,
     0
   );
+  const allSelected = cartItems.length > 0 && selectedItems.length === cartItems.length;
   const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id || user?.id;
+
+  const toggleItemSelection = (itemId) => {
+    setSelectedItems((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedItems([]);
+      return;
+    }
+
+    setSelectedItems(cartItems.map((item) => item._id));
+  };
 
   // Hàm xử lý xóa tất cả sản phẩm
   const handleClearCart = async () => {
-    if (!user?._id) {
+    if (!userId) {
       alert("Vui lòng đăng nhập để thực hiện thao tác này.");
       return;
     }
@@ -45,7 +65,7 @@ const CartShop = () => {
 
     if (result.isConfirmed) {
       setIsClearing(true); // Bật trạng thái loading
-      const clearResult = await clearCart(user._id);
+      const clearResult = await clearCart(userId);
       setIsClearing(false); // Tắt trạng thái loading
 
       if (!clearResult.success) {
@@ -82,6 +102,15 @@ const CartShop = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-gray-300 text-gray-700">
+                    <th className="p-3 w-14">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        className="h-4 w-4 cursor-pointer rounded border-gray-300 text-brown focus:ring-brown"
+                        aria-label="Chọn tất cả sản phẩm"
+                      />
+                    </th>
                     <th className="p-3">Sản phẩm</th>
                     <th className="p-3">Giá</th>
                     <th className="p-3">Số lượng</th>
@@ -95,6 +124,16 @@ const CartShop = () => {
                       key={item._id}
                       className="border-b border-gray-200 transition-all duration-300 min-h-[80px]"
                     >
+                      <td className="p-5 align-middle">
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.includes(item._id)}
+                          onChange={() => toggleItemSelection(item._id)}
+                          className="h-4 w-4 cursor-pointer rounded border-gray-300 text-brown focus:ring-brown"
+                          aria-label={`Chọn sản phẩm ${item.product_id?.name || ""}`}
+                        />
+                      </td>
+
                       <td className="p-5 flex items-center gap-6">
                         {/* Link đến trang chi tiết sản phẩm */}
                         <Link
@@ -120,10 +159,10 @@ const CartShop = () => {
                           <button
                             onClick={() => {
                               if (item.quantity === 1) {
-                                removeFromCart(user._id, item._id);
+                                removeFromCart(userId, item._id);
                               } else {
                                 updateCartItemQuantity(
-                                  user._id,
+                                  userId,
                                   item._id,
                                   item.quantity - 1
                                 );
@@ -141,12 +180,12 @@ const CartShop = () => {
                             onChange={(e) => {
                               const value = e.target.value;
                               if (value === "") {
-                                updateCartItemQuantity(user._id, item._id, ""); // Nếu rỗng thì chờ nhập số
+                                updateCartItemQuantity(userId, item._id, ""); // Nếu rỗng thì chờ nhập số
                               } else {
                                 const newQuantity = parseInt(value, 10);
                                 if (!isNaN(newQuantity) && newQuantity >= 1) {
                                   updateCartItemQuantity(
-                                    user._id,
+                                    userId,
                                     item._id,
                                     newQuantity
                                   );
@@ -158,7 +197,7 @@ const CartShop = () => {
                                 !e.target.value ||
                                 parseInt(e.target.value, 10) < 1
                               ) {
-                                updateCartItemQuantity(user._id, item._id, 1);
+                                updateCartItemQuantity(userId, item._id, 1);
                               }
                             }}
                             className="w-10 text-center border-x border-gray-300 bg-white text-gray-800 appearance-none custom-number-input"
@@ -168,7 +207,7 @@ const CartShop = () => {
                           <button
                             onClick={() =>
                               updateCartItemQuantity(
-                                user._id,
+                                userId,
                                 item._id,
                                 item.quantity + 1
                               )
@@ -189,7 +228,7 @@ const CartShop = () => {
 
                       <td className="p-5 w-16 text-center">
                         <button
-                          onClick={() => removeFromCart(user._id, item._id)}
+                          onClick={() => removeFromCart(userId, item._id)}
                           className="cursor-pointer text-red-500 hover:text-red-700 transition text-lg"
                         >
                           <FaTrash />

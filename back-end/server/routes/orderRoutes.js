@@ -8,6 +8,7 @@ import {
     getOrderStats,
     getRecentOrders
 } from "../controllers/orderController.js";
+import { requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.post("/", createOrder);
 
 // lấy tất cả đơn hàng
 router.get("/", getOrders);
+
+router.use(requireAdmin);
 
 // lấy thống kê đơn hàng
 router.get("/stats", getOrderStats);

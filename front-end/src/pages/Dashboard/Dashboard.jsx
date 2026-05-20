@@ -14,9 +14,19 @@ import {
 import Sidebar from "../../components/Sidebar";
 import TopNavigation from "../../components/TopNavigation";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import Chart from "react-apexcharts";
+import {
+  fetchDashboardStats,
+  fetchRecentOrders,
+  fetchNotifications,
+  fetchRevenueByDay,
+  fetchRevenueByCategory,
+  importOrders as importOrdersRequest,
+} from "../../services/dashboardService";
+import { fetchUserById as fetchUserByIdRequest, fetchUsersPaginated as fetchUsersPaginatedRequest } from "../../services/userService";
+import { fetchProducts as fetchProductsRequest } from "../../services/productService";
+import { fetchOrders as fetchOrdersRequest } from "../../services/orderService";
 
 const Dashboard = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -52,7 +62,7 @@ const Dashboard = () => {
     try {
       const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id) throw new Error("No user found");
-      const response = await axiosInstance.get(`/api/users/${userLocal._id}`);
+      const response = await fetchUserByIdRequest(userLocal._id);
       setCurrentUser(response.data);
     } catch (err) {
       console.error("Failed to fetch current user:", err.message);
@@ -79,21 +89,16 @@ const Dashboard = () => {
         usersResponse,
         productsResponse,
       ] = await Promise.all([
-        axiosInstance.get("/api/dashboard/stats", { params }),
-        axiosInstance.get("/api/dashboard/recent-orders", {
-          params: { limit: 5 },
-        }),
-        axiosInstance.get("/api/dashboard/notifications", { params }),
-        axiosInstance.get("/api/dashboard/revenue-by-day", { params }),
-        axiosInstance.get("/api/dashboard/revenue-by-category", { params }),
-        axiosInstance.get("/api/users/paginated", {
-          params: { page: 1, limit: 1 },
-        }),
-        axiosInstance.get("/api/products"),
+        fetchDashboardStats(params),
+        fetchRecentOrders({ limit: 5 }),
+        fetchNotifications(params),
+        fetchRevenueByDay(params),
+        fetchRevenueByCategory(params),
+        fetchUsersPaginatedRequest({ page: 1, limit: 1 }),
+        fetchProductsRequest(),
       ]);
 
-      const totalOrders = await axiosInstance
-        .get("/api/orders", { params })
+      const totalOrders = await fetchOrdersRequest()
         .then((res) => res.data.length);
       const activeUsers = usersResponse.data.users.filter(
         (user) => user.status === "Active"
@@ -334,7 +339,7 @@ const Dashboard = () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await axiosInstance.post("/api/dashboard/import-orders", formData);
+      await importOrdersRequest(formData);
       toast.success("Nhập đơn hàng thành công");
       fetchDashboardData();
     } catch (err) {

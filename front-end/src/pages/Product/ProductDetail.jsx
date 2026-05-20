@@ -155,30 +155,32 @@ const ProductDetail = () => {
     setOpen(true);
   };
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id || user?.id;
+
   const handleBuyNow = async () => {
-    if (!user?._id) {
+    if (!userId) {
       navigate("/login");
       return;
     }
-    const result = await addToCart(user._id, productDetail._id, quantity);
 
-    if (result.success) {
-      navigate("/checkout");
-    } else {
-      toast.error(result.message);
-    }
-    // dispatch(addToCart({ ...productDetail, cartQuantity: quantity }));
-    // navigate("/checkout");
+    navigate("/checkout", {
+      state: {
+        buyNowItems: [{
+          product_id: productDetail,
+          quantity,
+        }],
+      },
+    });
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
   const handleAddToCart = async () => {
-    if (!user?._id) {
+    if (!userId) {
       navigate("/login");
       return;
     }
 
-    const result = await addToCart(user._id, productDetail._id, quantity);
+    const result = await addToCart(userId, productDetail._id, quantity);
 
     if (result.success) {
       toast.success(result.message);
@@ -197,7 +199,7 @@ const ProductDetail = () => {
 
   return (
     <MainLayout>
-      <ul className="gap-10 border-b-[1px] justify-center border-[#c49a6c] items-center hidden md:flex">
+      <ul className="gap-10 border-b justify-center border-[#c49a6c] items-center hidden md:flex">
         <Link className="font-bold text-blue-900">Cam kết</Link>
         {services.map((service, index) => (
           <li key={index} className="py-3">
@@ -234,7 +236,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className="max-w-[1350px] mx-auto flex flex-col gap-5 px-5">
+      <div className="max-w-337.5 mx-auto flex flex-col gap-5 px-5">
         <div className="flex gap-5 mt-5">
           <div className="w-full md:w-8/10 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="bg-white shadow-md rounded-lg p-4">
@@ -251,7 +253,7 @@ const ProductDetail = () => {
                   setSelectedImage(productDetail.images[swiper.activeIndex]);
                   setSelectedImageId(swiper.activeIndex);
                 }}
-                className="mySwiper2 h-[300px] md:h-[400px] w-full rounded-lg overflow-hidden"
+                className="mySwiper2 h-75 md:h-100 w-full rounded-lg overflow-hidden"
               >
                 {productDetail?.images?.map((image, index) => (
                   <SwiperSlide
@@ -276,7 +278,7 @@ const ProductDetail = () => {
                 freeMode={true}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
-                className="mySwiper h-[80px] md:h-[100px] box-border py-[10px] mt-4"
+                className="mySwiper h-20 md:h-25 box-border py-2.5 mt-4"
               >
                 {productDetail?.images?.map((image, index) => (
                   <SwiperSlide
@@ -546,16 +548,16 @@ const ProductDetail = () => {
         <div className="p-3 bg-white shadow-md rounded-lg flex flex-col gap-2">
           <h3 className="font-medium text-2xl">Sản phẩm tương tự</h3>
           <Slider {...settings}>
-            {products.map((product, index) => (
+            {products.filter(Boolean).map((product, index) => (
               <div key={index} className="p-3">
                 <div>
                 <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block">
                   <div className="relative group hover:cursor-pointer">
-                      <Link to={`/product/${product.slug}`}>
+                      <Link to={`/product/${product?.slug || ""}`}>
                         <img
                           className="hover:opacity-70 w-full h-48 object-cover"
-                          src={product.images[0]}
-                          alt={product.name}
+                          src={product?.images?.[0] || "/pet.png"}
+                          alt={product?.name || "Sản phẩm"}
                         />
                       </Link>
                       <div className="flex gap-3 absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100">
@@ -578,14 +580,14 @@ const ProductDetail = () => {
                     </div>
                     <div className="py-3 px-4 flex flex-col gap-1 justify-between h-full">
                       <Link
-                        to={`/product/${product.slug}`}
+                        to={`/product/${product?.slug || ""}`}
                         className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
                         >
-                        {product.name}
+                        {product?.name || "Sản phẩm không có tên"}
                       </Link>
                       <div>
                         <span className="text-1xl text-[#c49a6c] text-start">
-                          {product.price.toLocaleString("vi-VN") + "₫"}
+                          {(product?.price || 0).toLocaleString("vi-VN") + "₫"}
                         </span>
                         <button className="mt-3 mb-2 bg-[#e17100] text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium cursor-pointer">
                           Mua ngay

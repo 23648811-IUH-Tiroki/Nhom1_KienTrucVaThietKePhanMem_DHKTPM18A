@@ -6,11 +6,18 @@ import UserTable from "../../components/UserTable";
 import UserDetailView from "../../components/UserDetailView";
 import Modal from "../../components/Modal";
 import UserForm from "../../components/UserForm";
-import axiosInstance from "../../utils/axiosInstance";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import SearchAndFilter from "../../components/SearchAndFilter";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import { toast } from "react-toastify";
+import {
+  createUser as createUserRequest,
+  deleteUser as deleteUserRequest,
+  fetchUserById as fetchUserByIdRequest,
+  fetchUsersPaginated as fetchUsersPaginatedRequest,
+  searchUsers as searchUsersRequest,
+  updateUser as updateUserRequest,
+} from "../../services/userService";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -42,7 +49,7 @@ const UserManagement = () => {
       const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
-      const response = await axiosInstance.get(`api/users/${userLocal._id}`);
+      const response = await fetchUserByIdRequest(userLocal._id);
       setCurrentUser(response.data);
     } catch (err) {
       console.error(
@@ -61,8 +68,9 @@ const UserManagement = () => {
     if (searchTerm || statusFilter !== "all" || roleFilter !== "all") return;
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get("api/users/paginated", {
-        params: { page: currentPage, limit: ITEMS_PER_PAGE },
+      const response = await fetchUsersPaginatedRequest({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
       });
       const usersData = Array.isArray(response.data.users)
         ? response.data.users
@@ -98,7 +106,7 @@ const UserManagement = () => {
       if (statusFilter !== "all") params.status = statusFilter; 
       if (roleFilter !== "all") params.role = roleFilter;
 
-      const response = await axiosInstance.get("api/users/search", { params });
+      const response = await searchUsersRequest(params);
       const usersData = Array.isArray(response.data.users)
         ? response.data.users
         : [];
@@ -166,14 +174,11 @@ const UserManagement = () => {
       }
       let response;
       if (selectedUser) {
-        response = await axiosInstance.put(
-          `api/users/${selectedUser._id}`,
-          formData
-        );
+        response = await updateUserRequest(selectedUser._id, formData);
         toast.success("User updated successfully");
         if (selectedUser._id === currentUser?._id) await fetchCurrentUser();
       } else {
-        response = await axiosInstance.post("api/users", formData);
+        response = await createUserRequest(formData);
         toast.success("User created successfully");
       }
       setIsModalOpen(false);
@@ -191,7 +196,7 @@ const UserManagement = () => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`api/users/${selectedUser._id}`);
+      await deleteUserRequest(selectedUser._id);
       setIsDeleteModalOpen(false);
       setSelectedUser(null);
       if (currentView === "detail") setCurrentView("list");
@@ -199,10 +204,10 @@ const UserManagement = () => {
       if (searchTerm || statusFilter !== "all" || roleFilter !== "all") {
         await searchUsers();
       } else {
-        const totalUsers = await axiosInstance
-          .get("api/users/paginated", {
-            params: { page: 1, limit: ITEMS_PER_PAGE },
-          })
+        const totalUsers = await fetchUsersPaginatedRequest({
+          page: 1,
+          limit: ITEMS_PER_PAGE,
+        })
           .then((res) => res.data.total);
         const newTotalPages = Math.ceil(totalUsers / ITEMS_PER_PAGE);
         if (currentPage > newTotalPages && newTotalPages > 0)

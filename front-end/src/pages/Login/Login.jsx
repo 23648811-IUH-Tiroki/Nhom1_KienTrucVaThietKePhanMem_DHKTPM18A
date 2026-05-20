@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Breadcrumb from "../../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -7,20 +6,49 @@ import logo from "/pet.png";
 import Header from "../../components/Header";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.scss";
+import "../page.scss";
 import { ToastContainer, toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance";
+import { signIn } from "../../services/authService";
+import { fetchProfile } from "../../services/userService";
 
 const Login = () => {
   const links = [{ label: "Trang chủ", link: "/" }, { label: "Đăng nhập" }];
   const [formData, setFormData] = useState({
-    phone: "",
+    email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [lockUntil, setLockUntil] = useState(() => {
+    const storedLockUntil = Number(localStorage.getItem("loginLockUntil") || 0);
+    return storedLockUntil > Date.now() ? storedLockUntil : 0;
+  });
+  const [lockRemainingSeconds, setLockRemainingSeconds] = useState(0);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!lockUntil) {
+      setLockRemainingSeconds(0);
+      localStorage.removeItem("loginLockUntil");
+      return;
+    }
+
+    const updateRemaining = () => {
+      const remaining = Math.max(0, Math.ceil((lockUntil - Date.now()) / 1000));
+      setLockRemainingSeconds(remaining);
+
+      if (remaining === 0) {
+        setLockUntil(0);
+        localStorage.removeItem("loginLockUntil");
+      }
+    };
+
+    updateRemaining();
+    const timer = setInterval(updateRemaining, 1000);
+
+    return () => clearInterval(timer);
+  }, [lockUntil]);
 
   useEffect(() => {
     if (success) {
@@ -48,10 +76,12 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.phone) {
-      newErrors.phone = "Số điện thoại không được để trống.";
-    } else if (!formData.phone.match(/^\d{10}$/)) {
-      newErrors.phone = "Số điện thoại không hợp lệ.";
+    if (!formData.email) {
+      newErrors.email = "Email không được để trống.";
+    } else if (
+      !formData.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ) {
+      newErrors.email = "Email không hợp lệ.";
     }
 
     if (!formData.password) {
@@ -76,8 +106,8 @@ const Login = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/api/auth/signin", {
-        phone: formData.phone,
+      const res = await signIn({
+        email: formData.email,
         password: formData.password,
       });
 
@@ -85,13 +115,19 @@ const Login = () => {
 
       if (!accessToken) {
         setErrors({
-          general: "Số điện thoại hoặc mật khẩu không chính xác.",
+          general: "Email hoặc mật khẩu không chính xác.",
         });
         return;
       }
 
-      // Save JWT token
+      // Lưu token JWT
       localStorage.setItem("accessToken", accessToken);
+      const profileRes = await fetchProfile();
+      if (profileRes?.data) {
+        localStorage.setItem("user", JSON.stringify(profileRes.data));
+      }
+      localStorage.removeItem("loginLockUntil");
+      setLockUntil(0);
       setSuccess(true);
       toast.success("Đăng nhập thành công!");
       setTimeout(() => {
@@ -99,9 +135,21 @@ const Login = () => {
       }, 500);
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
-      if (err.response && err.response.status === 401) {
+      if (err.response && err.response.status === 429) {
+        const responseLockUntil = Number(err.response?.data?.lockUntil || 0);
+        if (responseLockUntil > Date.now()) {
+          setLockUntil(responseLockUntil);
+          localStorage.setItem("loginLockUntil", String(responseLockUntil));
+        }
+
         setErrors({
-          general: "Số điện thoại hoặc mật khẩu không chính xác.",
+          general:
+            err.response?.data?.message ||
+            "Bạn đã thử quá nhiều lần. Vui lòng chờ rồi thử lại.",
+        });
+      } else if (err.response && err.response.status === 401) {
+        setErrors({
+          general: "Email hoặc mật khẩu không chính xác.",
         });
       } else {
         setErrors({
@@ -113,12 +161,11 @@ const Login = () => {
     }
   };
 
-
   return (
     <>
       <Header />
       <Breadcrumb items={links} />
-      <div className="container mx-auto px-4 md:px-8 flex flex-col items-center justify-center -mt-10 mb-20">
+      <div className="container mx-auto px-4 md:px-8 flex flex-col items-center -mt-10">
         <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-8">
           <div className="flex justify-center">
             <img src={logo} alt="Logo" className="w-30 h-30 object-contain" />
@@ -137,9 +184,9 @@ const Login = () => {
             </button>
           </div>
           <div className="flex items-center my-6">
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
             <span className="mx-4 text-gray-500">hoặc</span>
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
           </div>
           {errors.general && (
             <div
@@ -150,19 +197,20 @@ const Login = () => {
             </div>
           )}
           <form onSubmit={handleLogin}>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="input-container">
                 <input
-                  type="tel"
-                  name="phone"
+                  type="email"
+                  name="email"
                   placeholder=" "
                   className="w-full"
-                  value={formData.phone}
+                  value={formData.email}
                   onChange={handleChange}
+                  disabled={lockRemainingSeconds > 0}
                 />
-                <label>Nhập số điện thoại</label>
-                {errors.phone && (
-                  <span className="error-message">{errors.phone}</span>
+                <label>Nhập email</label>
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
                 )}
               </div>
               <div className="input-container">
@@ -173,26 +221,38 @@ const Login = () => {
                   className="w-full"
                   value={formData.password}
                   onChange={handleChange}
+                  disabled={lockRemainingSeconds > 0}
                 />
                 <label>Nhập mật khẩu</label>
                 {errors.password && (
                   <span className="error-message">{errors.password}</span>
                 )}
               </div>
-              <small className="text-gray-500 italic mx-2 pt-0">
-                (*) Mật khẩu tối thiểu 6 ký tự, có ít nhất 1 chữ và 1 số. (VD:
-                12345a)
+              {lockRemainingSeconds > 0 && (
+                <small className="text-red-600 italic mx-2">
+                  Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau{" "}
+                  {lockRemainingSeconds} giây.
+                </small>
+              )}
+              <small className="text-gray-500 italic mx-2">
+                Quên mât khẩu?{" "}
+                <Link
+                  to="/forgot-password"
+                  className="text-brown font-semibold"
+                >
+                  Lấy lại mật khẩu
+                </Link>
               </small>
             </div>
-              <Link to="/forgot-password" className="text-sm text-brown hover:underline">Quên mật khẩu?</Link>
             <button
               type="submit"
-              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer"
+              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={lockRemainingSeconds > 0}
             >
               Đăng nhập
             </button>
           </form>
-          
+
           <p className="text-center text-gray-600 mt-6">
             Bạn chưa có tài khoản?{" "}
             <Link to="/register" className="text-brown font-semibold">

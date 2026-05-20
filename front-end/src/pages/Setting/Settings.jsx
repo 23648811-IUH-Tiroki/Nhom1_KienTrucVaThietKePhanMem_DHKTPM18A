@@ -3,8 +3,9 @@ import { Settings as SettingsIcon, AlertCircle, Save } from "lucide-react";
 import Sidebar from "../../components/Sidebar";
 import TopNavigation from "../../components/TopNavigation";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
+import { fetchUserById as fetchUserByIdRequest } from "../../services/userService";
+import { fetchSettings as fetchSettingsRequest, updateSettings as updateSettingsRequest } from "../../services/settingService";
 
 const Settings = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -27,7 +28,7 @@ const Settings = () => {
       const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
-      const response = await axiosInstance.get(`api/users/${userLocal._id}`);
+      const response = await fetchUserByIdRequest(userLocal._id);
       setCurrentUser(response.data);
     } catch (err) {
       console.error(
@@ -46,7 +47,7 @@ const Settings = () => {
   const fetchSettings = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get("api/settings");
+      const response = await fetchSettingsRequest();
       setSettings(response.data);
       setError(null);
     } catch (err) {
@@ -70,7 +71,7 @@ const Settings = () => {
   // save
   const handleSaveSettings = async () => {
     try {
-      await axiosInstance.put("api/settings", settings);
+      await updateSettingsRequest(settings);
       toast.success("Settings saved successfully");
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);

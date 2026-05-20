@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import axiosInstance from "../../utils/axiosInstance";
 import Sidebar from "../../components/Sidebar";
 import TopNavigation from "../../components/TopNavigation";
 import ProductTable from "../../components/ProductTable";
@@ -7,6 +6,16 @@ import ProductForm from "../../components/ProductForm";
 import Modal from "../../components/Modal";
 import { toast } from "react-toastify";
 import DeleteProductConfirmationModal from "../../components/DeleteProductConfirmationModal";
+import { fetchUserById as fetchUserByIdRequest } from "../../services/userService";
+import {
+  createProduct as createProductRequest,
+  deleteProduct as deleteProductRequest,
+  fetchProducts as fetchProductsRequest,
+  fetchProductsByCategoryId as fetchProductsByCategoryIdRequest,
+  searchProductsByQuery as searchProductsByQueryRequest,
+  updateProduct as updateProductRequest,
+} from "../../services/productService";
+import { fetchCategories as fetchCategoriesRequest } from "../../services/categoryService";
 
 const InventoryManagement = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -29,7 +38,7 @@ const InventoryManagement = () => {
       const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("Lỗi không tìm thấy người dùng.");
-      const response = await axiosInstance.get(`api/users/${userLocal._id}`);
+      const response = await fetchUserByIdRequest(userLocal._id);
       setCurrentUser(response.data);
     } catch (err) {
       console.error(
@@ -46,7 +55,7 @@ const InventoryManagement = () => {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await axiosInstance.get("api/products");
+      const response = await fetchProductsRequest();
       setProducts(response.data);
     } catch (err) {
       console.error("Lỗi:", err);
@@ -58,7 +67,7 @@ const InventoryManagement = () => {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await axiosInstance.get("api/categories");
+      const response = await fetchCategoriesRequest();
       setCategories(response.data);
     } catch (err) {
       console.error("Lỗi", err);
@@ -92,7 +101,7 @@ const InventoryManagement = () => {
     if (!productToDelete) return;
 
     try {
-      await axiosInstance.delete(`api/products/${productToDelete._id}`);
+      await deleteProductRequest(productToDelete._id);
       toast.success("Sản phẩm đã được xóa thành công");
       fetchProducts();
     } catch (err) {
@@ -108,14 +117,11 @@ const InventoryManagement = () => {
   const handleSubmit = async (productData) => {
     try {
       if (currentProduct) {
-        await axiosInstance.put(
-          `api/products/${currentProduct._id}`,
-          productData
-        );
+        await updateProductRequest(currentProduct._id, productData);
         toast.success("Cập nhật sản phẩm thành công");
       } else {
         // create new product
-        await axiosInstance.post("api/products", productData);
+        await createProductRequest(productData);
         toast.success("Thêm sản phẩm mới thành công");
       }
       setIsFormOpen(false);
@@ -134,9 +140,7 @@ const InventoryManagement = () => {
            return;
          }
 
-         const response = await axiosInstance.get(`api/products/search`, {
-           params: { query: term },
-         });
+         const response = await searchProductsByQueryRequest(term);
          setProducts(response.data);
        } catch (err) {
          console.error("Lỗi khi tìm kiếm sản phẩm:", err);
@@ -171,9 +175,7 @@ const InventoryManagement = () => {
       return;
     }
     try {
-      const response = await axiosInstance.get(
-        `api/products?category=${categoryId}`
-      );
+      const response = await fetchProductsByCategoryIdRequest(categoryId);
       setProducts(response.data);
     } catch (err) {
       console.error("Failed to filter products:", err);

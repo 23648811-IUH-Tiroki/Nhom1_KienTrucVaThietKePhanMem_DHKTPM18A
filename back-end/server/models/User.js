@@ -2,10 +2,12 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
-  phone: { type: String, required: true, unique: true },
+  phone: { type: String, unique: true, sparse: true },
   email: { type: String, required: true, unique: true },
   birthDate: { type: Date, required: true },
   password: { type: String, required: true },
+  resetPasswordToken: { type: String, default: null },
+  resetPasswordExpires: { type: Date, default: null },
   role: { type: String, default: 'user' },
   avatar: { type: String },
   gender: { type: Boolean, default: false },

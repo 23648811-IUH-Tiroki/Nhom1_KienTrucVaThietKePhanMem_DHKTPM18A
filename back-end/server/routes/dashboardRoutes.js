@@ -7,8 +7,11 @@ import {
   getDashboardNotifications,
   importOrdersFromCSV
 } from '../controllers/dashboardController.js';
+import { requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+router.use(requireAdmin);
 
 router.get('/stats', getDashboardStats);
 

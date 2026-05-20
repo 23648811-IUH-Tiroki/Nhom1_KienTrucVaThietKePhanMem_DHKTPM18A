@@ -2,13 +2,11 @@
 import { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
 
 function DialogProduct({ open, setOpen, product }) {
   if (!open) return null;
-  const dispatch = useDispatch()
 
   // Tạo mảng images với id duy nhất cho mỗi ảnh
   const imagesWithIds = product.images.map((image, index) => ({
@@ -51,19 +49,31 @@ function DialogProduct({ open, setOpen, product }) {
   };
 
   const handleBuyNow = () => {
-      dispatch(addToCart({ ...product, cartQuantity: quantity }));
-      navigate("/checkout");
+      if (!userId) {
+        navigate("/login");
+        return;
+      }
+
+      navigate("/checkout", {
+        state: {
+          buyNowItems: [{
+            product_id: product,
+            quantity,
+          }],
+        },
+      });
       window.scrollTo(0, 0);
     };
   
   const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id || user?.id;
   const handleAddToCart = async () => {
-    if (!user?._id) {
+    if (!userId) {
       navigate("/login");
       return;
     }
 
-    const result = await addToCart(user._id, product._id, quantity);
+    const result = await addToCart(userId, product._id, quantity);
     
     if (result.success) {
       setOpen(false);

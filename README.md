@@ -172,6 +172,9 @@ npm run dev
 
 ### Backend
 ```bash
+# Chạy docker(mở docker decskop)
+# Mở terminal
+docker start redis
 # Chạy server (với auto-reload)
 npm start
 

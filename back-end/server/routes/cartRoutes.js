@@ -15,25 +15,25 @@ const router = express.Router();
 // Thêm sản phẩm vào giỏ hàng
 router.post('/add', addToCart);
 
-// Lấy giỏ hàng theo user_id
-router.get('/:user_id', getCartByUserId);
+// Lấy giỏ hàng của user đã đăng nhập
+router.get('/me', getCartByUserId);
 
-// Cập nhật giỏ hàng
-router.put('/:user_id', updateCart);
+// Cập nhật giỏ hàng của user đã đăng nhập
+router.put('/me', updateCart);
 
 // Cập nhật số lượng sản phẩm trong giỏ hàng
-router.put("/:userId/:itemId", updateCartItemQuantity);
+router.put("/item/:itemId", updateCartItemQuantity);
 
 // Xóa sản phẩm khỏi giỏ hàng
-router.delete('/:user_id/:product_id', deleteProductFromCart);
+router.delete('/product/:product_id', deleteProductFromCart);
 
 // Xóa tất cả sản phẩm khỏi giỏ hàng
-router.delete('/:user_id', deleteAllProductsFromCart);
+router.delete('/me', deleteAllProductsFromCart);
 
 // Xóa giỏ hàng
-router.delete('/:user_id', deleteCart);
+router.delete('/delete', deleteCart);
 
 // Đếm số lượng sản phẩm trong giỏ hàng
-router.get('/count/:user_id', countCartItems);
+router.get('/count', countCartItems);
 
 export default router;

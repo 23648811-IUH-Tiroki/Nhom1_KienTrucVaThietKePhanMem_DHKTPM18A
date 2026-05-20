@@ -1,5 +1,11 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
-import axiosInstance from "../utils/axiosInstance";
+import {
+  addCartItem as addCartItemRequest,
+  clearCart as clearCartRequest,
+  fetchCart as fetchCartRequest,
+  removeCartItem as removeCartItemRequest,
+  updateCartItem as updateCartItemRequest,
+} from "../services/cartService";
 
 const CartContext = createContext();
 
@@ -7,18 +13,31 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Hàm lấy dữ liệu giỏ hàng
-  const fetchCart = useCallback(async (userId) => {
-    if (!userId) return;
+  const normalizeCartItems = (cartResponse) => {
+    if (cartResponse?.data?.data?.items) {
+      return cartResponse.data.data.items;
+    }
 
+    if (Array.isArray(cartResponse?.data?.items)) {
+      return cartResponse.data.items;
+    }
+
+    if (Array.isArray(cartResponse?.data)) {
+      return cartResponse.data;
+    }
+
+    return [];
+  };
+
+  // Hàm lấy dữ liệu giỏ hàng
+  const fetchCart = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get(`/api/carts/${userId}`);
-      if (response?.data?.status === "success") {
-        setCartItems(response?.data?.data?.items || []);
-      }
+      const response = await fetchCartRequest();
+      setCartItems(normalizeCartItems(response));
     } catch (error) {
       console.error("Lỗi khi tải giỏ hàng:", error);
+      setCartItems([]);
     } finally {
       setIsLoading(false);
     }
@@ -26,44 +45,36 @@ export const CartProvider = ({ children }) => {
 
   // Hàm thêm sản phẩm vào giỏ hàng
   const addToCart = useCallback(async (userId, productId, quantity) => {
-    if (!userId) {
-      return { success: false, message: "Vui lòng đăng nhập để thêm vào giỏ hàng" };
+    if (!productId || !quantity) {
+      return { success: false, message: "Thiếu thông tin sản phẩm" };
     }
 
     setIsLoading(true);
     try {
-      // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-      const cartResponse = await axiosInstance.get(`/api/carts/${userId}`);
-      const existingCartItem = cartResponse.data?.data?.items?.find(
-        (item) => item.product_id === productId
-      ) || cartResponse.data?.items?.find(
-        (item) => item.product_id === productId
-      );
+      const cartResponse = await fetchCartRequest();
+      const cartItemsList = normalizeCartItems(cartResponse);
+      const existingCartItem = cartItemsList.find((item) => {
+        const itemProductId = item?.product_id?._id || item?.product_id;
+        return itemProductId?.toString?.() === productId.toString();
+      });
 
       if (existingCartItem) {
         // Nếu sản phẩm đã tồn tại, cập nhật số lượng
         const updatedQuantity = existingCartItem.quantity + quantity;
-        const updateResponse = await axiosInstance.put(
-          `/api/carts/${userId}/${existingCartItem._id}`,
-          { quantity: updatedQuantity }
-        );
+        const updateResponse = await updateCartItemRequest(existingCartItem._id, updatedQuantity);
 
         if (updateResponse?.status === 200) {
-          await fetchCart(userId); // Cập nhật lại giỏ hàng
+          await fetchCart();
           return { success: true, message: "Đã cập nhật số lượng sản phẩm trong giỏ hàng" };
         } else {
           return { success: false, message: "Không thể cập nhật giỏ hàng" };
         }
       } else {
         // Nếu sản phẩm chưa tồn tại, thêm mới
-        const addResponse = await axiosInstance.post(`/api/carts/add`, {
-          user_id: userId,
-          product_id: productId,
-          quantity,
-        });
+        const addResponse = await addCartItemRequest(productId, quantity);
 
         if (addResponse?.status === 201) {
-          await fetchCart(userId); // Cập nhật lại giỏ hàng
+          await fetchCart();
           return { success: true, message: "Đã thêm sản phẩm vào giỏ hàng" };
         } else {
           return { success: false, message: "Không thể thêm sản phẩm vào giỏ hàng" };
@@ -82,12 +93,12 @@ export const CartProvider = ({ children }) => {
 
   // Hàm xóa sản phẩm khỏi giỏ hàng
   const removeFromCart = useCallback(async (userId, itemId) => {
-    if (!userId || !itemId) return;
+    if (!itemId) return;
     setIsLoading(true);
     try {
-      const response = await axiosInstance.delete(`/api/carts/${userId}/${itemId}`);
+      const response = await removeCartItemRequest(itemId);
       if (response?.status === 200) {
-        await fetchCart(userId); // Cập nhật lại giỏ hàng
+        await fetchCart();
         return { success: true, message: "Đã xóa sản phẩm khỏi giỏ hàng" };
       } else {
         return { success: false, message: "Không thể xóa sản phẩm khỏi giỏ hàng" };
@@ -105,15 +116,13 @@ export const CartProvider = ({ children }) => {
 
   // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
   const updateCartItemQuantity = useCallback(async (userId, itemId, quantity) => {
-    if (!userId || !itemId || quantity < 1) return;
+    if (!itemId || quantity < 1) return;
 
     setIsLoading(true);
     try {
-      const response = await axiosInstance.put(`/api/carts/${userId}/${itemId}`, {
-        quantity,
-      });
+      const response = await updateCartItemRequest(itemId, quantity);
       if (response?.status === 200) {
-        await fetchCart(userId); // Cập nhật lại giỏ hàng
+        await fetchCart();
         return { success: true, message: "Đã cập nhật số lượng sản phẩm" };
       } else {
         return { success: false, message: "Không thể cập nhật số lượng sản phẩm" };
@@ -131,13 +140,11 @@ export const CartProvider = ({ children }) => {
 
   // Hàm xóa toàn bộ giỏ hàng
   const clearCart = useCallback(async (userId) => {
-    if (!userId) return;
-
     setIsLoading(true);
     try {
-      const response = await axiosInstance.delete(`/api/carts/${userId}`);
+      const response = await clearCartRequest();
       if (response?.status === 200) {
-        setCartItems([]); // Xóa toàn bộ giỏ hàng
+        setCartItems([]);
         return { success: true, message: "Đã xóa toàn bộ giỏ hàng" };
       } else {
         return { success: false, message: "Không thể xóa toàn bộ giỏ hàng" };

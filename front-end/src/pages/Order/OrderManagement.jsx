@@ -6,7 +6,6 @@ import {
   FaTimesCircle,
   FaClock,
 } from "react-icons/fa";
-import axiosInstance from "../../utils/axiosInstance";
 import Sidebar from "../../components/Sidebar";
 import TopNavigation from "../../components/TopNavigation";
 import OrderStats from "../../components/OrderStats";
@@ -15,6 +14,13 @@ import OrdersTable from "../../components/OrdersTable";
 import OrderDetailsModal from "../../components/OrderDetailsModal";
 import Pagination from "../../components/Pagination";
 import { toast } from "react-toastify";
+import {
+  deleteOrder as deleteOrderRequest,
+  fetchOrderStats as fetchOrderStatsRequest,
+  fetchOrders as fetchOrdersRequest,
+  updateOrder as updateOrderRequest,
+} from "../../services/orderService";
+import { fetchUserById as fetchUserByIdRequest } from "../../services/userService";
 
 const OrderManagement = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -41,7 +47,7 @@ const OrderManagement = () => {
       const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
-      const response = await axiosInstance.get(`api/users/${userLocal._id}`);
+      const response = await fetchUserByIdRequest(userLocal._id);
       setCurrentUser(response.data);
     } catch (err) {
       console.error(
@@ -65,8 +71,8 @@ const OrderManagement = () => {
       try {
         setLoading(true);
         const [ordersResponse, statsResponse] = await Promise.all([
-          axiosInstance.get("/api/orders"),
-          axiosInstance.get("/api/orders/stats"),
+          fetchOrdersRequest(),
+          fetchOrderStatsRequest(),
         ]);
 
         setOrders(ordersResponse.data);
@@ -119,7 +125,7 @@ const OrderManagement = () => {
   // cập nhật trạng thái
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await axiosInstance.put(`/api/orders/${orderId}`, {
+      const response = await updateOrderRequest(orderId, {
         status: newStatus,
         updatedAt: Date.now(),
       });
@@ -136,7 +142,7 @@ const OrderManagement = () => {
   const deleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
-        await axiosInstance.delete(`/api/orders/${orderId}`);
+        await deleteOrderRequest(orderId);
         setOrders(orders.filter((order) => order._id !== orderId));
         toast.success("Order deleted successfully");
       } catch (error) {

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import MainLayout from "../../layout/mainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
-import "./Checkout.scss";
-import { useNavigate } from "react-router-dom";
+import "../page.scss";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import axiosInstance from "../../utils/axiosInstance";
 import boxCard from "../../assets/images/box-card.png";
 import bankCard from "../../assets/images/bank-card.png";
 import { CheckCheck, ChevronDown } from "lucide-react";
 import { BsBox2 } from "react-icons/bs";
+import { createOrder } from "../../services/orderService";
 
 const CheckOut = () => {
   const [deliveryOption, setDeliveryOption] = useState("delivery");
@@ -19,9 +19,15 @@ const CheckOut = () => {
   const [selectedMethod, setSelectedMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
   const { cartItems, clearCart } = useCart();
   const [user, setUser] = useState(null);
-  const subtotal = cartItems.reduce(
+  const userId = user?._id || user?.id;
+  const buyNowItems = location.state?.buyNowItems || null;
+  const checkoutItems = buyNowItems && buyNowItems.length > 0 ? buyNowItems : cartItems;
+  const isBuyNowMode = Boolean(buyNowItems && buyNowItems.length > 0);
+
+  const subtotal = checkoutItems.reduce(
     (total, item) => total + (item.product_id?.price || 0) * item.quantity,
     0
   );
@@ -144,11 +150,11 @@ const CheckOut = () => {
       }
     }
 
-    // Kiểm tra giỏ hàng có sản phẩm không
-    if (cartItems.length === 0) {
-      newErrors.cart = "Giỏ hàng của bạn đang trống.";
+    // Kiểm tra danh sách thanh toán có sản phẩm không
+    if (checkoutItems.length === 0) {
+      newErrors.cart = "Danh sách thanh toán đang trống.";
       toast.error(
-        "Giỏ hàng của bạn đang trống, vui lòng thêm sản phẩm trước khi đặt hàng."
+        "Không có sản phẩm để thanh toán, vui lòng chọn sản phẩm trước khi đặt hàng."
       );
     }
 
@@ -178,8 +184,8 @@ const CheckOut = () => {
       }
 
       const orderData = {
-        user_id: user._id,
-        items: cartItems.map((item) => ({
+        user_id: userId,
+        items: checkoutItems.map((item) => ({
           product_id: item.product_id?._id || item.product_id,
           quantity: item.quantity,
         })),
@@ -200,7 +206,7 @@ const CheckOut = () => {
         const loadingToastId = toast.loading("Đang xử lý đơn hàng...");
 
         // call API đặt hàng
-        const response = await axiosInstance.post("/api/orders", orderData);
+        const response = await createOrder(orderData);
 
         // update toast thành công
         toast.update(loadingToastId, {
@@ -211,9 +217,9 @@ const CheckOut = () => {
           closeButton: true,
         });
 
-        // clear all cart
-        if (user._id) {
-          await clearCart(user._id);
+        // Chỉ clear cart khi thanh toán từ giỏ hàng
+        if (!isBuyNowMode && userId) {
+          await clearCart(userId);
         }
 
         // Reset form
@@ -418,7 +424,7 @@ const CheckOut = () => {
                       Phương thức vận chuyển
                     </h3>
                     {selectedProvince && (
-                      <div className="flex justify-between shipping-cost border-1 rounded p-3 ">
+                      <div className="flex justify-between shipping-cost border rounded p-3 ">
                         <span>Phí vận chuyển: </span>
                         <strong>{shippingCost.toLocaleString("vi-VN")}đ</strong>
                       </div>
@@ -527,7 +533,7 @@ const CheckOut = () => {
             {/* Product list */}
 
             <div className="border-b border-gray-200 pb-6 mb-4">
-              {cartItems.map((item, index) => (
+              {checkoutItems.map((item, index) => (
                 <div key={index} className="flex items-start mb-4">
                   <div className="relative mr-4">
                     <div className="bg-gray-200 rounded w-16 h-16 flex items-center justify-center relative">

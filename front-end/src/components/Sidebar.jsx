@@ -8,8 +8,8 @@ import { useState, useEffect } from "react";
 import LoadingOverlay from "./LoadingOverlay";
 import "./darkMode.scss";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import axiosInstance from "../utils/axiosInstance"; // Thêm import axiosInstance
 import { toast } from "react-toastify"; // Thêm import toast
+import { signOut } from "../services/authService";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await axiosInstance.post("/api/users/signout");
+      await signOut();
       toast.success("Đăng xuất thành công!");
 
       localStorage.removeItem("accessToken");

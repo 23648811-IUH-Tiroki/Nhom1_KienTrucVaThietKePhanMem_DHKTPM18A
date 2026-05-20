@@ -18,7 +18,9 @@ import ScrollToTopButton from "../../components/ScrollToTopButton";
 import Modal from "../../components/Modal";
 import { generateInvoice } from "../../utils/GenerateInvoice";
 import { FaCartPlus } from "react-icons/fa6";
-import axiosInstance from "../../utils/axiosInstance";
+import { signOut as signOutRequest } from "../../services/authService";
+import { fetchProfile as fetchProfileRequest, updateUser as updateUserRequest } from "../../services/userService";
+import { fetchOrdersByUser as fetchOrdersByUserRequest, updateOrder as updateOrderRequest } from "../../services/orderService";
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -90,7 +92,7 @@ const UserProfile = () => {
           return;
         }
 
-        const res = await axiosInstance.get("/api/users/profile");
+        const res = await fetchProfileRequest();
 
         const userData = res.data;
         userData.avatar = convertBase64ToImage(userData.avatar);
@@ -108,7 +110,7 @@ const UserProfile = () => {
 
   const fetchUserOrders = async (userId) => {
     try {
-      const response = await axiosInstance.get(`/api/orders?user_id=${userId}`);
+      const response = await fetchOrdersByUserRequest(userId);
       const userOrders = response.data;
 
       const pendingOrders = userOrders.filter(
@@ -164,7 +166,7 @@ const UserProfile = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await axiosInstance.post("/api/users/signout");
+      await signOutRequest();
       toast.success("Đăng xuất thành công!");
 
       localStorage.removeItem("accessToken");
@@ -196,15 +198,7 @@ const UserProfile = () => {
             avatar: avatarBinary.split(",")[1],
           };
 
-          const res = await axiosInstance.put(
-            `/api/users/${user._id}`,
-            updateUser,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const res = await updateUserRequest(user._id, updateUser);
 
           const updatedUser = res.data;
           updatedUser.avatar = convertBase64ToImage(updatedUser.avatar);
@@ -242,22 +236,14 @@ const UserProfile = () => {
   const handleUpdateProfile = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const res = await axiosInstance.put(
-        `/api/users/${storedUser._id}`,
-        {
-          fullName: user.fullName,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          birthDate: user.birthDate,
-          gender: user.gender,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await updateUserRequest(storedUser._id, {
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        birthDate: user.birthDate,
+        gender: user.gender,
+      });
 
       const updatedUser = res.data;
 
@@ -300,9 +286,7 @@ const UserProfile = () => {
       );
       if (!confirmed) return;
 
-      const response = await axiosInstance.put(`/api/orders/${orderId}`, {
-        status: "Đã hủy",
-      });
+      const response = await updateOrderRequest(orderId, { status: "Đã hủy" });
 
       if (response.status === 200) {
         toast.success("Đã hủy đơn hàng thành công");

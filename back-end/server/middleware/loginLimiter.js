@@ -2,21 +2,54 @@ import Redis from "ioredis";
 import { getPolicy } from "../utils/getPolicy.js";
 const redis = new Redis(); // Kết nối đến Redis
 
+const buildLoginKeys = (email, ip) => ({
+  shortKey: `login_fail:${email}:${ip}`,
+  longKey: `login_fail_24h:${email}`,
+});
+
+export const recordLoginFailure = async (email, ip) => {
+  if (!email) {
+    return;
+  }
+
+  const { shortKey, longKey } = buildLoginKeys(email, ip);
+  const now = Date.now();
+  let data = await redis.get(shortKey);
+  data = data ? JSON.parse(data) : { count: 0, lastFail: now };
+
+  if (now - data.lastFail > 15 * 60 * 1000) {
+    data = { count: 0, lastFail: now };
+  }
+
+  data.count += 1;
+  data.lastFail = now;
+
+  await redis.set(shortKey, JSON.stringify(data), "EX", 15 * 60);
+  await redis.set(longKey, String(data.count), "EX", 24 * 60 * 60);
+};
+
+export const resetLoginFailures = async (email, ip) => {
+  if (!email) {
+    return;
+  }
+
+  const { shortKey } = buildLoginKeys(email, ip);
+  await redis.del(shortKey);
+};
+
 //Giới hạn đăng nhập
 export const loginLimiter = async (req, res, next) => {
   try {
     const ip = req.ip || req.headers["x-forwarded-for"]; // Lấy địa chỉ IP của người dùng
-    const { phone } = req.body;
+    const { email } = req.body;
 
-    if(!phone) {
-      return res.status(400).json({ message: "Vui lòng nhập số điện thoại." });
+    if(!email) {
+      return res.status(400).json({ message: "Vui lòng nhập email." });
     }
-    //key theo IP và phone để giới hạn đăng nhập
-    const shortKey = `login_fail:${phone}:${ip}`; 
-    const longKey = `login_fail_24h:${phone}`; //key theo phone để khóa 24h sau 20 lần thất bại
-    let data = await redis.get(shortKey); // Lấy số lần đăng nhập thất bại từ Redis
-    data = data ? JSON.parse(data) : { count: 0, lastFail: Date.now() }; // Nếu không có dữ liệu, khởi tạo với count = 0 và lastFail là thời điểm hiện tại
-    
+    const { shortKey, longKey } = buildLoginKeys(email, ip);
+    let data = await redis.get(shortKey);
+    data = data ? JSON.parse(data) : { count: 0, lastFail: Date.now() };
+
     const now = Date.now();
 
     //kiem tra 24h sau 20 lan that bai
@@ -24,6 +57,8 @@ export const loginLimiter = async (req, res, next) => {
     if(fail24h && Number(fail24h) >= 20) {
         return res.status(429).json({
             message: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau 24 giờ.",
+        retryAfterSeconds: 24 * 60 * 60,
+        lockUntil: Date.now() + 24 * 60 * 60 * 1000,
         });
     }
     
@@ -41,11 +76,15 @@ export const loginLimiter = async (req, res, next) => {
         const waitTime = data.lastFail + policy.delay * 1000 - now; // Tính thời gian còn lại cần chờ`
         
         if(waitTime > 0) {
-            return res.status(429).json({ message: `Vui lòng chờ ${Math.ceil(waitTime / 1000)} giây trước khi thử lại.` }); // Trả về lỗi nếu người dùng cần chờ
+          return res.status(429).json({ 
+            message: `Vui lòng chờ ${Math.ceil(waitTime / 1000)} giây trước khi thử lại.`,
+            retryAfterSeconds: Math.ceil(waitTime / 1000),
+            lockUntil: Date.now() + waitTime,
+          }); // Trả về lỗi nếu người dùng cần chờ
         }
     }
     // Nếu đăng nhập thất bại, tăng số lần thất bại và cập nhật thời điểm thất bại
-    req.loginLimiterData = { shortKey, longKey, data }; // Lưu key và data vào req để có thể sử dụng trong controller
+    req.loginLimiterData = { shortKey, longKey, data, email, ip }; // Lưu key và data để controller có thể ghi nhận thất bại
     next();
   } catch (error) {
     console.error("Lỗi khi xử lý giới hạn đăng nhập:", error);

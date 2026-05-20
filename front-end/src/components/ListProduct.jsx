@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom"
 import Product from "./Product"
 import { useEffect, useState } from "react"
-import axiosInstance from "../utils/axiosInstance";
+import { fetchCategories as fetchCategoriesRequest } from "../services/categoryService";
 
 function ListProduct({title, products}) {
   const icon = title.includes('cún') ? '🐶' : title.includes('mèo') ? '🐱' : '🐾';
@@ -13,7 +13,7 @@ function ListProduct({title, products}) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axiosInstance.get("/api/categories");
+        const res = await fetchCategoriesRequest();
         setCategories(res.data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);

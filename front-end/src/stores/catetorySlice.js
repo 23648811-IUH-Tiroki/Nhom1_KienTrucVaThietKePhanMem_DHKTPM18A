@@ -1,10 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "../utils/axiosInstance";
+import {
+  fetchCategoryBySlug as fetchCategoryBySlugRequest,
+  fetchCategories as fetchCategoriesRequest,
+} from "../services/categoryService";
 
 export const fetchCategoryBySlug = createAsyncThunk(
   "categories/fetchCategoryBySlug",
   async (slug) => {
-    const response = await axiosInstance.get(`/api/categories/catetory/${slug}`)
+    const response = await fetchCategoryBySlugRequest(slug)
     return response.data
   }
 )
@@ -13,7 +16,7 @@ export const fetchCategoryBySlug = createAsyncThunk(
 export const fetchAllCategory = createAsyncThunk(
   "categoies/createAsyncThunk",
   async () => {
-    const response = await axiosInstance.get("/api/categories");
+    const response = await fetchCategoriesRequest();
     return response.data
   }
 )

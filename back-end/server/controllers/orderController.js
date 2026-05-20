@@ -45,7 +45,15 @@ export const getOrders = async (req, res) => {
     const { user_id } = req.query;
     let query = {};
 
-    if (user_id) {
+    if (req.user?.role !== "admin") {
+      if (user_id && user_id !== req.user._id.toString()) {
+        return res.status(403).json({
+          message: "Bạn chỉ được xem đơn hàng của chính mình",
+        });
+      }
+
+      query.user_id = req.user._id;
+    } else if (user_id) {
       query.user_id = user_id;
     }
 
@@ -68,6 +76,16 @@ export const getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    if (
+      req.user?.role !== "admin" &&
+      order.user_id?._id?.toString() !== req.user?._id?.toString()
+    ) {
+      return res.status(403).json({
+        message: "Bạn không có quyền xem đơn hàng này",
+      });
+    }
+
     res.status(200).json(order);
   } catch (error) {
     res.status(404).json({ message: error.message });

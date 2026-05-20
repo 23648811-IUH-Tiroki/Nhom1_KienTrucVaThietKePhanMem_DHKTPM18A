@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import MainLayout from "../../layout/mainLayout";
-import axiosInstance from "../../utils/axiosInstance";
 import Product from "../../components/Product";
 import { ScaleLoader } from "react-spinners";
+import { searchProducts } from "../../services/productService";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,9 +30,7 @@ const Search = () => {
     setHasSearched(true);
 
     try {
-      const response = await axiosInstance.get(
-        `/api/products/search?q=${query}`
-      );
+      const response = await searchProducts(query);
       setSearchResults(response.data);
     } catch (error) {
       console.error("Error searching products:", error);

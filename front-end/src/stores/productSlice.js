@@ -1,10 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axiosInstance from '../utils/axiosInstance';
+import {
+  fetchProductBySlug as fetchProductBySlugRequest,
+  fetchProducts as fetchProductsRequest,
+  fetchSaleProducts as fetchSaleProductsRequest,
+  filterProductsByPrice as filterProductsByPriceRequest,
+} from "../services/productService";
+import {
+  fetchProductsByCategory as fetchProductsByCategoryRequest,
+  fetchProductsByCategoryName as fetchProductsByCategoryNameRequest,
+} from "../services/categoryService";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await axiosInstance.get('/api/products');
+    const response = await fetchProductsRequest();
     return response.data;
   }
 );
@@ -12,7 +21,7 @@ export const fetchProducts = createAsyncThunk(
 export const fetchProductsByCategory = createAsyncThunk(
   "category/fetchProductsByCategory",
   async (slug_type) => {
-    const response = await axiosInstance.get(`/api/categories/${slug_type}`);
+    const response = await fetchProductsByCategoryRequest(slug_type);
     return { slug_type, products: response.data };
   }
 );
@@ -20,7 +29,7 @@ export const fetchProductsByCategory = createAsyncThunk(
 export const fetachProductByName = createAsyncThunk(
   "products/fetachProductByName",
   async (slug) => {
-    const response = await axiosInstance.get(`/api/products/${slug}`)
+    const response = await fetchProductBySlugRequest(slug)
     return response.data
   }
 )
@@ -28,7 +37,7 @@ export const fetachProductByName = createAsyncThunk(
 export const featchProductSale = createAsyncThunk(
   "products/featchProductSale",
   async () => {
-    const response = await axiosInstance.get(`/api/products/product/sales`)
+    const response = await fetchSaleProductsRequest()
     return response.data
   }
 )
@@ -38,7 +47,7 @@ export const featchProductByCategoryName = createAsyncThunk(
   async ({slug, currentPage, limit = 8}) => {
     console.log('currentPage: ', currentPage);
     
-    const response = await axiosInstance.get(`api/categories/name/${slug}?page=${currentPage}&limit=${limit}`)
+    const response = await fetchProductsByCategoryNameRequest(slug, currentPage, limit)
     return response.data
   }
 )
@@ -48,7 +57,7 @@ export const featchProductFilterProduct = createAsyncThunk(
   async (priceRanges) => {
     console.log(priceRanges);
     
-    const response = await axiosInstance.post(`/api/products/filterPrice`, { priceRanges });
+    const response = await filterProductsByPriceRequest(priceRanges);
     return response.data;
   }
 );

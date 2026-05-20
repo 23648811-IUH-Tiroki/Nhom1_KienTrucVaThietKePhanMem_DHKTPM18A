@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Breadcrumb from "../../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -7,9 +6,9 @@ import logo from "/pet.png";
 import Header from "../../components/Header";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import { Link, useNavigate } from "react-router-dom";
-import "./Register.scss";
+import "../page.scss";
 import { ToastContainer, toast } from "react-toastify";
-import axiosInstance from "../../utils/axiosInstance";
+import { checkDuplicate, sendSignupCode, verifySignup } from "../../services/authService";
 
 const Register = () => {
   const links = [{ label: "Trang chủ", link: "/" }, { label: "Đăng ký" }];
@@ -26,6 +25,10 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [step, setStep] = useState(1);
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (success) {
@@ -51,14 +54,14 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    const { fullName, phone, email, birthDate, password, confirmPassword } =
+    const { fullName, email, birthDate, password, confirmPassword } =
       formData;
 
     const newErrors = {};
 
     if (!fullName.trim()) newErrors.fullName = "Họ và tên không được để trống.";
-    if (!phone.match(/^\d{10}$/))
-      newErrors.phone = "Số điện thoại không hợp lệ.";
+    // if (!phone.match(/^\d{10}$/))
+    //   newErrors.phone = "Số điện thoại không hợp lệ.";
     if (
       email &&
       !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
@@ -77,6 +80,8 @@ const Register = () => {
     e.preventDefault();
     setErrors({});
     setSuccess(false);
+    setMessage("");
+    setLoading(false);
 
     const validationError = validateForm();
     if (Object.keys(validationError).length > 0) {
@@ -87,12 +92,7 @@ const Register = () => {
     try {
       // Kiểm tra trùng lặp email và số điện thoại
       const { phone, email } = formData;
-      const checkDuplicateResponse = await axiosInstance.post("/api/auth/check-duplicate",
-        {
-          phone,
-          email,
-        }
-      ); 
+      const checkDuplicateResponse = await checkDuplicate({ phone, email });
 
       if (checkDuplicateResponse.data.duplicateEmail) {
         setErrors({ email: "Email đã tồn tại." });
@@ -133,29 +133,23 @@ const Register = () => {
       const userData = {
         firstName: firstName,
         lastName: lastName,
-        phone: formData.phone,
+        // phone: formData.phone,
         email: formData.email,
         birthDate: formData.birthDate,
         password: formData.password,
         role: "user",
         avatar: defaultAvatarBase64.split(",")[1],
       };
-
-      const res = await axiosInstance.post("/api/auth/signup",
-        userData
-      );
-
-      if (res.status === 204 || res.status === 201) {
-        setSuccess(true);
-        toast.success("Đăng ký thành công. Đến trang đăng nhập.");
-        setFormData({
-          fullName: "",
-          phone: "",
-          email: "",
-          birthDate: "",
-          password: "",
-          confirmPassword: "",
-        });
+      // send signup code and store payload in backend temporarily
+      try {
+        setLoading(true);
+        const res = await sendSignupCode(userData);
+        setMessage(res.data?.message || "Đã gửi mã xác thực đến email.");
+        setStep(2);
+      } catch (err2) {
+        setErrors({ general: err2.response?.data?.message || err2.message });
+      } finally {
+        setLoading(false);
       }
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
@@ -166,11 +160,39 @@ const Register = () => {
     }
   };
 
+  const handleVerifyCode = async (e) => {
+    e.preventDefault();
+    setErrors({});
+    setLoading(true);
+    try {
+      const res = await verifySignup({ email: formData.email, code });
+      if (res.status === 201) {
+        toast.success("Đăng ký thành công. Đến trang đăng nhập.");
+        setFormData({
+          fullName: "",
+          phone: "",
+          email: "",
+          birthDate: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setStep(1);
+        setCode("");
+        setSuccess(true);
+        setTimeout(() => navigate('/login'), 800);
+      }
+    } catch (err) {
+      setErrors({ general: err.response?.data?.message || err.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Header />
       <Breadcrumb items={links} />
-      <div className="container mx-auto px-4 md:px-8 flex flex-col items-center justify-center -mt-10">
+      <div className="container mx-auto px-4 md:px-8 flex flex-col items-center -mt-10">
         <div className="w-full max-w-2xl bg-white rounded-md shadow-md p-8">
           <div className="flex justify-center">
             <img src={logo} alt="Logo" className="w-30 h-30 object-contain" />
@@ -190,115 +212,184 @@ const Register = () => {
             </button>
           </div>
           <div className="flex items-center my-6">
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
             <span className="mx-4 text-gray-500">hoặc</span>
-            <hr className="flex-grow border-gray-300" />
+            <hr className="grow border-gray-300" />
           </div>
           {/* form */}
-          <form onSubmit={handleRegister}>
-            {errors.general && (
-              <span className="error-message">{errors.general}</span>
-            )}
-            <div className="space-y-6">
-              <div className="input-container">
+          {step === 1 && (
+            <form onSubmit={handleRegister}>
+              {errors.general && (
+                <span className="error-message">{errors.general}</span>
+              )}
+              <div className="space-y-6">
+                <div className="input-container">
+                  <input
+                    type="text"
+                    name="fullName"
+                    placeholder=" "
+                    className="w-full mb-2"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                  />
+                  <label>Nhập họ và tên</label>
+                  {errors.fullName && (
+                    <span className="error-message">{errors.fullName}</span>
+                  )}
+                </div>
+
+                {/* <div className="input-container">
+                  <input
+                    type="text"
+                    name="phone"
+                    placeholder=" "
+                    className="w-full mb-2"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                  <label>Nhập số điện thoại</label>
+                  {errors.phone && (
+                    <span className="error-message">{errors.phone}</span>
+                  )}
+                </div> */}
+
+                <div className="input-container">
+                  <input
+                    type="text"
+                    name="email"
+                    placeholder=" "
+                    className="w-full mb-2"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                  <label>Nhập email</label>
+                  {errors.email && (
+                    <span className="error-message">{errors.email}</span>
+                  )}
+                </div>
+
+                <div className="input-container">
+                  <input
+                    type="date"
+                    name="birthDate"
+                    placeholder=" "
+                    className="w-full"
+                    value={formData.birthDate}
+                    onChange={handleChange}
+                  />
+                  <label>Chọn ngày sinh</label>
+                  {errors.birthDate && (
+                    <span className="error-message">{errors.birthDate}</span>
+                  )}
+                </div>
+
+                <div className="input-container">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder=" "
+                    className="w-full mb-2"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <label>Nhập mật khẩu</label>
+                  {errors.password && (
+                    <span className="error-message">{errors.password}</span>
+                  )}
+                </div>
+
+                <div className="input-container">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder=" "
+                    className="w-full mb-2"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                  <label>Xác nhận mật khẩu</label>
+                  {errors.confirmPassword && (
+                    <span className="error-message">
+                      {errors.confirmPassword}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-brown text-white py-3 rounded-md mt-2 font-semibold hover:shadow-lg cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? 'Đang gửi mã...' : 'Đăng ký'}
+              </button>
+            </form>
+          )}
+
+          {step === 2 && (
+            <form onSubmit={handleVerifyCode} className="max-w-sm mx-auto">
+              {message && <div className="mb-4 text-green-700">{message}</div>}
+              {errors.general && (
+                <div className="mb-4 text-red-600">{errors.general}</div>
+              )}
+              <div className="mb-4">
+                <label className="block mb-2">Mã xác thực</label>
                 <input
                   type="text"
-                  name="fullName"
-                  placeholder=" "
-                  className="w-full mb-2"
-                  value={formData.fullName}
-                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  required
                 />
-                <label>Nhập họ và tên</label>
-                {errors.fullName && (
-                  <span className="error-message">{errors.fullName}</span>
-                )}
               </div>
-
-              <div className="input-container">
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder=" "
-                  className="w-full mb-2"
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
-                <label>Nhập số điện thoại</label>
-                {errors.phone && (
-                  <span className="error-message">{errors.phone}</span>
-                )}
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-brown text-white py-2 rounded"
+                  disabled={loading}
+                >
+                  {loading ? 'Đang xác thực...' : 'Xác thực & Tạo tài khoản'}
+                </button>
+                <button
+                  type="button"
+                  className="flex-1 border rounded py-2"
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      const imagePath = '/avatar.png';
+                      const response = await fetch(imagePath);
+                      const blob = await response.blob();
+                      const defaultAvatarBase64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                      });
+                      const nameParts = formData.fullName.trim().split(/\s+/);
+                      const firstName = nameParts[0];
+                      const lastName = nameParts.slice(1).join(' ') || nameParts[0];
+                      await sendSignupCode({
+                        firstName,
+                        lastName,
+                        // phone: formData.phone,
+                        email: formData.email,
+                        birthDate: formData.birthDate,
+                        password: formData.password,
+                        role: 'user',
+                        avatar: defaultAvatarBase64.split(',')[1],
+                      });
+                      setMessage('Mã xác thực đã được gửi lại.');
+                    } catch (err) {
+                      setErrors({ general: err.response?.data?.message || err.message });
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                >
+                  Gửi lại mã
+                </button>
               </div>
-
-              <div className="input-container">
-                <input
-                  type="text"
-                  name="email"
-                  placeholder=" "
-                  className="w-full mb-2"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-                <label>Nhập email</label>
-                {errors.email && (
-                  <span className="error-message">{errors.email}</span>
-                )}
-              </div>
-
-              <div className="input-container">
-                <input
-                  type="date"
-                  name="birthDate"
-                  placeholder=" "
-                  className="w-full"
-                  value={formData.birthDate}
-                  onChange={handleChange}
-                />
-                <label>Chọn ngày sinh</label>
-                {errors.birthDate && (
-                  <span className="error-message">{errors.birthDate}</span>
-                )}
-              </div>
-
-              <div className="input-container">
-                <input
-                  type="password"
-                  name="password"
-                  placeholder=" "
-                  className="w-full mb-2"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-                <label>Nhập mật khẩu</label>
-                {errors.password && (
-                  <span className="error-message">{errors.password}</span>
-                )}
-              </div>
-
-              <div className="input-container">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder=" "
-                  className="w-full mb-2"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-                <label>Xác nhận mật khẩu</label>
-                {errors.confirmPassword && (
-                  <span className="error-message">
-                    {errors.confirmPassword}
-                  </span>
-                )}
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-brown text-white py-3 rounded-md mt-2 font-semibold hover:shadow-lg cursor-pointer"
-            >
-              Đăng ký
-            </button>
-          </form>
+            </form>
+          )}
 
           <p className="text-center text-gray-600 mt-6">
             Bạn đã có tài khoản?{" "}

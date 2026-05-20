@@ -19,12 +19,15 @@ import HoverPopupMenu from "./HoverPopupMenu";
 import LoadingOverlay from "./LoadingOverlay";
 import { useSelector } from "react-redux";
 import DialogCart from "./DialogCart";
-import axiosInstance from "../utils/axiosInstance";
 import PopupSearch from "./PopupSearch";
 import axios from "axios";
 import CartButton from "./CartButton";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
+import { fetchCategories as fetchCategoriesRequest } from "../services/categoryService";
+import { fetchProfile as fetchProfileRequest } from "../services/userService";
+import { signOut as signOutRequest } from "../services/authService";
+import { searchProducts as searchProductsRequest } from "../services/productService";
 
 const Header = () => {
   const { fetchCart } = useCart();
@@ -61,12 +64,14 @@ const Header = () => {
 
   //   window.addEventListener("scroll", handleScroll);
   //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []); 
-
+  // }, []);
 
   useEffect(() => {
     // Skip scroll effect on login/register pages
-    if (window.location.pathname === '/login' || window.location.pathname === '/register') {
+    if (
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/register"
+    ) {
       return;
     }
 
@@ -95,9 +100,9 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const { data } = await axiosInstance.get("/api/categories");
+        const { data } = await fetchCategoriesRequest();
         setCategories(data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
@@ -109,19 +114,26 @@ const Header = () => {
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("accessToken");
       if (!token) return; // Don't call API if no token
-      
+
       try {
-        const { data } = await axiosInstance.get("/api/users/profile");
+        const { data } = await fetchProfileRequest();
         const userData = data;
 
         userData.avatar = convertBase64ToImage(userData.avatar);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...data,
+            id: data._id || data.id,
+          }),
+        );
         setUser({
           name: userData.fullName,
           avatar: userData.avatar,
@@ -162,9 +174,7 @@ const Header = () => {
     setIsSearching(true);
 
     try {
-      const response = await axiosInstance.get(
-        `/api/products/search?q=${query}`
-      );
+      const response = await searchProductsRequest(query);
       setSearchResults(response.data);
     } catch (err) {
       console.error("Failed to fetch search results:", err);
@@ -232,11 +242,10 @@ const Header = () => {
     };
   }, []);
 
-
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await axiosInstance.post("/api/auth/signout");
+      await signOutRequest();
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
@@ -350,6 +359,15 @@ const Header = () => {
       icon: <RiAdminFill className="mr-2" />,
       href: `/user-management`,
     },
+    ...(isAdmin
+      ? [
+          {
+            label: "Quản lý cửa hàng",
+            icon: <RiAdminFill className="mr-2" />,
+            href: `/dashboard`,
+          },
+        ]
+      : []),
     {
       label: "Đăng xuất",
       icon: <FaSignOutAlt className="mr-2" />,

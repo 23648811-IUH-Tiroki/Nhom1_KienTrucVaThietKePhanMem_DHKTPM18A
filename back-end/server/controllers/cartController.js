@@ -1,9 +1,25 @@
 import Cart from '../models/Cart.js';
 
+const getAuthenticatedUserId = (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    res.status(401).json({ message: 'Không tìm thấy người dùng đã đăng nhập' });
+    return null;
+  }
+
+  return userId;
+};
+
 // Thêm sản phẩm vào giỏ hàng
 export const addToCart = async (req, res) => {
   try {
-      const { user_id, product_id, quantity } = req.body;
+      const user_id = getAuthenticatedUserId(req, res);
+      if (!user_id) {
+        return;
+      }
+
+      const { product_id, quantity } = req.body;
       let cart = await Cart.findOne({ user_id });
 
       if (cart) {
@@ -35,7 +51,12 @@ export const addToCart = async (req, res) => {
 // Lấy giỏ hàng theo user_id
 export const getCartByUserId = async (req, res) => {
     try {
-      const cart = await Cart.findOne({ user_id: req.params.user_id }).populate('items.product_id');
+      const user_id = getAuthenticatedUserId(req, res);
+      if (!user_id) {
+        return;
+      }
+
+      const cart = await Cart.findOne({ user_id }).populate('items.product_id');
 
       // Nếu giỏ hàng tồn tại nhưng không có sản phẩm
       if (!cart) {
@@ -53,9 +74,14 @@ export const getCartByUserId = async (req, res) => {
 // Cập nhật giỏ hàng
 export const updateCart = async (req, res) => {
     try {
+    const user_id = getAuthenticatedUserId(req, res);
+    if (!user_id) {
+      return;
+    }
+
         const { items } = req.body;
         const updatedCart = await Cart.findOneAndUpdate(
-            {user_id: req.params.user_id},
+      {user_id},
             {items},
             {new: true}
         ).populate('items.product_id');
@@ -70,7 +96,12 @@ export const updateCart = async (req, res) => {
 
 // Cập nhật số lượng sản phẩm trong giỏ hàng
 export const updateCartItemQuantity = async (req, res) => {
-    const { userId, itemId } = req.params;
+    const userId = getAuthenticatedUserId(req, res);
+    if (!userId) {
+      return;
+    }
+
+    const { itemId } = req.params;
     const { quantity } = req.body;
   
     try {
@@ -119,7 +150,12 @@ export const updateCartItemQuantity = async (req, res) => {
 // Xóa giỏ hàng
 export const deleteCart = async (req, res) => {
     try {
-        const cart = await Cart.findOneAndDelete({user_id: req.params.user_id});
+        const user_id = getAuthenticatedUserId(req, res);
+        if (!user_id) {
+          return;
+        }
+
+        const cart = await Cart.findOneAndDelete({user_id});
         if (!cart) {
             return res.status(404).json({message: "Cart not found"});
         }
@@ -131,7 +167,12 @@ export const deleteCart = async (req, res) => {
 
 // Xóa sản phẩm khỏi giỏ hàng
 export const deleteProductFromCart = async (req, res) => {
-    const { user_id, product_id } = req.params;
+    const user_id = getAuthenticatedUserId(req, res);
+    if (!user_id) {
+      return;
+    }
+
+    const { product_id } = req.params;
     try {
       // Tìm giỏ hàng của người dùng
       const cart = await Cart.findOne({ user_id });
@@ -189,8 +230,13 @@ export const deleteProductFromCart = async (req, res) => {
 // Xóa tất cả sản phẩm khỏi giỏ hàng
 export const deleteAllProductsFromCart = async (req, res) => {
     try {
+    const user_id = getAuthenticatedUserId(req, res);
+    if (!user_id) {
+      return;
+    }
+
         const cart = await Cart.findOneAndUpdate(
-            {user_id: req.params.user_id},
+      {user_id},
             {items: []},
             {new: true}
         ).populate('items.product_id');
@@ -203,7 +249,12 @@ export const deleteAllProductsFromCart = async (req, res) => {
 // đếm số lượng sản phẩm trong giỏ hàng
 export const countCartItems = async (req, res) => {
     try {
-        const cart = await Cart.findOne({user_id: req.params.user_id});
+        const user_id = getAuthenticatedUserId(req, res);
+        if (!user_id) {
+          return;
+        }
+
+        const cart = await Cart.findOne({user_id});
         if (!cart) {
             return res.status(404).json({message: "Cart not found"});
         }
