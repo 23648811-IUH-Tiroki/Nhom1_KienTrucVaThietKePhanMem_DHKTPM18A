@@ -4,7 +4,7 @@ export const getPolicy = (count) => {
   if (count >= 20) {
     return {
       delay: 24 * 60 * 60, //24h
-    //   block24h: true, //khoa 24h
+      //   block24h: true, //khoa 24h
       message: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau 24 giờ.",
     };
   }
@@ -12,7 +12,7 @@ export const getPolicy = (count) => {
   if (count >= 10) {
     return {
       delay: 60 * 60, //1h
-    //   sendMail: true, //gửi email cảnh báo 
+      //   sendMail: true, //gửi email cảnh báo
       message:
         "Bạn đã đăng nhập thất bại quá nhiều lần. Vui lòng thử lại sau một thời gian.",
     };

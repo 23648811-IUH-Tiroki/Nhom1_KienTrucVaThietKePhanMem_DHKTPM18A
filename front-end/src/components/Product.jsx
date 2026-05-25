@@ -48,12 +48,16 @@ function Product({ product }) {
       return;
     }
 
+    const pagePathAtClick = window.location.pathname;
     const result = await addToCart(userId, product._id, 1);
 
-    if (result.success) {
-      toast.success(result.message);
-    } else {
+    if (window.location.pathname !== pagePathAtClick) {
+      return;
+    }
+
+    if (!result.success) {
       toast.error(result.message);
+      return;
     }
   };
 
@@ -116,7 +120,7 @@ function Product({ product }) {
             </button>
           </div>
         </div>
-        <div className="py-3 px-4 flex flex-col gap-1 justify-between h-[170px]">
+        <div className="py-3 px-4 flex flex-col gap-1 justify-between h-42.5">
           <Link
             to={"/product/2"}
             className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
@@ -148,7 +152,7 @@ function Product({ product }) {
             <div className="mb-4">
               <img
                 src={product.images[0]}
-                className="w-full h-48 object-contain mb-2 gap-1 border-1 border-[#e17100] rounded-[5px]"
+                className="w-full h-48 object-contain mb-2 gap-1 border border-[#e17100] rounded-[5px]"
                 alt={product.name}
               />
               <h2 className="text-lg font-semibold text-[#e17100] line-clamp-2">

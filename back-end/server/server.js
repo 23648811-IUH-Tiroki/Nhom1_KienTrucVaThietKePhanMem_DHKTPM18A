@@ -41,9 +41,15 @@ if (connectRedisModule && typeof connectRedisModule.RedisStore === "function") {
 } else if (typeof connectRedisModule === "function") {
   // older CJS: module is a function that accepts session and returns the store class
   RedisStoreClass = connectRedisModule(session);
-} else if (connectRedisModule && typeof connectRedisModule.default === "function") {
+} else if (
+  connectRedisModule &&
+  typeof connectRedisModule.default === "function"
+) {
   RedisStoreClass = connectRedisModule.default(session);
-} else if (connectRedisModule && typeof connectRedisModule.create === "function") {
+} else if (
+  connectRedisModule &&
+  typeof connectRedisModule.create === "function"
+) {
   RedisStoreClass = connectRedisModule.create(session);
 } else {
   throw new Error("connect-redis: unsupported module shape");
@@ -111,7 +117,7 @@ app.use(
     },
   }),
 );
-
+app.set("trust proxy", 1); // Nếu ứng dụng chạy sau proxy (ví dụ: Nginx), để Express biết và xử lý cookie đúng cách
 app.use(rateLimiter); // Apply rate limiter to all routes
 // ===== PUBLIC ROUTES (No authentication required) =====
 // Authentication routes (signup, signin, signout)

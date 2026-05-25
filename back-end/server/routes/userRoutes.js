@@ -8,6 +8,7 @@ import {
   updateUser,
   deleteUser,
   getProfile,
+  updateProfile,
 } from '../controllers/userController.js';
 import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 
@@ -16,6 +17,7 @@ const router = express.Router();
 router.use(protectedRoute);
 
 router.get('/profile', getProfile);
+router.put('/profile', updateProfile);
 
 router.use(requireAdmin);
 

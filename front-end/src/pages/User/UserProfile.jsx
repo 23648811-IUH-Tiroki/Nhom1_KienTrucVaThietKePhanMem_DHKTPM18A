@@ -19,7 +19,10 @@ import Modal from "../../components/Modal";
 import { generateInvoice } from "../../utils/GenerateInvoice";
 import { FaCartPlus } from "react-icons/fa6";
 import { signOut as signOutRequest } from "../../services/authService";
-import { fetchProfile as fetchProfileRequest, updateUser as updateUserRequest } from "../../services/userService";
+import {
+  fetchProfile as fetchProfileRequest,
+  updateProfile as updateProfileRequest,
+} from "../../services/userService";
 import { fetchOrdersByUser as fetchOrdersByUserRequest, updateOrder as updateOrderRequest } from "../../services/orderService";
 
 const UserProfile = () => {
@@ -178,6 +181,11 @@ const UserProfile = () => {
       }, 2000);
     } catch (err) {
       console.error("Logout Error:", err.response?.data || err.message);
+      if (err.response?.status === 429) {
+        setIsLoggingOut(false);
+        return;
+      }
+
       // Still logout on error
       localStorage.removeItem("accessToken");
       toast.error("Đăng xuất thất bại. Vui lòng thử lại!");
@@ -198,7 +206,7 @@ const UserProfile = () => {
             avatar: avatarBinary.split(",")[1],
           };
 
-          const res = await updateUserRequest(user._id, updateUser);
+          const res = await updateProfileRequest(updateUser);
 
           const updatedUser = res.data;
           updatedUser.avatar = convertBase64ToImage(updatedUser.avatar);
@@ -236,7 +244,7 @@ const UserProfile = () => {
   const handleUpdateProfile = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const res = await updateUserRequest(storedUser._id, {
+      const res = await updateProfileRequest({
         fullName: user.fullName,
         email: user.email,
         phone: user.phone,
@@ -270,7 +278,9 @@ const UserProfile = () => {
       toast.success("Cập nhật thông tin thành công!");
     } catch (err) {
       console.error("Lỗi khi cập nhật thông tin:", err);
-      toast.error("Cập nhật thông tin thất bại!");
+      toast.error(
+        err.response?.data?.message || "Cập nhật thông tin thất bại!"
+      );
     }
   };
 

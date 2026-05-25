@@ -40,7 +40,7 @@ export const resetLoginFailures = async (email, ip) => {
 //Giới hạn đăng nhập
 export const loginLimiter = async (req, res, next) => {
   try {
-    const ip = req.ip || req.headers["x-forwarded-for"]; // Lấy địa chỉ IP của người dùng
+    const ip = req.ip;// Lấy địa chỉ IP của người dùng
     const { email } = req.body;
 
     if(!email) {

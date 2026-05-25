@@ -73,6 +73,7 @@ function SaleProduct({ productSale }) {
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
+    // toast.success("Đã thêm sản phẩm vào giỏ hàng");
   };
 
   const handleViewProduct = (product) => {

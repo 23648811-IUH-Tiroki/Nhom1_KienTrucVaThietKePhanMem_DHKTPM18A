@@ -2,6 +2,9 @@ import axiosInstance from "../utils/axiosInstance";
 
 export const fetchProfile = () => axiosInstance.get("/api/users/profile");
 
+export const updateProfile = (formData) =>
+  axiosInstance.put("/api/users/profile", formData);
+
 export const fetchUserById = (userId) => axiosInstance.get(`/api/users/${userId}`);
 
 export const fetchUsersPaginated = (params) =>

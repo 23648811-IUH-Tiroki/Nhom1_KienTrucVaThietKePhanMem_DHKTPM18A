@@ -51,6 +51,8 @@ const CheckOut = () => {
   });
 
   useEffect(() => {
+    toast.dismiss("cart-add-success-toast");
+
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
       setUser(userData);

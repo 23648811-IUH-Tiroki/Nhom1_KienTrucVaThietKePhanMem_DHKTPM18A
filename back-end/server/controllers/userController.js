@@ -172,3 +172,80 @@ export const getProfile = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updates = {};
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "fullName")) {
+      updates.fullName = String(req.body.fullName || "").trim();
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "email")) {
+      updates.email = String(req.body.email || "").trim();
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "phone")) {
+      const normalizedPhone = String(req.body.phone || "").trim();
+      updates.phone = normalizedPhone || undefined;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "address")) {
+      updates.address = String(req.body.address || "").trim();
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "birthDate")) {
+      if (!req.body.birthDate) {
+        return res.status(400).json({ message: "Ngày sinh không được để trống." });
+      }
+
+      const parsedDate = new Date(req.body.birthDate);
+      if (Number.isNaN(parsedDate.getTime())) {
+        return res.status(400).json({ message: "Ngày sinh không hợp lệ." });
+      }
+
+      updates.birthDate = parsedDate;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "gender")) {
+      updates.gender = Boolean(req.body.gender);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(req.body, "avatar")) {
+      updates.avatar = req.body.avatar;
+    }
+
+    if (updates.email) {
+      const duplicateEmail = await User.findOne({
+        email: updates.email,
+        _id: { $ne: user._id },
+      });
+      if (duplicateEmail) {
+        return res.status(409).json({ message: "Email đã được sử dụng." });
+      }
+    }
+
+    if (updates.phone) {
+      const duplicatePhone = await User.findOne({
+        phone: updates.phone,
+        _id: { $ne: user._id },
+      });
+      if (duplicatePhone) {
+        return res.status(409).json({ message: "Số điện thoại đã được sử dụng." });
+      }
+    }
+
+    Object.assign(user, updates);
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+  } catch (err) {
+    console.error("Error updating user profile:", err);
+    res.status(400).json({ message: err.message });
+  }
+};

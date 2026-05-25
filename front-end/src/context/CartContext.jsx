@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useCallback } from "react";
+import { toast } from "react-toastify";
 import {
   addCartItem as addCartItemRequest,
   clearCart as clearCartRequest,
@@ -51,34 +52,18 @@ export const CartProvider = ({ children }) => {
 
     setIsLoading(true);
     try {
-      const cartResponse = await fetchCartRequest();
-      const cartItemsList = normalizeCartItems(cartResponse);
-      const existingCartItem = cartItemsList.find((item) => {
-        const itemProductId = item?.product_id?._id || item?.product_id;
-        return itemProductId?.toString?.() === productId.toString();
-      });
+      const addResponse = await addCartItemRequest(productId, quantity);
 
-      if (existingCartItem) {
-        // Nếu sản phẩm đã tồn tại, cập nhật số lượng
-        const updatedQuantity = existingCartItem.quantity + quantity;
-        const updateResponse = await updateCartItemRequest(existingCartItem._id, updatedQuantity);
-
-        if (updateResponse?.status === 200) {
-          await fetchCart();
-          return { success: true, message: "Đã cập nhật số lượng sản phẩm trong giỏ hàng" };
-        } else {
-          return { success: false, message: "Không thể cập nhật giỏ hàng" };
-        }
+      if (addResponse?.status === 201) {
+        // toast.success("Đã thêm sản phẩm vào giỏ hàng", {
+        //   toastId: "cart-add-success-toast",
+        // });
+        fetchCart().catch((error) => {
+          console.error("Lỗi khi đồng bộ giỏ hàng:", error);
+        });
+        return { success: true, message: "Đã thêm sản phẩm vào giỏ hàng" };
       } else {
-        // Nếu sản phẩm chưa tồn tại, thêm mới
-        const addResponse = await addCartItemRequest(productId, quantity);
-
-        if (addResponse?.status === 201) {
-          await fetchCart();
-          return { success: true, message: "Đã thêm sản phẩm vào giỏ hàng" };
-        } else {
-          return { success: false, message: "Không thể thêm sản phẩm vào giỏ hàng" };
-        }
+        return { success: false, message: "Không thể thêm sản phẩm vào giỏ hàng" };
       }
     } catch (error) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);

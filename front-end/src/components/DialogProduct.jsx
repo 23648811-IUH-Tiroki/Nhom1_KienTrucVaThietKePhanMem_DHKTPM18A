@@ -73,24 +73,28 @@ function DialogProduct({ open, setOpen, product }) {
       return;
     }
 
+    const pagePathAtClick = window.location.pathname;
     const result = await addToCart(userId, product._id, quantity);
-    
+
+    if (window.location.pathname !== pagePathAtClick) {
+      return;
+    }
+
     if (result.success) {
       setOpen(false);
-      toast.success(result.message);
     } else {
       toast.error(result.message);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-[10000000]">
+    <div className="fixed inset-0 flex justify-center items-center z-10000000">
       <div
         className="absolute inset-0 bg-black opacity-50"
         onClick={() => setOpen(false)}
       ></div>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[900px] relative z-10">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-225 relative z-10">
         <IoIosCloseCircle
           className="size-6 absolute -top-3 -right-3 text-amber-50"
           onClick={() => setOpen(false)}
@@ -98,7 +102,7 @@ function DialogProduct({ open, setOpen, product }) {
 
         <div className="flex gap-5">
           <div className="w-1/2 flex flex-col justify-center items-center gap-6">
-            <div className="w-full max-w-[500px] overflow-hidden rounded-lg shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px]">
+            <div className="w-full max-w-125 overflow-hidden rounded-lg shadow-[rgba(0,0,0,0.25)_0px_25px_50px_-12px]">
               <img
                 src={selectedImage}
                 alt="Selected Product"

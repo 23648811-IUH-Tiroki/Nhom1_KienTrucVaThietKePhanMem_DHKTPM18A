@@ -180,12 +180,15 @@ const ProductDetail = () => {
       return;
     }
 
+    const pagePathAtClick = window.location.pathname;
     const result = await addToCart(userId, productDetail._id, quantity);
 
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      toast.error(result.message);
+    if (window.location.pathname !== pagePathAtClick) {
+      return;
+    }
+
+    if (!result.success) {
+      toast.error(result.message || "Đã xảy ra lỗi khi thêm vào giỏ hàng");
     }
   };
 
