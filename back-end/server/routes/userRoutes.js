@@ -9,6 +9,8 @@ import {
   deleteUser,
   getProfile,
   updateProfile,
+  getShippingAddress,
+  updateShippingAddress,
 } from '../controllers/userController.js';
 import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 
@@ -18,6 +20,8 @@ router.use(protectedRoute);
 
 router.get('/profile', getProfile);
 router.put('/profile', updateProfile);
+router.get('/shipping-address', getShippingAddress);
+router.put('/shipping-address', updateShippingAddress);
 
 router.use(requireAdmin);
 

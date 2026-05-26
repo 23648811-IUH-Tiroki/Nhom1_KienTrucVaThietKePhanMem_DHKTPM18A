@@ -6,10 +6,17 @@ dotenv.config();
 export const createChatAI = async (req, res) => {
     try {
         const { message } = req.body;
+        const apiKey = process.env.OPENROUTER_API_KEY;
 
         if (!message) {
             return res.status(400).json({
                 reply: "Message is required",
+            });
+        }
+
+        if (!apiKey) {
+            return res.status(503).json({
+                reply: "AI hiện chưa được cấu hình (thiếu OPENROUTER_API_KEY).",
             });
         }
 
@@ -30,7 +37,7 @@ export const createChatAI = async (req, res) => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    Authorization: `Bearer ${apiKey}`,
                     "HTTP-Referer": "http://localhost:5173",
                     "X-Title": "PetShop AI",
                     "Content-Type": "application/json",

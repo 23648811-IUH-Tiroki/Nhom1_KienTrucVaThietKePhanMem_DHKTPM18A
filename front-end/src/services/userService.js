@@ -5,6 +5,12 @@ export const fetchProfile = () => axiosInstance.get("/api/users/profile");
 export const updateProfile = (formData) =>
   axiosInstance.put("/api/users/profile", formData);
 
+export const fetchShippingAddress = () =>
+  axiosInstance.get("/api/users/shipping-address");
+
+export const updateShippingAddress = (payload) =>
+  axiosInstance.put("/api/users/shipping-address", payload);
+
 export const fetchUserById = (userId) => axiosInstance.get(`/api/users/${userId}`);
 
 export const fetchUsersPaginated = (params) =>

@@ -3,6 +3,7 @@ import MainLayout from "../../layout/mainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "../page.scss";
+import "./Checkout.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import boxCard from "../../assets/images/box-card.png";
@@ -10,14 +11,22 @@ import bankCard from "../../assets/images/bank-card.png";
 import { CheckCheck, ChevronDown } from "lucide-react";
 import { BsBox2 } from "react-icons/bs";
 import { createOrder } from "../../services/orderService";
+import {
+  fetchShippingAddress,
+  updateShippingAddress,
+} from "../../services/userService";
 
 const CheckOut = () => {
   const [deliveryOption, setDeliveryOption] = useState("delivery");
   const [showCouponInput, setShowCouponInput] = useState(false);
   const [shippingCost, setShippingCost] = useState(0);
-  const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedMethod, setSelectedMethod] = useState("cod");
   const [errors, setErrors] = useState({});
+  const [provinces, setProvinces] = useState([]);
+  const [pickupProvince, setPickupProvince] = useState("");
+  const [isAddressLoading, setIsAddressLoading] = useState(false);
+  const [isSavingAddress, setIsSavingAddress] = useState(false);
+  const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { cartItems, clearCart } = useCart();
@@ -41,13 +50,13 @@ const CheckOut = () => {
   ];
 
   const [formData, setFormData] = useState({
-    fullName: "",
+    receiverName: "",
     email: "",
     phone: "",
-    address: "",
     province: "",
     district: "",
-    couponCode: "",
+    ward: "",
+    detailAddress: "",
   });
 
   useEffect(() => {
@@ -58,7 +67,7 @@ const CheckOut = () => {
       setUser(userData);
       setFormData((prevState) => ({
         ...prevState,
-        fullName: userData.fullName || "",
+        receiverName: userData.fullName || "",
         email: userData.email || "",
         phone: userData.phone || "",
       }));
@@ -67,6 +76,78 @@ const CheckOut = () => {
       navigate("/login");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProvinces = async () => {
+      try {
+        const response = await fetch("https://provinces.open-api.vn/api/?depth=3");
+        if (!response.ok) {
+          throw new Error("Không thể tải dữ liệu địa giới hành chính.");
+        }
+        const data = await response.json();
+        if (isMounted) {
+          setProvinces(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Error loading provinces:", error);
+        if (isMounted) {
+          setAddressError(
+            error.message || "Không thể tải dữ liệu tỉnh/thành."
+          );
+        }
+      }
+    };
+
+    loadProvinces();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadShippingAddress = async () => {
+      if (!userId) return;
+
+      setIsAddressLoading(true);
+      setAddressError("");
+
+      try {
+        const response = await fetchShippingAddress();
+        const savedAddress = response?.data?.shippingAddress;
+        if (savedAddress) {
+          setFormData((prevState) => ({
+            ...prevState,
+            receiverName: savedAddress.receiverName || prevState.receiverName,
+            phone: savedAddress.phone || prevState.phone,
+            province: savedAddress.province || "",
+            district: savedAddress.district || "",
+            ward: savedAddress.ward || "",
+            detailAddress: savedAddress.detailAddress || "",
+          }));
+        }
+      } catch (error) {
+        console.error("Error loading shipping address:", error);
+        setAddressError(
+          error.response?.data?.message || "Không thể tải địa chỉ đã lưu."
+        );
+      } finally {
+        setIsAddressLoading(false);
+      }
+    };
+
+    loadShippingAddress();
+  }, [userId]);
+
+  useEffect(() => {
+    if (formData.province) {
+      updateShippingCost(formData.province);
+    } else {
+      setShippingCost(0);
+    }
+  }, [formData.province]);
 
   const shippingRates = {
     "Miền Nam": 10000,
@@ -124,8 +205,28 @@ const CheckOut = () => {
     ],
   };
 
+  const buildFullAddress = (data) => {
+    return [
+      data.detailAddress,
+      data.ward,
+      data.district,
+      data.province,
+    ]
+      .map((part) => String(part || "").trim())
+      .filter(Boolean)
+      .join(", ");
+  };
+
+  const selectedProvinceData = provinces.find(
+    (province) => province.name === formData.province
+  );
+  const districts = selectedProvinceData?.districts || [];
+  const selectedDistrictData = districts.find(
+    (district) => district.name === formData.district
+  );
+  const wards = selectedDistrictData?.wards || [];
+
   const updateShippingCost = (province) => {
-    setSelectedProvince(province);
     let cost = 0;
     for (let region in regions) {
       if (regions[region].includes(province)) {
@@ -135,19 +236,46 @@ const CheckOut = () => {
     }
     setShippingCost(cost);
   };
+  const validateAddressForm = () => {
+    const newErrors = {};
+
+    if (!formData.receiverName.trim()) {
+      newErrors.receiverName = "Vui lòng nhập tên người nhận.";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Vui lòng nhập số điện thoại.";
+    }
+
+    if (!formData.province.trim()) {
+      newErrors.province = "Vui lòng chọn tỉnh/thành phố.";
+    }
+
+    if (!formData.district.trim()) {
+      newErrors.district = "Vui lòng chọn quận/huyện.";
+    }
+
+    if (!formData.ward.trim()) {
+      newErrors.ward = "Vui lòng chọn phường/xã.";
+    }
+
+    if (!formData.detailAddress.trim()) {
+      newErrors.detailAddress = "Vui lòng nhập địa chỉ chi tiết.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
     if (deliveryOption === "delivery") {
-      if (!formData.address.trim()) {
-        newErrors.address = "Vui lòng nhập địa chỉ giao hàng.";
-      }
-
-      if (!selectedProvince) {
-        newErrors.province = "Vui lòng chọn tỉnh/thành phố.";
+      if (!validateAddressForm()) {
+        return false;
       }
     } else {
-      if (!formData.province) {
+      if (!pickupProvince) {
         newErrors.province = "Vui lòng chọn chi nhánh nhận hàng.";
       }
     }
@@ -166,14 +294,102 @@ const CheckOut = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevState) => ({
+      ...prevState,
       [name]: value,
-    });
+    }));
+  };
+
+  const handleProvinceChange = (e) => {
+    const value = e.target.value;
+    setFormData((prevState) => ({
+      ...prevState,
+      province: value,
+      district: "",
+      ward: "",
+    }));
+    updateShippingCost(value);
+  };
+
+  const handleDistrictChange = (e) => {
+    const value = e.target.value;
+    setFormData((prevState) => ({
+      ...prevState,
+      district: value,
+      ward: "",
+    }));
+  };
+
+  const handleWardChange = (e) => {
+    const value = e.target.value;
+    setFormData((prevState) => ({
+      ...prevState,
+      ward: value,
+    }));
+  };
+
+  const handlePickupProvinceChange = (e) => {
+    setPickupProvince(e.target.value);
   };
 
   const handleDeliveryOptionChange = (option) => {
     setDeliveryOption(option);
+  };
+
+  const handleSaveAddress = async (e) => {
+    e.preventDefault();
+    if (deliveryOption !== "delivery") {
+      toast.info("Vui lòng chọn giao tận nơi để lưu địa chỉ.");
+      return;
+    }
+
+    if (!validateAddressForm()) {
+      toast.error("Vui lòng điền đầy đủ thông tin địa chỉ.");
+      return;
+    }
+
+    setIsSavingAddress(true);
+    try {
+      const payload = {
+        receiverName: formData.receiverName,
+        phone: formData.phone,
+        province: deliveryOption === "pickup" ? pickupProvince : formData.province,
+        district: formData.district,
+        ward: formData.ward,
+        detailAddress: formData.detailAddress,
+      };
+
+      const response = await updateShippingAddress(payload);
+      const savedAddress = response?.data?.shippingAddress;
+      const legacyAddress = response?.data?.address || buildFullAddress(payload);
+
+      if (savedAddress) {
+        setFormData((prevState) => ({
+          ...prevState,
+          receiverName: savedAddress.receiverName || prevState.receiverName,
+          phone: savedAddress.phone || prevState.phone,
+          province: savedAddress.province || prevState.province,
+          district: savedAddress.district || prevState.district,
+          ward: savedAddress.ward || prevState.ward,
+          detailAddress: savedAddress.detailAddress || prevState.detailAddress,
+        }));
+      }
+
+      if (user) {
+        const nextUser = { ...user, address: legacyAddress };
+        localStorage.setItem("user", JSON.stringify(nextUser));
+        setUser(nextUser);
+      }
+
+      toast.success("Đã lưu địa chỉ giao hàng.");
+    } catch (error) {
+      console.error("Error saving shipping address:", error);
+      toast.error(
+        error.response?.data?.message || "Có lỗi khi lưu địa chỉ giao hàng."
+      );
+    } finally {
+      setIsSavingAddress(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -193,11 +409,11 @@ const CheckOut = () => {
         })),
         total_price: calculateTotal(),
         status: "Chờ xử lý",
-        fullName: formData.fullName,
+        fullName: formData.receiverName,
         email: formData.email,
         phone: formData.phone,
-        address: formData.address,
-        province: formData.province || selectedProvince,
+        address: buildFullAddress(formData),
+        province: formData.province,
         deliveryOption: deliveryOption,
         paymentMethod: selectedMethod,
         shippingCost: deliveryOption === "pickup" ? 0 : shippingCost,
@@ -225,16 +441,6 @@ const CheckOut = () => {
         }
 
         // Reset form
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          address: "",
-          province: "",
-          district: "",
-          couponCode: "",
-        });
-        setSelectedProvince("");
         setShippingCost(0);
         setDeliveryOption("delivery");
         setSelectedMethod("cod");
@@ -275,73 +481,29 @@ const CheckOut = () => {
         <div className="flex flex-col md:flex-row gap-8">
           {/* Left checkout */}
           <div className="md:w-3/5">
-            <div className="mb-5">
-              <p className="text-gray-600 text-xl">Thông tin giao hàng</p>
-            </div>
+            <div className="shipping-card">
+              <h2 className="shipping-title">THÔNG TIN GIAO HÀNG</h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="border border-gray-200 rounded-lg p-6"
-            >
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="fullName"
-                  className="w-full border rounded p-3 focus:outline-none  bg-gray-100 opacity-70  cursor-not-allowed"
-                  value={formData.fullName}
-                  readOnly
-                />
-                <p className="text-red-500 text-xs italic">{errors.fullName}</p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                <div className="flex-1">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    className="w-full border rounded p-3 focus:outline-none  bg-gray-100 opacity-70  cursor-not-allowed"
-                    value={formData.email}
-                    readOnly
-                  />
-                  <p className="text-red-500 text-xs italic">{errors.email}</p>
-                </div>
-                <div className="flex-1">
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Số điện thoại"
-                    className="w-full border rounded p-3 focus:outline-none  bg-gray-100 opacity-70  cursor-not-allowed"
-                    value={formData.phone}
-                    readOnly
-                  />
-                  <p className="text-red-500 text-xs italic">{errors.phone}</p>
-                </div>
-              </div>
-
-              <div className="mb-4">
+              <div className="mb-5">
                 <div
-                  className={`border ${
-                    deliveryOption === "delivery"
+                  className={`border ${deliveryOption === "delivery"
                       ? "border-blue-0"
                       : "border-gray-300"
-                  } rounded p-3 mb-3 cursor-pointer`}
+                    } rounded p-3 mb-3 cursor-pointer`}
                   onClick={() => handleDeliveryOptionChange("delivery")}
                 >
                   <div className="flex items-center">
                     <div
-                      className={`flex items-center justify-center w-6 h-6 border-2 ${
-                        deliveryOption === "delivery"
+                      className={`flex items-center justify-center w-6 h-6 border-2 ${deliveryOption === "delivery"
                           ? "border-blue-0"
                           : "border-gray-300"
-                      } rounded-full mr-2`}
+                        } rounded-full mr-2`}
                     >
                       <div
-                        className={`w-3 h-3 ${
-                          deliveryOption === "delivery"
+                        className={`w-3 h-3 ${deliveryOption === "delivery"
                             ? "bg-blue-0"
                             : "bg-transparent"
-                        } rounded-full`}
+                          } rounded-full`}
                       ></div>
                     </div>
                     <span className="text-gray-700">Giao tận nơi</span>
@@ -349,27 +511,24 @@ const CheckOut = () => {
                 </div>
 
                 <div
-                  className={`border ${
-                    deliveryOption === "pickup"
+                  className={`border ${deliveryOption === "pickup"
                       ? "border-blue-0"
                       : "border-gray-300"
-                  } rounded p-3 cursor-pointer`}
+                    } rounded p-3 cursor-pointer`}
                   onClick={() => handleDeliveryOptionChange("pickup")}
                 >
                   <div className="flex items-center">
                     <div
-                      className={`flex items-center justify-center w-6 h-6 border-2 ${
-                        deliveryOption === "pickup"
+                      className={`flex items-center justify-center w-6 h-6 border-2 ${deliveryOption === "pickup"
                           ? "border-blue-0"
                           : "border-gray-300"
-                      } rounded-full mr-2`}
+                        } rounded-full mr-2`}
                     >
                       <div
-                        className={`w-3 h-3 ${
-                          deliveryOption === "pickup"
+                        className={`w-3 h-3 ${deliveryOption === "pickup"
                             ? "bg-blue-0"
                             : "bg-transparent"
-                        } rounded-full`}
+                          } rounded-full`}
                       ></div>
                     </div>
                     <span className="text-gray-700">Nhận tại cửa hàng</span>
@@ -378,75 +537,144 @@ const CheckOut = () => {
               </div>
 
               {deliveryOption === "delivery" ? (
-                <div className="mb-6">
-                  <div className="mb-4">
-                    <input
-                      type="text"
-                      name="address"
-                      placeholder="Địa chỉ"
-                      className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      required={deliveryOption === "delivery"}
-                    />
-                    <p className="text-red-500 text-xs italic">
-                      {errors.address}
-                    </p>
-                  </div>
+                <form className="shipping-form" onSubmit={handleSaveAddress}>
+                  <div className="shipping-grid">
+                    <div className="shipping-field">
+                      <label className="shipping-label">Người nhận</label>
+                      <input
+                        type="text"
+                        name="receiverName"
+                        className="shipping-input"
+                        placeholder="Nguyễn Văn Nam"
+                        value={formData.receiverName}
+                        onChange={handleInputChange}
+                        disabled={isAddressLoading}
+                      />
+                      {errors.receiverName && (
+                        <span className="shipping-error">
+                          {errors.receiverName}
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                      <div className="relative">
-                        <select
-                          className="w-full border border-gray-300 rounded p-3 bg-white appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          value={selectedProvince}
-                          onChange={(e) => updateShippingCost(e.target.value)}
-                        >
-                          <option value="">Chọn tỉnh / thành</option>
-                          {Object.values(regions)
-                            .flat()
-                            .map((province) => (
-                              <option key={province} value={province}>
-                                {province}
-                              </option>
-                            ))}
-                        </select>
-                        <p className="text-red-500 text-xs italic">
+                    <div className="shipping-field">
+                      <label className="shipping-label">Số điện thoại</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        className="shipping-input"
+                        placeholder="0912345678"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        disabled={isAddressLoading}
+                      />
+                      {errors.phone && (
+                        <span className="shipping-error">{errors.phone}</span>
+                      )}
+                    </div>
+
+                    <div className="shipping-field">
+                      <label className="shipping-label">Tỉnh/Thành phố</label>
+                      <select
+                        name="province"
+                        className="shipping-select"
+                        value={formData.province}
+                        onChange={handleProvinceChange}
+                        disabled={isAddressLoading}
+                      >
+                        <option value="">Chọn tỉnh / thành</option>
+                        {provinces.map((province) => (
+                          <option key={province.code} value={province.name}>
+                            {province.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.province && (
+                        <span className="shipping-error">
                           {errors.province}
-                        </p>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <ChevronDown />
-                        </div>
-                      </div>
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="shipping-field">
+                      <label className="shipping-label">Quận/Huyện</label>
+                      <select
+                        name="district"
+                        className="shipping-select"
+                        value={formData.district}
+                        onChange={handleDistrictChange}
+                        disabled={!formData.province || isAddressLoading}
+                      >
+                        <option value="">Chọn quận / huyện</option>
+                        {districts.map((district) => (
+                          <option key={district.code} value={district.name}>
+                            {district.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.district && (
+                        <span className="shipping-error">
+                          {errors.district}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="shipping-field shipping-full">
+                      <label className="shipping-label">Phường/Xã</label>
+                      <select
+                        name="ward"
+                        className="shipping-select"
+                        value={formData.ward}
+                        onChange={handleWardChange}
+                        disabled={!formData.district || isAddressLoading}
+                      >
+                        <option value="">Chọn phường / xã</option>
+                        {wards.map((ward) => (
+                          <option key={ward.code} value={ward.name}>
+                            {ward.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.ward && (
+                        <span className="shipping-error">{errors.ward}</span>
+                      )}
+                    </div>
+
+                    <div className="shipping-field shipping-full">
+                      <label className="shipping-label">Địa chỉ chi tiết</label>
+                      <input
+                        type="text"
+                        name="detailAddress"
+                        className="shipping-input"
+                        placeholder="25 Nguyễn Văn Nghi"
+                        value={formData.detailAddress}
+                        onChange={handleInputChange}
+                        disabled={isAddressLoading}
+                      />
+                      {errors.detailAddress && (
+                        <span className="shipping-error">
+                          {errors.detailAddress}
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  <div className="mt-8">
-                    <h3 className="text-lg font-medium text-gray-800 mb-5">
-                      Phương thức vận chuyển
-                    </h3>
-                    {selectedProvince && (
-                      <div className="flex justify-between shipping-cost border rounded p-3 ">
-                        <span>Phí vận chuyển: </span>
-                        <strong>{shippingCost.toLocaleString("vi-VN")}đ</strong>
-                      </div>
+                  <div className="shipping-actions">
+                    <button
+                      type="submit"
+                      className="shipping-save"
+                      disabled={isSavingAddress || isAddressLoading}
+                    >
+                      {isSavingAddress ? "ĐANG LƯU..." : "LƯU ĐỊA CHỈ"}
+                    </button>
+                    {isAddressLoading && (
+                      <span className="shipping-hint">Đang tải địa chỉ...</span>
                     )}
-
-                    {!selectedProvince && (
-                      <div className="flex items-center justify-center border border-gray-200 rounded p-8">
-                        <div className="text-center">
-                          <div className="mb-4 flex justify-center">
-                            <BsBox2 size={90} className="text-gray-500" />
-                          </div>
-                          <p className="text-gray-600">
-                            Vui lòng chọn tỉnh / thành để có danh sách phương
-                            thức vận chuyển.
-                          </p>
-                        </div>
-                      </div>
+                    {addressError && (
+                      <span className="shipping-error">{addressError}</span>
                     )}
                   </div>
-                </div>
+                </form>
               ) : (
                 <div className="mb-6">
                   <div className="mb-4">
@@ -454,8 +682,8 @@ const CheckOut = () => {
                       <select
                         name="province"
                         className="w-full border border-gray-300 rounded p-3 bg-white appearance-none focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        value={formData.province}
-                        onChange={handleInputChange}
+                        value={pickupProvince}
+                        onChange={handlePickupProvinceChange}
                         required={deliveryOption === "pickup"}
                       >
                         <option value="" disabled>
@@ -487,17 +715,44 @@ const CheckOut = () => {
                   </div>
                 </div>
               )}
-            </form>
+
+              {deliveryOption === "delivery" && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-medium text-gray-800 mb-5">
+                    Phương thức vận chuyển
+                  </h3>
+                  {formData.province && (
+                    <div className="flex justify-between shipping-cost border rounded p-3 ">
+                      <span>Phí vận chuyển: </span>
+                      <strong>{shippingCost.toLocaleString("vi-VN")}đ</strong>
+                    </div>
+                  )}
+
+                  {!formData.province && (
+                    <div className="flex items-center justify-center border border-gray-200 rounded p-8">
+                      <div className="text-center">
+                        <div className="mb-4 flex justify-center">
+                          <BsBox2 size={90} className="text-gray-500" />
+                        </div>
+                        <p className="text-gray-600">
+                          Vui lòng chọn tỉnh / thành để có danh sách phương thức
+                          vận chuyển.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <h2 className="text-lg font-semibold mt-8 mb-4">
               Phương thức thanh toán
             </h2>
 
             <div
-              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer ${
-                selectedMethod === "cod"
+              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer ${selectedMethod === "cod"
                   ? "border-blue-0 bg-blue-100"
                   : "border-gray-300"
-              }`}
+                }`}
               onClick={() => handlePaymentSelection("cod")}
             >
               <input
@@ -512,11 +767,10 @@ const CheckOut = () => {
             </div>
 
             <div
-              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${
-                selectedMethod === "bank"
+              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${selectedMethod === "bank"
                   ? "border-blue-0 bg-blue-100"
                   : "border-gray-300"
-              }`}
+                }`}
               onClick={() => handlePaymentSelection("bank")}
             >
               <input

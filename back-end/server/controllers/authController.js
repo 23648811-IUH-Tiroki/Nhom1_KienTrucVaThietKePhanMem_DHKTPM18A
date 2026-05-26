@@ -253,6 +253,14 @@ export const requestPasswordReset = async (req, res) => {
 
     const mailer = createMailer();
     if (!mailer) {
+      if (process.env.NODE_ENV !== "production") {
+        return res.status(200).json({
+          message:
+            "SMTP chưa được cấu hình. Mã đặt lại mật khẩu được trả về cho môi trường dev.",
+          devCode: resetCode,
+        });
+      }
+
       return res.status(500).json({
         message: "Thiếu cấu hình SMTP để gửi email đặt lại mật khẩu.",
       });
@@ -381,6 +389,14 @@ export const sendSignupCode = async (req, res) => {
     //Gửi email chứa OTP
     const mailer = createMailer();
     if (!mailer) {
+      if (process.env.NODE_ENV !== "production") {
+        return res.status(200).json({
+          message:
+            "SMTP chưa được cấu hình. Mã đăng ký được trả về cho môi trường dev.",
+          devCode: signupCode,
+        });
+      }
+
       return res
         .status(500)
         .json({ message: "Thiếu cấu hình SMTP để gửi email." });

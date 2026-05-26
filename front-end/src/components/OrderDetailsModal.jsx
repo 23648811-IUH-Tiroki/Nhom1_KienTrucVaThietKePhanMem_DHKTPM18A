@@ -17,7 +17,7 @@ export default function OrderDetailsModal({
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div
-            className="absolute inset-0 bg-gray-500 opacity-75"
+            className="absolute inset-0 bg-transparent"
             onClick={() => setShowModal(false)}
           ></div>
         </div>
@@ -74,9 +74,8 @@ export default function OrderDetailsModal({
                       <p className="text-sm text-gray-600 mt-1">
                         <span className="font-medium">Trạng thái:</span>{" "}
                         <span
-                          className={`inline-flex items-center ${
-                            getStatusInfo(selectedOrder.status).color
-                          } text-xs px-2 py-1 rounded-full`}
+                          className={`inline-flex items-center ${getStatusInfo(selectedOrder.status).color
+                            } text-xs px-2 py-1 rounded-full`}
                         >
                           {getStatusInfo(selectedOrder.status).icon}
                           <span className="ml-1">{selectedOrder.status}</span>

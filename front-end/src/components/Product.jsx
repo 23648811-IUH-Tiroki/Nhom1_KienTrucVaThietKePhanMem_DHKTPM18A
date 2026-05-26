@@ -132,8 +132,6 @@ function Product({ product }) {
               {product.price.toLocaleString("vi-VN") + "₫"}
             </span>
             <button
-              text-xl
-              font-bold
               onClick={handleBuyNow}
               style={{}}
               className="mt-3 mb-2 bg-[#e17100] text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium cursor-pointer"

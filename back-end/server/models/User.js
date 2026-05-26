@@ -12,8 +12,17 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String },
   gender: { type: Boolean, default: false },
   address: { type: String },
-  status: { type: String, default: 'Inactive', enum: ['Active', 'Inactive'] }, 
-  lastActive: { type: Date, default: null }, 
+  shippingAddress: {
+    receiverName: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    province: { type: String, default: "" },
+    district: { type: String, default: "" },
+    ward: { type: String, default: "" },
+    detailAddress: { type: String, default: "" },
+    updatedAt: { type: Date, default: null },
+  },
+  status: { type: String, default: 'Inactive', enum: ['Active', 'Inactive'] },
+  lastActive: { type: Date, default: null },
 }, { collection: 'users' });
 
 const User = mongoose.model('User', userSchema);

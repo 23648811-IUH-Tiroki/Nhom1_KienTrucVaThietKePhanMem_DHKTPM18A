@@ -8,18 +8,18 @@ export const getAllUsers = async (req, res) => {
     const users = await User.find()
       .skip(skip)
       .limit(parseInt(limit));
-    
+
     const total = await User.countDocuments();
 
     res.json({
-      users: users || [], 
-      total: total || 0, 
+      users: users || [],
+      total: total || 0,
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / limit)
     });
   } catch (err) {
     console.error('Error fetching users:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       message: err.message,
       users: [],
       total: 0
@@ -101,7 +101,7 @@ export const getUsersWithPagination = async (req, res) => {
     const users = await User.find()
       .skip(skip)
       .limit(parseInt(limit));
-    
+
     const total = await User.countDocuments();
 
     res.json({
@@ -126,7 +126,7 @@ export const searchUsers = async (req, res) => {
     const { searchTerm = "", status = "all", role = "all" } = req.query;
 
     let query = {};
-    
+
     if (searchTerm) {
       query.$or = [
         { fullName: { $regex: searchTerm, $options: "i" } },
@@ -247,5 +247,113 @@ export const updateProfile = async (req, res) => {
   } catch (err) {
     console.error("Error updating user profile:", err);
     res.status(400).json({ message: err.message });
+  }
+};
+
+const buildLegacyAddress = (payload) => {
+  const parts = [
+    payload.detailAddress,
+    payload.ward,
+    payload.district,
+    payload.province,
+  ].filter((part) => Boolean(String(part || "").trim()));
+
+  return parts.join(", ");
+};
+
+const validateShippingAddressPayload = (payload) => {
+  const errors = {};
+
+  const receiverName = String(payload.receiverName || "").trim();
+  const phone = String(payload.phone || "").trim();
+  const province = String(payload.province || "").trim();
+  const district = String(payload.district || "").trim();
+  const ward = String(payload.ward || "").trim();
+  const detailAddress = String(payload.detailAddress || "").trim();
+
+  if (!receiverName) {
+    errors.receiverName = "Tên người nhận không được để trống.";
+  }
+
+  if (!phone) {
+    errors.phone = "Số điện thoại không được để trống.";
+  }
+
+  if (!province) {
+    errors.province = "Tỉnh/Thành phố không được để trống.";
+  }
+
+  if (!district) {
+    errors.district = "Quận/Huyện không được để trống.";
+  }
+
+  if (!ward) {
+    errors.ward = "Phường/Xã không được để trống.";
+  }
+
+  if (!detailAddress) {
+    errors.detailAddress = "Địa chỉ chi tiết không được để trống.";
+  }
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+    sanitized: {
+      receiverName,
+      phone,
+      province,
+      district,
+      ward,
+      detailAddress,
+    },
+  };
+};
+
+export const getShippingAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({
+      shippingAddress: user.shippingAddress || null,
+      address: user.address || "",
+    });
+  } catch (err) {
+    console.error("Error fetching shipping address:", err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateShippingAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { isValid, errors, sanitized } = validateShippingAddressPayload(req.body || {});
+    if (!isValid) {
+      return res.status(400).json({ message: "Dữ liệu không hợp lệ.", errors });
+    }
+
+    const nextAddress = {
+      ...sanitized,
+      updatedAt: new Date(),
+    };
+
+    user.shippingAddress = nextAddress;
+    user.address = buildLegacyAddress(nextAddress);
+
+    const updatedUser = await user.save();
+
+    return res.json({
+      shippingAddress: updatedUser.shippingAddress,
+      address: updatedUser.address || "",
+    });
+  } catch (err) {
+    console.error("Error updating shipping address:", err);
+    return res.status(400).json({ message: err.message });
   }
 };
