@@ -1,0 +1,48 @@
+# Docker Compose cấu hình cho phát triển/kiểm thử
+# Giải thích (tiếng Việt):
+# - Tạo 4 service: mongo (DB), redis (cache), backend (Express API), frontend (built site served by nginx).
+# - Backend sẽ kết nối tới mongo bằng hostname `mongo` và redis bằng `redis`.
+# - Frontend được build rồi serve bởi nginx; map cổng host 5173 -> container 80 để giữ cổng dev quen thuộc.
+
+services:
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/PetShop
+      - REDIS_URL=redis://redis:6379
+      - FRONTEND_URL=http://localhost:5173
+      - SESSION_SECRET=supersecret
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

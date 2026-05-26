@@ -3,6 +3,9 @@ import { toast } from 'react-toastify';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:5000`;
 const RATE_LIMIT_LOCK_PREFIX = 'rateLimitLock:';
+const RATE_LIMIT_COUNTER_PREFIX = 'rateLimitCounter:';
+const CLIENT_WINDOW_MS = 60 * 1000; // 1 minute
+const CLIENT_MAX_REQUESTS = 5; // after 5 requests in window, lock
 
 const getRequestScope = (config) => {
   const method = (config.method || 'get').toUpperCase();
@@ -60,6 +63,34 @@ const createRateLimitError = (config, lockData) => {
   return error;
 };
 
+const readCounter = (scope) => {
+  try {
+    const raw = localStorage.getItem(`${RATE_LIMIT_COUNTER_PREFIX}${scope}`);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    // remove old timestamps
+    const now = Date.now();
+    const filtered = arr.filter((t) => t > now - CLIENT_WINDOW_MS);
+    localStorage.setItem(`${RATE_LIMIT_COUNTER_PREFIX}${scope}`, JSON.stringify(filtered));
+    return filtered;
+  } catch {
+    return [];
+  }
+};
+
+const addCounter = (scope) => {
+  try {
+    const now = Date.now();
+    const arr = readCounter(scope);
+    arr.push(now);
+    localStorage.setItem(`${RATE_LIMIT_COUNTER_PREFIX}${scope}`, JSON.stringify(arr));
+    return arr.length;
+  } catch {
+    return 0;
+  }
+};
+
 const extractLockFromResponse = (error) => {
   const response = error.response;
   if (!response) {
@@ -101,6 +132,17 @@ axiosInstance.interceptors.request.use(
     if (lockData) {
       toast.error(lockData.message || 'Bạn đang tạm thời bị giới hạn gửi yêu cầu.');
       return Promise.reject(createRateLimitError(config, lockData));
+    }
+
+    // Client-side rate limiting: count requests per scope and lock if exceed threshold
+    const currentCount = addCounter(scope);
+    if (currentCount > CLIENT_MAX_REQUESTS) {
+      // lock for remaining window
+      const lockUntil = Date.now() + CLIENT_WINDOW_MS;
+      const message = 'Bạn đã gọi quá nhiều lần trong 1 phút. Vui lòng thử lại sau.';
+      storeLock(scope, lockUntil, message);
+      toast.error(message);
+      return Promise.reject(createRateLimitError(config, { lockUntil, message }));
     }
 
     const token = localStorage.getItem('accessToken');

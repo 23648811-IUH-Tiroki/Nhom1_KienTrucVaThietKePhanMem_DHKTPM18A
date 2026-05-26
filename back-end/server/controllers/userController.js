@@ -164,7 +164,7 @@ export const getProfile = async (req, res) => {
   try {
     const user = req.user;
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Không tồn tại user!" });
     }
     res.json(user);
   } catch (err) {
@@ -177,7 +177,7 @@ export const updateProfile = async (req, res) => {
   try {
     const user = req.user;
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Không tồn tại user!" });
     }
 
     const updates = {};
@@ -186,9 +186,9 @@ export const updateProfile = async (req, res) => {
       updates.fullName = String(req.body.fullName || "").trim();
     }
 
-    if (Object.prototype.hasOwnProperty.call(req.body, "email")) {
-      updates.email = String(req.body.email || "").trim();
-    }
+    // if (Object.prototype.hasOwnProperty.call(req.body, "email")) {
+    //   updates.email = String(req.body.email || "").trim();
+    // }
 
     if (Object.prototype.hasOwnProperty.call(req.body, "phone")) {
       const normalizedPhone = String(req.body.phone || "").trim();
@@ -220,25 +220,25 @@ export const updateProfile = async (req, res) => {
       updates.avatar = req.body.avatar;
     }
 
-    if (updates.email) {
-      const duplicateEmail = await User.findOne({
-        email: updates.email,
-        _id: { $ne: user._id },
-      });
-      if (duplicateEmail) {
-        return res.status(409).json({ message: "Email đã được sử dụng." });
-      }
-    }
+    // if (updates.email) {
+    //   const duplicateEmail = await User.findOne({
+    //     email: updates.email,
+    //     _id: { $ne: user._id },
+    //   });
+    //   if (duplicateEmail) {
+    //     return res.status(409).json({ message: "Email đã được sử dụng." });
+    //   }
+    // }
 
-    if (updates.phone) {
-      const duplicatePhone = await User.findOne({
-        phone: updates.phone,
-        _id: { $ne: user._id },
-      });
-      if (duplicatePhone) {
-        return res.status(409).json({ message: "Số điện thoại đã được sử dụng." });
-      }
-    }
+    // if (updates.phone) {
+    //   const duplicatePhone = await User.findOne({
+    //     phone: updates.phone,
+    //     _id: { $ne: user._id },
+    //   });
+    //   if (duplicatePhone) {
+    //     return res.status(409).json({ message: "Số điện thoại đã được sử dụng." });
+    //   }
+    // }
 
     Object.assign(user, updates);
 

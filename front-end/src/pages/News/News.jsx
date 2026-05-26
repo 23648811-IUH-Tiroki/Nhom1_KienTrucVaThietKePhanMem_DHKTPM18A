@@ -1,5 +1,5 @@
 import React from "react";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Breadcrumb2 from "../../components/Breadcrumb2";
 import dog1 from "../../assets/images/dog1.jpg";
 import dog2 from "../../assets/images/dog2.jpg";

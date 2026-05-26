@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link, useNavigate, useParams } from "react-router-dom";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import { TiTick } from "react-icons/ti";
 import { FaShippingFast } from "react-icons/fa";
 import { RiRefund2Line } from "react-icons/ri";

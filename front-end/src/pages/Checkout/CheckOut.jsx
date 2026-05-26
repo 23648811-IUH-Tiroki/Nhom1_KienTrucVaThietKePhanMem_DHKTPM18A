@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "../page.scss";

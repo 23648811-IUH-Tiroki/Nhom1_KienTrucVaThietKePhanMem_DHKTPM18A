@@ -1,6 +1,6 @@
 import Breadcrumb from "../../components/Breadcrumb";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import { FaFacebook, FaYoutube } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io5";

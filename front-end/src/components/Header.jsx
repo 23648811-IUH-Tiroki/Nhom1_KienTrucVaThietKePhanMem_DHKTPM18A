@@ -377,8 +377,8 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-white shadow-md sticky top-0 z-25 transition-all duration-300 ${
-        isScrolled ? "h-20 overflow-hidden" : "h-auto"
+      className={`bg-white shadow-md sticky top-0 z-[9990] transition-all duration-300 ${
+        isScrolled ? "h-20 overflow-visible" : "h-auto"
       }`}
       ref={headerRef}
     >
@@ -452,7 +452,7 @@ const Header = () => {
                   isAdmin ? (
                     <PopupMenu
                       trigger={
-                        <div className="flex items-center space-x-2 cursor-pointer">
+                        <div className="flex items-center space-x-2 cursor-pointer z-50">
                           <img
                             src={user.avatar}
                             alt="User avatar"

@@ -16,7 +16,7 @@ import LoadingOverlay from "../../components/LoadingOverlay";
 import { ToastContainer, toast } from "react-toastify";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import Modal from "../../components/Modal";
-import { generateInvoice } from "../../utils/GenerateInvoice";
+import { generateInvoice } from "../../utils/generateInvoice";
 import { FaCartPlus } from "react-icons/fa6";
 import { signOut as signOutRequest } from "../../services/authService";
 import {
