@@ -1,4 +1,5 @@
 import User from '../models/User.js'
+import mongoose from "mongoose";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -78,15 +79,19 @@ export const deleteUser = async (req, res) => {
 
 
 export const checkDuplicate = async (req, res) => {
-  const { phone, email } = req.body;
+  const email = String(req.body?.email ?? "").trim().toLowerCase();
+  const phoneRaw = req.body?.phone;
+  const phone = typeof phoneRaw === "string" ? phoneRaw.trim() : phoneRaw;
 
   try {
-    const duplicateEmail = await User.findOne({ email });
-    const duplicatePhone = await User.findOne({ phone });
+    const duplicateEmail = email ? await User.findOne({ email }) : null;
+    const duplicatePhone =
+      phone ? await User.findOne({ phone }) : null;
 
     res.json({
       duplicateEmail: !!duplicateEmail,
       duplicatePhone: !!duplicatePhone,
+      db: { name: mongoose.connection?.name, host: mongoose.connection?.host },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
