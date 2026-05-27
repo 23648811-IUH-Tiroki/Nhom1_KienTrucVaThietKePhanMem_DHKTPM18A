@@ -20,7 +20,6 @@ import LoadingOverlay from "./LoadingOverlay";
 import { useSelector } from "react-redux";
 import DialogCart from "./DialogCart";
 import PopupSearch from "./PopupSearch";
-import axios from "axios";
 import CartButton from "./CartButton";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
@@ -50,7 +49,6 @@ const Header = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchHistory, setSearchHistory] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef(null);
 
   // useEffect(() => {
@@ -66,23 +64,6 @@ const Header = () => {
   //   return () => window.removeEventListener("scroll", handleScroll);
   // }, []);
 
-  useEffect(() => {
-    // Skip scroll effect on login/register pages
-    if (
-      window.location.pathname === "/login" ||
-      window.location.pathname === "/register"
-    ) {
-      return;
-    }
-
-    const handleScroll = () => {
-      const shouldScroll = window.scrollY > 100;
-      setIsScrolled(shouldScroll);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,9 +75,12 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const convertBase64ToImage = useCallback((base64) => {
-    if (!base64) return "/avatar.png";
-    return `data:image/jpeg;base64,${base64}`;
+  const convertBase64ToImage = useCallback((value) => {
+    if (!value) return "/avatar.png";
+    if (typeof value !== "string") return "/avatar.png";
+    if (value.startsWith("data:image")) return value;
+    if (value.startsWith("/") || value.startsWith("http")) return value;
+    return `data:image/jpeg;base64,${value}`;
   }, []);
 
   useEffect(() => {
@@ -121,6 +105,19 @@ const Header = () => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("accessToken");
       if (!token) return; // Don't call API if no token
+
+      const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
+      if (cachedUser) {
+        const cachedAvatar = convertBase64ToImage(cachedUser.avatar);
+        setUser({
+          name: cachedUser.fullName,
+          avatar: cachedAvatar,
+          role: cachedUser.role,
+          id: cachedUser._id || cachedUser.id,
+        });
+        setLoggedIn(true);
+        setIsAdmin(cachedUser.role === "admin");
+      }
 
       try {
         const { data } = await fetchProfileRequest();
@@ -147,13 +144,17 @@ const Header = () => {
 
         setLoggedIn(true);
       } catch (err) {
-        // Only log unexpected errors
-        if (err.response?.status !== 401) {
+        const status = err.response?.status;
+        if (status && status !== 401) {
           console.error("API Error:", err.response?.data || err.message);
         }
-        // Token invalid, clear localStorage
-        localStorage.removeItem("accessToken");
-        setLoggedIn(false);
+
+        if (status === 401) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+          setLoggedIn(false);
+          setIsAdmin(false);
+        }
       }
     };
     fetchUserData();
@@ -383,12 +384,12 @@ const Header = () => {
     },
     ...(isAdmin
       ? [
-          {
-            label: "Quản lý cửa hàng",
-            icon: <RiAdminFill className="mr-2" />,
-            href: `/dashboard`,
-          },
-        ]
+        {
+          label: "Quản lý cửa hàng",
+          icon: <RiAdminFill className="mr-2" />,
+          href: `/dashboard`,
+        },
+      ]
       : []),
     {
       label: "Đăng xuất",
@@ -399,19 +400,11 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-white shadow-md sticky top-0 z-[9990] transition-all duration-300 ${
-        isScrolled ? "h-20 overflow-visible" : "h-auto"
-      }`}
+      className="bg-white shadow-md sticky top-0 z-[10000] overflow-visible"
       ref={headerRef}
     >
       <LoadingOverlay isVisible={isLoggingOut} />
-      <div
-        className={`transition-all duration-300 ${
-          isScrolled
-            ? "-translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
-        }`}
-      >
+      <div className="relative z-[200]">
         <div className="container mx-auto flex flex-wrap items-center justify-evenly py-2 px-4 md:px-8 lg:px-16">
           {/* logo */}
           <div className="flex items-center space-x-3">
@@ -466,10 +459,20 @@ const Header = () => {
                     <FaSearch className="text-lg" />
                   </button>
                 </Link>
+
+                {showPopupSearch && !isMobile && (
+                  <PopupSearch
+                    searchResults={searchResults}
+                    searchHistory={searchHistory}
+                    onSearch={handleSearchResultClick}
+                    onHistoryItemClick={handleHistoryItemClick}
+                    onClearHistory={handleClearHistory}
+                  />
+                )}
               </div>
 
               {/* user */}
-              <div className="flex items-center space-x-4 cursor-pointer">
+              <div className="flex items-center space-x-4 cursor-pointer user-menu">
                 {loggedIn ? (
                   isAdmin ? (
                     <PopupMenu
@@ -536,14 +539,10 @@ const Header = () => {
         </div>
       </div>
 
-      <div
-        className={`transition-all duration-300 ${
-          isScrolled ? "fixed top-0 left-0 right-0 bg-white shadow-md" : ""
-        }`}
-      >
+      <div className="relative z-[100]">
         {/* nav bar */}
         <nav className={`border-none ${isMobile ? "hidden" : ""}`}>
-          <div className="container mx-auto flex flex-wrap items-center justify-evenly px-4 py-2 lg:px-16">
+          <div className="container mx-auto -mt-1 flex flex-wrap items-center justify-evenly px-4 py-1 lg:px-16">
             <div className="relative group">
               <PopupMenu
                 trigger={
@@ -608,16 +607,6 @@ const Header = () => {
           </div>
         </nav>
       </div>
-
-      {showPopupSearch && (
-        <PopupSearch
-          searchResults={searchResults}
-          searchHistory={searchHistory}
-          onSearch={handleSearchResultClick}
-          onHistoryItemClick={handleHistoryItemClick}
-          onClearHistory={handleClearHistory}
-        />
-      )}
 
       {/* overlay */}
       {menuOpen && (

@@ -32,8 +32,9 @@ const OrderCard = ({
                 </div>
                 <div className="flex items-center gap-3">
                     <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${statusInfo?.badge || "border-slate-200 text-slate-600"
-                            }`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                            statusInfo?.badge || "border-slate-200 text-slate-600"
+                        }`}
                     >
                         {statusInfo?.label || order.status}
                     </span>
@@ -71,7 +72,7 @@ const OrderCard = ({
             <div className="mt-4 flex flex-wrap items-center gap-3">
                 <button
                     onClick={() => onView(order)}
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 text-sm font-medium hover:border-amber-300 hover:text-amber-700 transition"
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 text-slate-700 text-sm font-medium hover:border-amber-300 hover:text-amber-700 transition cursor-pointer"
                 >
                     <FaEye />
                     Xem chi tiết
@@ -79,7 +80,7 @@ const OrderCard = ({
                 {canCancel && (
                     <button
                         onClick={() => onCancel(order._id)}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-rose-200 text-rose-600 text-sm font-medium hover:bg-rose-50 transition"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-rose-200 text-rose-600 text-sm font-medium hover:bg-rose-50 transition cursor-pointer"
                     >
                         <FaTrash />
                         Hủy đơn hàng
@@ -122,10 +123,7 @@ const OrderCard = ({
                                             )}
                                         </div>
                                         <p className="text-sm text-slate-500">
-                                            {new Intl.NumberFormat("vi-VN", {
-                                                style: "currency",
-                                                currency: "VND",
-                                            }).format(product.price || 0)} x {item.quantity}
+                                            {formatCurrency(product.price)} x {item.quantity}
                                         </p>
 
                                         {review && (
@@ -135,7 +133,7 @@ const OrderCard = ({
                                                         <FaStar key={star} className="text-amber-500 text-sm" />
                                                     ) : (
                                                         <FaRegStar key={star} className="text-slate-300 text-sm" />
-                                                    ),
+                                                    )
                                                 )}
                                             </div>
                                         )}

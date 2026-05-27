@@ -153,7 +153,7 @@ const Dashboard = () => {
   // Chart configurations
   const textColor = isDarkTheme
     ? getCSSVariable("--text-white") : getCSSVariable("--text-color");
-  const secondaryTextColor = isDarkTheme ? "#666" : "#999"; 
+  const secondaryTextColor = isDarkTheme ? "#666" : "#999";
 
   const barChartOptions = {
     chart: {
@@ -182,17 +182,16 @@ const Dashboard = () => {
     },
     colors: ["#4CAF50"],
     title: {
-      text: `Doanh Thu Theo ${
-        timeFilter === "7days"
+      text: `Doanh Thu Theo ${timeFilter === "7days"
           ? "Ngày (Tuần Này)"
           : timeFilter === "30days"
-          ? "Ngày (30 Ngày Qua)"
-          : timeFilter === "90days"
-          ? "Ngày (90 Ngày Qua)"
-          : timeFilter === "year"
-          ? "Tháng (Năm Nay)"
-          : "Năm (Tất Cả Thời Gian)"
-      }`,
+            ? "Ngày (30 Ngày Qua)"
+            : timeFilter === "90days"
+              ? "Ngày (90 Ngày Qua)"
+              : timeFilter === "year"
+                ? "Tháng (Năm Nay)"
+                : "Năm (Tất Cả Thời Gian)"
+        }`,
       align: "center",
       style: {
         fontSize: "16px",
@@ -231,39 +230,38 @@ const Dashboard = () => {
   const donutChartOptions = {
     chart: {
       id: "revenue-by-category",
-      foreColor: textColor, 
+      foreColor: textColor,
     },
     labels: revenueByCategory.labels,
     colors: ["#2196F3", "#4CAF50", "#FFC107", "#FF5722", "#9C27B0", "#E91E63"],
     title: {
-      text: `Doanh Thu Theo Danh Mục (${
-        timeFilter === "7days"
+      text: `Doanh Thu Theo Danh Mục (${timeFilter === "7days"
           ? "7 Ngày Qua"
           : timeFilter === "30days"
-          ? "30 Ngày Qua"
-          : timeFilter === "90days"
-          ? "90 Ngày Qua"
-          : timeFilter === "year"
-          ? "Năm Nay"
-          : "Tất Cả Thời Gian"
-      })`,
+            ? "30 Ngày Qua"
+            : timeFilter === "90days"
+              ? "90 Ngày Qua"
+              : timeFilter === "year"
+                ? "Năm Nay"
+                : "Tất Cả Thời Gian"
+        })`,
       align: "center",
       style: {
         fontSize: "16px",
-        color: textColor, 
+        color: textColor,
       },
     },
     dataLabels: {
       formatter: (val) => `${val.toFixed(1)}%`,
       style: {
         fontSize: "14px",
-        colors: ["#fff"], 
+        colors: ["#fff"],
       },
     },
     legend: {
       position: "bottom",
       labels: {
-        colors: secondaryTextColor, 
+        colors: secondaryTextColor,
       },
     },
     tooltip: {
@@ -278,7 +276,7 @@ const Dashboard = () => {
       align: "center",
       verticalAlign: "middle",
       style: {
-        color: secondaryTextColor, 
+        color: secondaryTextColor,
         fontSize: "14px",
       },
     },
@@ -349,20 +347,11 @@ const Dashboard = () => {
 
   const getStatusColor = (status) => {
     const statusColors = {
-<<<<<<< Updated upstream
-      "Chờ xử lý": "text-yellow-500 bg-yellow-100",
-      "Đang xử lý": "text-orange-500 bg-orange-100",
-      "Đang giao hàng": "text-blue-500 bg-blue-100",
-      "Đã giao hàng": "text-purple-500 bg-purple-100",
-      "Hoàn tất": "text-green-500 bg-green-100",
-      "Đã hủy": "text-red-500 bg-red-100",
-=======
       pending: "text-yellow-500 bg-yellow-100",
       confirmed: "text-orange-500 bg-orange-100",
       shipping: "text-blue-500 bg-blue-100",
       delivered: "text-green-500 bg-green-100",
       cancelled: "text-red-500 bg-red-100",
->>>>>>> Stashed changes
     };
     return statusColors[status] || "text-gray-500 bg-gray-100";
   };

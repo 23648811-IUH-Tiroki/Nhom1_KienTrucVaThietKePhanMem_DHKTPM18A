@@ -1,13 +1,34 @@
-import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-// Session-based protected route: require `req.session.userId` (stored in Redis)
+// Protected route: prefer JWT from Authorization header, fallback to session
 export const protectedRoute = async (req, res, next) => {
     try {
-        const sessionUserId = req.session?.userId;
-        if (!sessionUserId) {
-            return res.status(401).json({ message: "Không tìm thấy session. Vui lòng đăng nhập lại." });
+        const authHeader = req.headers.authorization || "";
+        const token = authHeader.startsWith("Bearer ")
+            ? authHeader.slice("Bearer ".length)
+            : null;
+
+        let userId = null;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+                userId = decoded?.userId || null;
+            } catch (error) {
+                return res.status(401).json({ message: "Token không hợp lệ hoặc đã hết hạn." });
+            }
+        } else if (req.session?.userId) {
+            userId = req.session.userId;
         }
-        const user = await User.findById(sessionUserId).select('-hashedPass');
+
+        if (!userId) {
+            return res
+                .status(401)
+                .json({ message: "Không tìm thấy token hoặc session. Vui lòng đăng nhập lại." });
+        }
+
+        const user = await User.findById(userId).select("-password");
         if (!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại!" });
         }
@@ -17,7 +38,7 @@ export const protectedRoute = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error("Lỗi khi xác minh session trong authMiddleware", error);
+        console.error("Lỗi khi xác minh auth trong authMiddleware", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 }

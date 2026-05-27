@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import bcrypt from "bcryptjs";
 
 // Load environment variables from .env file
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +32,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { protectedRoute } from "./middleware/authMiddleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.js";
 import redisClient from "./configs/redisClient.js";
+import User from "./models/User.js";
 import { createRequire } from "module";
 // Load connect-redis (CJS) via createRequire to avoid ESM import issues
 const require = createRequire(import.meta.url);
@@ -71,9 +73,69 @@ app.use(
 app.use(express.json());
 
 // Connect to MongoDB
+const ensureUserPhoneIndex = async () => {
+  try {
+    const indexes = await User.collection.indexes();
+    const phoneIndex = indexes.find((index) => index.name === "phone_1");
+
+    if (phoneIndex && !phoneIndex.sparse) {
+      await User.collection.dropIndex("phone_1");
+    }
+
+    await User.collection.createIndex(
+      { phone: 1 },
+      { unique: true, sparse: true, name: "phone_1" },
+    );
+  } catch (error) {
+    console.warn("⚠️ Unable to ensure phone index:", error.message);
+  }
+};
+
+const ensureBootstrapAdmin = async () => {
+  try {
+    const adminEmailRaw = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminEmailRaw || !adminPassword) {
+      return;
+    }
+
+    const adminEmail = String(adminEmailRaw).trim().toLowerCase();
+    if (!adminEmail) return;
+
+    const existingAdmin = await User.findOne({ email: adminEmail });
+    if (existingAdmin) {
+      if (existingAdmin.role !== "admin") {
+        existingAdmin.role = "admin";
+        await existingAdmin.save();
+        console.log("✅ Bootstrap admin role updated for:", adminEmail);
+      }
+      return;
+    }
+
+    const hashed = bcrypt.hashSync(adminPassword, 10);
+    await User.create({
+      email: adminEmail,
+      password: hashed,
+      fullName: process.env.ADMIN_FULLNAME || "Administrator",
+      birthDate: new Date(process.env.ADMIN_BIRTHDATE || "1990-01-01"),
+      role: "admin",
+      status: "Active",
+    });
+
+    console.log("✅ Bootstrap admin created:", adminEmail);
+  } catch (error) {
+    console.warn("⚠️ Unable to bootstrap admin:", error.message);
+  }
+};
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB"))
+  .then(async () => {
+    console.log("Connected to MongoDB");
+    await ensureUserPhoneIndex();
+    await ensureBootstrapAdmin();
+  })
   .catch((err) => {
     console.warn("⚠️ MongoDB connection failed. Server continuing without DB.");
     console.warn("Error:", err.message);

@@ -50,10 +50,8 @@ const CartButton = ({ idUser }) => {
     }
   }, [idUser]);
 
-  // Tính tổng số lượng sản phẩm
-  const cartTotalQuantity = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cartItems]);
+  // Distinct product count
+  const cartTotalQuantity = useMemo(() => cartItems.length, [cartItems]);
 
   return (
     <div

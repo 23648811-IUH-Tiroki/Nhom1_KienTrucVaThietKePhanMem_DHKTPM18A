@@ -55,12 +55,13 @@ export default function OrdersTable({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div
-                      className={`flex items-center ${
-                        getStatusInfo(order.status).color
-                      } text-xs px-2 py-1 rounded-full`}
+                      className={`flex items-center ${getStatusInfo(order.statusNormalized).color
+                        } text-xs px-2 py-1 rounded-full`}
                     >
-                      {getStatusInfo(order.status).icon}
-                      <span className="ml-1">{order.status}</span>
+                      {getStatusInfo(order.statusNormalized).icon}
+                      <span className="ml-1">
+                        {getStatusInfo(order.statusNormalized).label}
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -73,17 +74,17 @@ export default function OrdersTable({
                         <FiEye className="h-5 w-5" />
                       </button>
                       <select
-                        value={order.status}
+                        value={order.statusNormalized}
                         onChange={(e) =>
                           updateOrderStatus(order._id, e.target.value)
                         }
                         className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
                       >
-                        <option value="Chờ xử lý">Chờ xử lý</option>
-                        <option value="Đang xử lý">Đang xử lý</option>
-                        <option value="Đang giao hàng">Đang giao hàng</option>
-                        <option value="Đã giao hàng">Đã giao hàng</option>
-                        <option value="Đã hủy">Đã hủy</option>
+                        <option value="pending">Chờ xác nhận</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="shipping">Đang giao</option>
+                        <option value="delivered">Đã giao</option>
+                        <option value="cancelled">Đã hủy</option>
                       </select>
                       <button
                         onClick={() => deleteOrder(order._id)}

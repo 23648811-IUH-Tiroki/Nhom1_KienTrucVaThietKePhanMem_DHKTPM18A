@@ -41,25 +41,28 @@ const OrderManagement = () => {
     weeklyRevenue: 0,
     averageOrderValue: 0,
   });
-
-<<<<<<< Updated upstream
-=======
   const normalizeStatus = (status) => {
     if (!status) return "pending";
     const normalized = String(status).trim();
 
     switch (normalized) {
       case "pending":
+
+      case "Chờ xử lý":
       case "Chờ xác nhận":
         return "pending";
       case "confirmed":
+      case "Đang xử lý":
       case "Đã xác nhận":
         return "confirmed";
       case "shipping":
+      case "Đang giao hàng":
       case "Đang giao":
         return "shipping";
       case "delivered":
+      case "Đã giao hàng":
       case "Đã giao":
+      case "Hoàn tất":
         return "delivered";
       case "cancelled":
       case "Đã hủy":
@@ -68,8 +71,6 @@ const OrderManagement = () => {
         return "pending";
     }
   };
-
->>>>>>> Stashed changes
   const fetchCurrentUser = useCallback(async () => {
     try {
       const userLocal = JSON.parse(localStorage.getItem("user"));
@@ -103,8 +104,13 @@ const OrderManagement = () => {
           fetchOrderStatsRequest(),
         ]);
 
-        setOrders(ordersResponse.data);
-        setFilteredOrders(ordersResponse.data);
+        const normalizedOrders = (ordersResponse.data || []).map((order) => ({
+          ...order,
+          statusNormalized: normalizeStatus(order.status),
+        }));
+
+        setOrders(normalizedOrders);
+        setFilteredOrders(normalizedOrders);
         setStats(statsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -131,7 +137,9 @@ const OrderManagement = () => {
     }
 
     if (statusFilter !== "all") {
-      result = result.filter((order) => order.status === statusFilter);
+      result = result.filter(
+        (order) => order.statusNormalized === statusFilter
+      );
     }
 
     setFilteredOrders(result);
@@ -159,7 +167,14 @@ const OrderManagement = () => {
       });
 
       setOrders(
-        orders.map((order) => (order._id === orderId ? response.data : order))
+        orders.map((order) =>
+          order._id === orderId
+            ? {
+              ...response.data,
+              statusNormalized: normalizeStatus(response.data.status),
+            }
+            : order
+        )
       );
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -187,34 +202,40 @@ const OrderManagement = () => {
 
   const getStatusInfo = (status) => {
     switch (status) {
-      case "Chờ xử lý":
+      case "pending":
         return {
           icon: <FaClock className="text-yellow-500" />,
+          label: "Chờ xác nhận",
           color: "bg-yellow-100 text-yellow-800",
         };
-      case "Đang xử lý":
+      case "confirmed":
         return {
           icon: <FaBoxOpen className="text-blue-500" />,
+          label: "Đã xác nhận",
           color: "bg-blue-100 text-blue-800",
         };
-      case "Đang giao hàng":
+      case "shipping":
         return {
           icon: <FaShippingFast className="text-purple-500" />,
+          label: "Đang giao",
           color: "bg-purple-100 text-purple-800",
         };
-      case "Đã giao hàng":
+      case "delivered":
         return {
           icon: <FaCheckCircle className="text-green-500" />,
+          label: "Đã giao",
           color: "bg-green-100 text-green-800",
         };
-      case "Đã hủy":
+      case "cancelled":
         return {
           icon: <FaTimesCircle className="text-red-500" />,
+          label: "Đã hủy",
           color: "bg-red-100 text-red-800",
         };
       default:
         return {
           icon: <FaBoxOpen className="text-gray-500" />,
+          label: "Chưa xác định",
           color: "bg-gray-100 text-gray-600",
         };
     }

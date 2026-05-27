@@ -27,12 +27,14 @@ const OrderHistory = ({
 
     const reviewMap = useMemo(() => {
         const map = new Map();
-        myReviews.forEach((review) => {
-            const productId = String(review.product?._id || review.product);
-            if (!map.has(productId)) {
-                map.set(productId, review);
-            }
-        });
+        if (myReviews && Array.isArray(myReviews)) {
+            myReviews.forEach((review) => {
+                const productId = String(review.product?._id || review.product);
+                if (!map.has(productId)) {
+                    map.set(productId, review);
+                }
+            });
+        }
         return map;
     }, [myReviews]);
 

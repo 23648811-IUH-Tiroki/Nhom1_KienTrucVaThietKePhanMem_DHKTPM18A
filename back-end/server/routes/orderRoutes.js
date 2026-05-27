@@ -1,4 +1,4 @@
-import express from "express";
+﻿import express from "express";
 import {
     createOrder,
     getOrders,
@@ -6,33 +6,33 @@ import {
     updateOrder,
     deleteOrder,
     getOrderStats,
-    getRecentOrders
+    getRecentOrders,
 } from "../controllers/orderController.js";
-import { requireAdmin } from '../middleware/authMiddleware.js';
+import { requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // tạo đơn hàng mới
 router.post("/", createOrder);
 
-// lấy tất cả đơn hàng
+// lấy tất cả đơn hàng (admin xem tất cả, user chỉ xem của mình)
 router.get("/", getOrders);
 
-router.use(requireAdmin);
+// thống kê đơn hàng (admin)
+router.get("/stats", requireAdmin, getOrderStats);
 
-// lấy thống kê đơn hàng
-router.get("/stats", getOrderStats);
+// đơn hàng gần đây (admin)
+router.get("/recent", requireAdmin, getRecentOrders);
 
-// lấy đơn hàng gần đây
-router.get("/recent", getRecentOrders);
-
-// lấy đơn hàng theo ID
+// lấy đơn hàng theo ID (admin hoặc chủ đơn)
 router.get("/:id", getOrderById);
 
-// cập nhật đơn hàng
+// cập nhật đơn hàng:
+// - admin: cập nhật mọi trạng thái
+// - user: chỉ được huỷ đơn của chính mình
 router.put("/:id", updateOrder);
 
-// xóa đơn hàng
-router.delete("/:id", deleteOrder);
+// xoá đơn hàng (admin)
+router.delete("/:id", requireAdmin, deleteOrder);
 
 export default router;

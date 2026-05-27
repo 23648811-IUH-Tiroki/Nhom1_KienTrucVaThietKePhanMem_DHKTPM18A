@@ -1,90 +1,92 @@
 .bg-brown {
-    background: #e17100;
+  background: #e17100;
 }
 
 .text-brown {
-    color: #e17100;
+  color: #e17100;
 }
 
 .text-brown-hover:hover {
-    color: #d06a03;
+  color: #d06a03;
 }
 
 .border-brown {
-    border: 2px solid #e17100;
+  border: 2px solid #e17100;
 }
 
 .border-brown-hover:hover {
-    background-color: #d06a03;
+  background-color: #d06a03;
 }
 
 .text-white-hover:hover {
-    color: white;
+  color: white;
 }
 
 .text-white {
-    color: white;
+  color: white;
 }
 
 
 // Menu hidden 
 .hidden-menu {
-    position: fixed;
-    top: 0;
-    right: -100%; /* bắt đầu ẩn bên ngoài màn hình */
-    width: 75%;
-    max-width: 300px;
-    height: 100%;
-    background-color: white;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-    transition: right 0.3s ease-in-out;
-    z-index: 50;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  /* bắt đầu ẩn bên ngoài màn hình */
+  width: 75%;
+  max-width: 300px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 50;
 }
-  
+
 .hidden-menu.open {
-    right: 0; /* khi mở menu, hiển thị từ phải sang */
+  right: 0;
+  /* khi mở menu, hiển thị từ phải sang */
 }
-  
+
 .hidden-menu ul {
-    padding: 16px;
+  padding: 16px;
 }
-  
+
 .hidden-menu li {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
-  
+
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 40;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
 }
 
 .bg-333 {
-    background: #333;
+  background: #333;
 }
 
 .perspective {
-    perspective: 1000px;
+  perspective: 1000px;
 }
 
 .transform-style {
-    transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 .backface-hidden {
-    backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .rotate-y-180 {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 .text-red {
-    color: rgb(185, 0, 0);
+  color: rgb(185, 0, 0);
 }
 
 
@@ -125,7 +127,7 @@
 }
 
 .popup-menu li:hover {
-  background-color: #f3f4f6; 
+  background-color: #f3f4f6;
 }
 
 
@@ -155,13 +157,18 @@
 
 
 .hover-popup-menu {
-  z-index: 10;
-  width: 250px; 
+  z-index: 100;
+  width: 250px;
   padding: 0.5rem 0;
   background-color: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 0.375rem; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); 
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.user-menu {
+  position: relative;
+  z-index: 10050;
 }
 
 /* List item styles */
@@ -181,29 +188,32 @@
   width: 100%;
   text-align: left;
   text-decoration: none;
-  color: #4a5568; /* Tailwind's gray-700 */
+  color: #4a5568;
+  /* Tailwind's gray-700 */
   transition: color 0.2s ease;
 }
 
 .hover-popup-menu a:hover,
 .hover-popup-menu button:hover {
-  color: #e17100 /* Custom brown-hover color */
+  color: #e17100
+    /* Custom brown-hover color */
 }
 
 
 // Search
 .popup-search {
   position: absolute;
-  top: calc(45% + 5px);
-  left: 520px;
-  right: 0;
+  top: 100%;
+  left: 0;
+  right: auto;
+  width: 100%;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-height: 250px; 
+  max-height: 250px;
   overflow-y: auto;
-  max-width: 480px; 
+  max-width: none;
   pointer-events: auto;
   z-index: 9999 !important;
 }
@@ -225,4 +235,3 @@
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
-

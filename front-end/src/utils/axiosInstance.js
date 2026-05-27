@@ -124,6 +124,24 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+const shouldHandleAuthLogout = (error) => {
+  if (error.response?.status !== 401) {
+    return false;
+  }
+
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    return false;
+  }
+
+  const requestUrl = String(error.config?.url || '');
+  if (requestUrl.includes('/api/auth/')) {
+    return false;
+  }
+
+  return true;
+};
+
 // Add JWT token to request headers
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -134,15 +152,18 @@ axiosInstance.interceptors.request.use(
       return Promise.reject(createRateLimitError(config, lockData));
     }
 
-    // Client-side rate limiting: count requests per scope and lock if exceed threshold
-    const currentCount = addCounter(scope);
-    if (currentCount > CLIENT_MAX_REQUESTS) {
-      // lock for remaining window
-      const lockUntil = Date.now() + CLIENT_WINDOW_MS;
-      const message = 'Bạn đã gọi quá nhiều lần trong 1 phút. Vui lòng thử lại sau.';
-      storeLock(scope, lockUntil, message);
-      toast.error(message);
-      return Promise.reject(createRateLimitError(config, { lockUntil, message }));
+    const method = (config.method || 'get').toLowerCase();
+    if (method !== 'get') {
+      // Client-side rate limiting: count requests per scope and lock if exceed threshold
+      const currentCount = addCounter(scope);
+      if (currentCount > CLIENT_MAX_REQUESTS) {
+        // lock for remaining window
+        const lockUntil = Date.now() + CLIENT_WINDOW_MS;
+        const message = 'Bạn đã gọi quá nhiều lần trong 1 phút. Vui lòng thử lại sau.';
+        storeLock(scope, lockUntil, message);
+        toast.error(message);
+        return Promise.reject(createRateLimitError(config, { lockUntil, message }));
+      }
     }
 
     const token = localStorage.getItem('accessToken');
@@ -173,11 +194,11 @@ axiosInstance.interceptors.response.use(
 
       toast.error(
         error.response?.data?.message ||
-          'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau.'
+        'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau.'
       );
     }
 
-    if (error.response?.status === 401) {
+    if (shouldHandleAuthLogout(error)) {
       // Token expired or invalid - only redirect if not already on login page
       if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
         localStorage.removeItem('accessToken');
