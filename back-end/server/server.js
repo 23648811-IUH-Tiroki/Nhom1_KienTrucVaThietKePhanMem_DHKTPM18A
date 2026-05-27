@@ -25,7 +25,9 @@ import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import settingRoutes from "./routes/settingRoutes.js";
 import aiRoutes from "./routes/AIRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 import dashboadRoutes from "./routes/dashboardRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import { protectedRoute } from "./middleware/authMiddleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.js";
 import redisClient from "./configs/redisClient.js";
@@ -127,6 +129,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // ===== PROTECTED ROUTES (Authentication required) =====
 // Apply middleware to protect these routes
@@ -138,6 +141,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/carts", cartRoutes);
 app.use("/api/settings", settingRoutes);
 app.use("/api/dashboard", dashboadRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Start the server
 app.listen(PORT, () => {

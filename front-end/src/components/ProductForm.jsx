@@ -1,17 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import slugify from "slugify";
+import { createCategory } from "../services/categoryService";
 
-const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
+const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreated }) => {
+  const fileInputRef = useRef(null);
   const [images, setImages] = useState(product?.images || []);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [name, setName] = useState(product?.name || "");
   const [slug, setSlug] = useState(product?.slug || "");
-  
+  const [categorySelection, setCategorySelection] = useState(
+    product?.category_id?._id || product?.category_id || ""
+  );
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryType, setNewCategoryType] = useState("KHÁC");
+
+  useEffect(() => {
+    setImages(product?.images || []);
+    setName(product?.name || "");
+    setSlug(product?.slug || "");
+    setCategorySelection(product?.category_id?._id || product?.category_id || "");
+    setNewImageUrl("");
+    setNewCategoryName("");
+    setNewCategoryType("KHÁC");
+  }, [product]);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const imageUrl = reader.result;
+      if (imageUrl && !images.includes(imageUrl)) {
+        setImages((prev) => [...prev, imageUrl]);
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
 
   const handleAddImage = () => {
-    if (newImageUrl.trim() && !images.includes(newImageUrl.trim())) {
-      setImages([...images, newImageUrl.trim()]);
+    const trimmedUrl = newImageUrl.trim();
+    if (trimmedUrl) {
+      if (!images.includes(trimmedUrl)) {
+        setImages([...images, trimmedUrl]);
+      }
       setNewImageUrl("");
+      return;
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -19,19 +59,45 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const productData = Object.fromEntries(formData.entries());
+
+    let categoryId = categorySelection || productData.category_id;
+    if (categoryId === "other") {
+      if (!newCategoryName.trim()) {
+        toast.error("Vui lòng nhập tên danh mục mới");
+        return;
+      }
+      try {
+        const response = await createCategory({
+          name: newCategoryName.trim(),
+          description: `Danh mục ${newCategoryName.trim()}`,
+          image: "",
+          type: newCategoryType,
+          slug_type: slugify(newCategoryType, { lower: true, strict: true }),
+        });
+        const newCategory = response.data;
+        categoryId = newCategory._id;
+        onCategoryCreated?.(newCategory);
+      } catch (err) {
+        console.error("Lỗi khi tạo danh mục mới:", err);
+        toast.error("Không thể tạo danh mục mới");
+        return;
+      }
+    }
+
     const slugifiedName = slugify(productData.name, { lower: true });
     setSlug(slugifiedName);
 
     onSubmit({
       ...productData,
+      category_id: categoryId,
       price: parseFloat(productData.price),
       stock: parseInt(productData.stock),
       images: images,
-    slug: slugifiedName,
+      slug: slugifiedName,
     });
   };
 
@@ -79,7 +145,13 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
           </label>
           <select
             name="category_id"
-            defaultValue={product?.category_id || ""}
+            value={categorySelection}
+            onChange={(e) => {
+              setCategorySelection(e.target.value);
+              if (e.target.value !== "other") {
+                setNewCategoryName("");
+              }
+            }}
             required
             className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           >
@@ -89,7 +161,38 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
                 {category.name}
               </option>
             ))}
+            <option value="other">Khác</option>
           </select>
+          {categorySelection === "other" && (
+            <div className="mt-3 space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Tên danh mục mới
+                </label>
+                <input
+                  type="text"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder="Nhập tên danh mục mới"
+                  className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Loại danh mục
+                </label>
+                <select
+                  value={newCategoryType}
+                  onChange={(e) => setNewCategoryType(e.target.value)}
+                  className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                >
+                  <option value="KHÁC">KHÁC</option>
+                  <option value="SHOP CHO CÚN">SHOP CHO CÚN</option>
+                  <option value="SHOP CHO MÈO">SHOP CHO MÈO</option>
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -112,7 +215,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
             type="text"
             value={newImageUrl}
             onChange={(e) => setNewImageUrl(e.target.value)}
-            placeholder="Nhập URL hình ảnh"
+            placeholder="Nhập URL hình ảnh hoặc để trống để chọn file"
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
           <button
@@ -122,6 +225,13 @@ const ProductForm = ({ product, categories, onSubmit, onCancel }) => {
           >
             Thêm
           </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
 
         <div className="mt-2 space-y-2">

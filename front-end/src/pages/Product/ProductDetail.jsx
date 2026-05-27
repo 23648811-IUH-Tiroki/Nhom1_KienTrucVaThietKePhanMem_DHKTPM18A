@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../../layout/MainLayout";
 import { TiTick } from "react-icons/ti";
 import { FaShippingFast } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import { RiRefund2Line } from "react-icons/ri";
 import {
   MdAssignmentReturn,
@@ -30,6 +31,7 @@ import { addToCart } from "../../stores/cartSlice";
 import { ScaleLoader } from "react-spinners";
 import { useCart } from "../../context/CartContext";
 import { toast } from "react-toastify";
+import ProductReviewSummary from "../../components/ProductReviewSummary";
 
 const services = [
   {
@@ -307,6 +309,7 @@ const ProductDetail = () => {
               </Swiper>
             </div>
 
+<<<<<<< Updated upstream
             <div className="bg-white shadow-md rounded-lg">
               <div className="p-3 flex flex-col gap-3">
                 <div className="flex gap-5 items-center">
@@ -324,10 +327,310 @@ const ProductDetail = () => {
                         )}
                         đ
                       </h5>
+=======
+            <section className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                    <div className="contents">
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-4 h-full flex flex-col lg:order-1">
+                            <Swiper
+                                style={{
+                                    "--swiper-navigation-color": "#ffffff",
+                                    "--swiper-pagination-color": "#ffffff",
+                                }}
+                                spaceBetween={10}
+                                navigation={true}
+                                thumbs={{
+                                    swiper:
+                                        thumbsSwiper && !thumbsSwiper.destroyed
+                                            ? thumbsSwiper
+                                            : null,
+                                }}
+                                modules={[FreeMode, Navigation, Thumbs]}
+                                onSlideChange={(swiper) => {
+                                    setSelectedImageId(swiper.activeIndex);
+                                }}
+                                className="mySwiper2 w-full max-w-sm mx-auto rounded-xl overflow-hidden"
+                            >
+                                {productDetail?.images?.map((image, index) => (
+                                    <SwiperSlide
+                                        key={index}
+                                        className="flex justify-center items-center bg-slate-50"
+                                    >
+                                        <div className="w-full max-w-sm mx-auto aspect-square">
+                                            <Image
+                                                src={image}
+                                                className="block w-full h-full object-cover"
+                                                preview={{ mask: "Xem ảnh" }}
+                                            />
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+
+                            <div className="mt-5">
+                                <Swiper
+                                    onSwiper={setThumbsSwiper}
+                                    spaceBetween={10}
+                                    slidesPerView={4}
+                                    freeMode={true}
+                                    watchSlidesProgress={true}
+                                    modules={[FreeMode, Navigation, Thumbs]}
+                                    className="mySwiper h-10 md:h-12 box-border"
+                                >
+                                    {productDetail?.images?.map((image, index) => (
+                                        <SwiperSlide
+                                            key={index}
+                                            className="w-[25%] h-full cursor-pointer"
+                                            onClick={() => handleThumbnailClick(image, index)}
+                                        >
+                                            <img
+                                                src={image}
+                                                className={`block w-full h-full object-cover rounded-xl border ${selectedImageId === index
+                                                    ? "border-amber-500 ring-2 ring-amber-200"
+                                                    : "border-transparent opacity-70 hover:opacity-100"
+                                                    }`}
+                                                alt={`Thumbnail ${index}`}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            </div>
+                        </div>
+
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-5 lg:col-span-2 lg:order-3">
+                            <div className="flex flex-wrap gap-3 border-b border-slate-200 pb-4">
+                                {[
+                                    { id: "mo-ta", label: "Mô tả" },
+                                    { id: "chinh-sach", label: "Chính sách đổi trả" },
+                                    { id: "huong-dan", label: "Hướng dẫn sử dụng" },
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition ${activeTab === tab.id
+                                            ? "bg-amber-600 text-white shadow-sm"
+                                            : "text-slate-600 hover:bg-amber-50"
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="mt-5 text-slate-700 leading-relaxed">
+                                {activeTab === "mo-ta" && (
+                                    <div className="flex flex-col gap-3">
+                                        <h3 className="font-semibold text-slate-900">
+                                            Mô tả sản phẩm
+                                        </h3>
+                                        <span>- Tên sản phẩm: {productDetail?.name}</span>
+                                        <p>
+                                            Đối với các bé trưởng thành, bát thức ăn bệt gây tác hại
+                                            mỏi xương cổ, ảnh hưởng xương sống. Quá trình nhai nuốt
+                                            cũng không hiệu quả do phải cúi thấp. Bát thức ăn nâng cao
+                                            và điều chỉnh được độ nghiêng 15 độ là giải pháp an toàn
+                                            cho vật nuôi. Tư thế thoải mái, dễ chịu khi nhai nuốt sẽ
+                                            làm vật nuôi dễ dàng hấp thụ thức ăn. Tránh tác động xấu về
+                                            lâu dài lên hệ cơ xương và tiêu hóa.
+                                        </p>
+                                        <span>
+                                            - Chất liệu: Nhựa PP an toàn cho sức khỏe và thân thiện
+                                            với môi trường. Chịu nhiệt tốt. Dễ dàng lau chùi.
+                                        </span>
+                                        <span>- Kích thước: dài, rộng 13 cm, cao 14.5 cm.</span>
+                                    </div>
+                                )}
+
+                                {activeTab === "chinh-sach" && (
+                                    <div className="flex flex-col gap-4">
+                                        <h3 className="font-semibold text-lg text-slate-900">
+                                            Chính sách đổi trả
+                                        </h3>
+
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Quý khách có thể đổi hàng đã mua trong các trường hợp
+                                                sau:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
+                                                <li>Hàng bị giao nhầm, nhầm size.</li>
+                                            </ul>
+                                            <p className="text-slate-600">
+                                                <span className="font-medium">Thời hạn đổi hàng:</span>
+                                                05 ngày kể từ ngày mua/nhận hàng.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Điều kiện đổi hàng:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>
+                                                    Hàng chưa qua sử dụng, giặt ủi, phải còn nguyên tem
+                                                    mác, không dính bẩn,…
+                                                </li>
+                                                <li>
+                                                    Hàng đổi phải có giá bằng hoặc cao hơn hàng đã mua.
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Phí đổi hàng:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>
+                                                    Nếu hàng bị lỗi kỹ thuật do nhà sản xuất: miễn phí
+                                                    toàn bộ phí chuyển hàng (gửi trả và giao hàng)
+                                                </li>
+                                                <li>
+                                                    Trường hợp khác Quý khách hàng sẽ chịu chi phí chuyển
+                                                    hàng (gửi trả và giao hàng).
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                CHÍNH SÁCH BẢO HÀNH.
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
+                                                <li>Thời hạn bảo hành dây kéo : trọn đời.</li>
+                                            </ul>
+                                        </div>
+
+                                        <h3 className="font-medium text-slate-800">
+                                            Chân thành cảm ơn Quý Khách Hàng đã quan tâm đến các sản
+                                            phẩm nhãn hiệu Pet Shop.
+                                        </h3>
+                                    </div>
+                                )}
+
+                                {activeTab === "huong-dan" && (
+                                    <div className="flex flex-col gap-2">
+                                        <h3 className="font-semibold text-slate-900">
+                                            Hướng dẫn sử dụng
+                                        </h3>
+                                        <p>
+                                            - Lắp đặt bát ăn theo đúng hướng dẫn để đảm bảo độ nghiêng
+                                            phù hợp cho thú cưng.
+                                        </p>
+                                        <p>
+                                            - Sử dụng nước ấm và khăn mềm để vệ sinh, tránh dùng hóa
+                                            chất mạnh.
+                                        </p>
+                                        <p>
+                                            - Đặt bát ăn ở nơi bằng phẳng, tránh khu vực có nhiều bụi
+                                            bẩn.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div className="space-y-6 lg:self-stretch lg:order-2">
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-6 h-full flex flex-col">
+                            <div className="flex flex-col gap-4 flex-1">
+                                <div>
+                                    <h2 className="font-display text-2xl font-semibold text-slate-900">
+                                        {productDetail?.name}
+                                    </h2>
+                                    <span className="text-sm text-slate-500">
+                                        Đã bán: {productDetail.sold}
+                                    </span>
+                                </div>
+                                <div className="mt-2 flex items-center gap-3">
+                                    <div className="flex items-center">
+                                        {Array.from({ length: 5 }, (_, i) => i + 1).map((star) =>
+                                            star <= Math.round(Number(productDetail.rating || 0)) ? (
+                                                <FaStar key={star} className="text-amber-500" />
+                                            ) : (
+                                                <FaRegStar key={star} className="text-slate-300" />
+                                            ),
+                                        )}
+                                    </div>
+                                    <span className="text-sm text-slate-500">{Number(productDetail.rating || 0).toFixed(1)} • {productDetail.numReviews || 0} đánh giá</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <h5 className="font-semibold text-3xl text-rose-600">
+                                        {new Intl.NumberFormat("vi-VN").format(productDetail.price)}
+                                        đ
+                                    </h5>
+                                    <span className="text-xs px-2 py-1 rounded-full bg-amber-50 text-amber-700">
+                                        Giá tốt hôm nay
+                                    </span>
+                                </div>
+
+                                <div className="h-px bg-slate-100" />
+
+                                <div className="flex flex-col gap-4">
+                                    <div>
+                                        <h3 className="font-semibold text-slate-800 mb-2">
+                                            Số lượng
+                                        </h3>
+                                        <div className="flex items-center w-fit bg-white border border-slate-200 rounded-full">
+                                            <button
+                                                className="size-10 text-lg font-bold bg-slate-50 hover:bg-slate-100 transition rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                                                onClick={handleDecrease}
+                                                disabled={quantity <= 1}
+                                                aria-label="Giảm số lượng"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="px-6 text-lg font-medium">
+                                                {quantity}
+                                            </span>
+                                            <button
+                                                className="size-10 text-lg font-bold bg-slate-50 hover:bg-slate-100 transition rounded-full"
+                                                onClick={handleIncrease}
+                                                aria-label="Tăng số lượng"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold text-slate-800 mb-2">
+                                            Tổng tiền
+                                        </h3>
+                                        <span className="font-semibold text-3xl text-slate-900">
+                                            {new Intl.NumberFormat("vi-VN").format(
+                                                quantity * productDetail.price
+                                            )}
+                                            đ
+                                        </span>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-3 mt-auto pt-4">
+                                        <button
+                                            onClick={handleBuyNow}
+                                            className="bg-amber-600 text-white w-full py-3 text-lg rounded-xl font-semibold hover:bg-amber-500 transition"
+                                        >
+                                            Mua ngay
+                                        </button>
+                                        <button
+                                            onClick={handleAddToCart}
+                                            className="border border-amber-600 text-amber-700 w-full py-3 text-lg rounded-xl font-semibold hover:bg-amber-50 transition"
+                                        >
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                   </div>
                 </div>
 
+<<<<<<< Updated upstream
                 <hr />
 
                 <div className="flex flex-col gap-4">
@@ -375,6 +678,72 @@ const ProductDetail = () => {
                       Thêm vào giỏ hàng
                     </button>
                   </div>
+=======
+            <ProductReviewSummary product={productDetail} />
+
+            <section className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pb-10">
+                <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-5">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-2xl text-slate-900">
+                            Sản phẩm tương tự
+                        </h3>
+                    </div>
+                    <Slider {...settings}>
+                        {products.filter(Boolean).map((product, index) => (
+                            <div key={index} className="px-2">
+                                <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md">
+                                    <div className="relative group">
+                                        <Link to={`/product/${product?.slug || ""}`}>
+                                            <img
+                                                className="w-full h-48 object-cover"
+                                                src={product?.images?.[0] || "/pet.png"}
+                                                alt={product?.name || "Sản phẩm"}
+                                            />
+                                        </Link>
+                                        <div className="flex gap-3 absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
+                                            <button
+                                                onClick={() => handleViewProduct(product)}
+                                                className="bg-white/90 p-2 rounded-full shadow hover:bg-amber-50"
+                                                aria-label="Xem nhanh"
+                                            >
+                                                <MdOutlineRemoveRedEye size={22} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleAddToCart(product)}
+                                                className="bg-white/90 p-2 rounded-full shadow hover:bg-amber-50"
+                                                aria-label="Thêm vào giỏ"
+                                            >
+                                                <IoMdCart size={22} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 flex flex-col gap-2">
+                                        <Link
+                                            to={`/product/${product?.slug || ""}`}
+                                            className="line-clamp-2 text-slate-800 hover:text-amber-600 transition"
+                                        >
+                                            {product?.name || "Sản phẩm không có tên"}
+                                        </Link>
+                                        <div>
+                                            <span className="text-lg font-semibold text-amber-600">
+                                                {(product?.price || 0).toLocaleString("vi-VN") +
+                                                    "₫"}
+                                            </span>
+                                            <button className="mt-3 bg-amber-600 text-white border border-amber-600 transition-colors hover:bg-white hover:text-amber-700 w-full py-2 rounded-xl font-medium">
+                                                Mua ngay
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </Slider>
+                    <DialogProduct
+                        open={open}
+                        product={selectedProduct}
+                        setOpen={setOpen}
+                    />
+>>>>>>> Stashed changes
                 </div>
               </div>
             </div>

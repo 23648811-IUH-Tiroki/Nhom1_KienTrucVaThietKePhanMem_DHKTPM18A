@@ -80,9 +80,9 @@ const UserManagement = () => {
       setTotalPages(Math.ceil((response.data.total || 0) / ITEMS_PER_PAGE));
 
       setStats({
-        total: response.data.total || usersData.length,
-        active: usersData.filter((user) => user.status === "Active").length,
-        inactive: usersData.filter((user) => user.status === "Inactive").length,
+        total: response.data.stats?.total ?? response.data.total ?? usersData.length,
+        active: response.data.stats?.active ?? 0,
+        inactive: response.data.stats?.inactive ?? 0,
       });
 
       setError(null);
@@ -116,9 +116,9 @@ const UserManagement = () => {
       setCurrentPage(1);
 
       setStats({
-        total: usersData.length,
-        active: usersData.filter((user) => user.status === "Active").length,
-        inactive: usersData.filter((user) => user.status === "Inactive").length,
+        total: response.data.stats?.total ?? usersData.length,
+        active: response.data.stats?.active ?? 0,
+        inactive: response.data.stats?.inactive ?? 0,
       });
 
       setError(null);
@@ -153,6 +153,40 @@ const UserManagement = () => {
     link.download = "users.csv";
     link.click();
     window.URL.revokeObjectURL(url);
+  };
+
+  const handleInlineRoleChange = async (user, nextRole) => {
+    try {
+      await updateUserRequest(user._id, { role: nextRole });
+      toast.success("Đã cập nhật vai trò người dùng");
+      if (selectedUser?._id === user._id) {
+        setSelectedUser({ ...selectedUser, role: nextRole });
+      }
+      if (searchTerm || statusFilter !== "all" || roleFilter !== "all") {
+        await searchUsers();
+      } else {
+        await fetchUsers();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message || "Không thể cập nhật vai trò");
+    }
+  };
+
+  const handleInlineStatusChange = async (user, nextStatus) => {
+    try {
+      await updateUserRequest(user._id, { status: nextStatus });
+      toast.success("Đã cập nhật trạng thái tài khoản");
+      if (selectedUser?._id === user._id) {
+        setSelectedUser({ ...selectedUser, status: nextStatus });
+      }
+      if (searchTerm || statusFilter !== "all" || roleFilter !== "all") {
+        await searchUsers();
+      } else {
+        await fetchUsers();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message || "Không thể cập nhật trạng thái");
+    }
   };
 
   useEffect(() => {
@@ -410,6 +444,8 @@ const UserManagement = () => {
                           setSelectedUser(user);
                           setIsDeleteModalOpen(true);
                         }}
+                        onRoleChange={handleInlineRoleChange}
+                        onStatusChange={handleInlineStatusChange}
                       />
                       {!isSearching && totalPages > 1 && (
                         <div className="p-4 flex justify-center items-center gap-4">
@@ -462,6 +498,8 @@ const UserManagement = () => {
                     setSelectedUser(user);
                     setIsDeleteModalOpen(true);
                   }}
+                  onRoleChange={handleInlineRoleChange}
+                  onStatusChange={handleInlineStatusChange}
                 />
               )}
             </div>

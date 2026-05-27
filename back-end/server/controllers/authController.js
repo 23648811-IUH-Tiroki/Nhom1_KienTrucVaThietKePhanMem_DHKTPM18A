@@ -132,6 +132,10 @@ export const signIn = async (req, res) => {
         .status(401)
         .json({ message: "Email hoặc password không đúng" });
     }
+    if (user.isBlocked) {
+      await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
+      return res.status(403).json({ message: "Tài khoản đã bị khóa." });
+    }
     //Kiểm tra password
     const storedPassword = user.password ?? user.passWord;
     const passWordCorrect = verifyPassword(password, storedPassword);

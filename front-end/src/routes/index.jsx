@@ -16,9 +16,12 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Settings from "../pages/Setting/Settings";
 import OrderManagement from "../pages/Order/OrderManagement";
 import InventoryManagement from "../pages/Product/InventoryManagement";
+import UsersPage from "../pages/Admin/UsersPage";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import ForgotPassword from "../pages/ForgotPassWord";
 import ProtectedRoute from "./ProtectedRoute";
+import MyReviews from "../pages/Review/MyReviews";
+import ReviewPage from "../pages/Review/ReviewPage";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +35,8 @@ const AppRoutes = () => {
       <Route path="/cart" element={<CartShop />} />
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/userProfile" element={<UserProfile />} />
+      <Route path="/my-reviews" element={<MyReviews />} />
+      <Route path="/review/:productId/:orderId" element={<ReviewPage />} />
       <Route path="/blogs/news" element={<News />} />
       <Route path="/blogs/news/:slug" element={<NewsDetail />} />
       <Route path="/categories/:slug" element={<Category />} />
@@ -40,6 +45,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <UserManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={["admin","superadmin"]}>
+            <UsersPage />
           </ProtectedRoute>
         }
       />

@@ -21,6 +21,14 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  numReviews: {
+    type: Number,
+    default: 0,
+  },
   images: {
     type: [String], 
     default: [],
@@ -35,6 +43,18 @@ const productSchema = new mongoose.Schema({
     unique: true,
   },
 }, { collection: 'products' });
+
+productSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "product",
+  options: {
+    sort: { createdAt: -1 },
+  },
+});
+
+productSchema.set("toJSON", { virtuals: true });
+productSchema.set("toObject", { virtuals: true });
 
 const Product = mongoose.model('Product', productSchema);
 export default Product;

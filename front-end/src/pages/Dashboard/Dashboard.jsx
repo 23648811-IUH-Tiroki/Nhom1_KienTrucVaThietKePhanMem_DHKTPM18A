@@ -349,12 +349,20 @@ const Dashboard = () => {
 
   const getStatusColor = (status) => {
     const statusColors = {
+<<<<<<< Updated upstream
       "Chờ xử lý": "text-yellow-500 bg-yellow-100",
       "Đang xử lý": "text-orange-500 bg-orange-100",
       "Đang giao hàng": "text-blue-500 bg-blue-100",
       "Đã giao hàng": "text-purple-500 bg-purple-100",
       "Hoàn tất": "text-green-500 bg-green-100",
       "Đã hủy": "text-red-500 bg-red-100",
+=======
+      pending: "text-yellow-500 bg-yellow-100",
+      confirmed: "text-orange-500 bg-orange-100",
+      shipping: "text-blue-500 bg-blue-100",
+      delivered: "text-green-500 bg-green-100",
+      cancelled: "text-red-500 bg-red-100",
+>>>>>>> Stashed changes
     };
     return statusColors[status] || "text-gray-500 bg-gray-100";
   };

@@ -9,7 +9,7 @@ import {
     searchProducts,
     filterProductsByPrice,
 } from '../controllers/productController.js';
-import { requireAdmin } from '../middleware/authMiddleware.js';
+import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -19,6 +19,7 @@ router.get("/product/sales", getProductsSale)
 router.get('/:slug', getProductByName);
 router.post("/filterPrice", filterProductsByPrice)
 
+router.use(protectedRoute);
 router.use(requireAdmin);
 
 router.post('/', createProduct);

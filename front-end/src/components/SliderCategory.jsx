@@ -2,35 +2,63 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
+import {
+  MdOutlineArrowBackIos,
+  MdOutlineArrowForwardIos,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategoryBySlug } from "../stores/catetorySlice";
 
 function SliderCategory() {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { categories } = useSelector(state => state.categories)
+  const { categories } = useSelector((state) => state.categories);
 
   useEffect(()=>{
     dispatch(fetchCategoryBySlug("shop-cho-cun"));
-  }, [dispatch])
+  }, [dispatch]);
 
   const CustomPrevArrow = (props) => {
     const { onClick } = props;
     return (
+<<<<<<< Updated upstream
       <MdOutlineArrowBackIos className="absolute text-[#e17100] top-1/2 left-0 -translate-y-1/2 z-10 hover:cursor-pointer" size={30} onClick={onClick}/>
+=======
+      <MdOutlineArrowBackIos
+        className="absolute text-[#e17100] top-1/2 left-0 -translate-y-1/2 z-10 hover:cursor-pointer"
+        size={30}
+        onClick={onClick}
+      />
+>>>>>>> Stashed changes
     );
   };
 
   const CustomNextArrow = (props) => {
     const { onClick } = props;
     return (
+<<<<<<< Updated upstream
       <MdOutlineArrowForwardIos className="absolute text-[#e17100] top-1/2 right-0 -translate-y-1/2 hover:cursor-pointer" size={30} onClick={onClick}/>
+=======
+      <MdOutlineArrowForwardIos
+        className="absolute text-[#e17100] top-1/2 right-0 -translate-y-1/2 hover:cursor-pointer"
+        size={30}
+        onClick={onClick}
+      />
+>>>>>>> Stashed changes
     );
   };
+
+  const totalCategories = categories?.length || 0;
+
+  const baseSlidesToShow = Math.min(totalCategories, 5) || 1;
+
+  const slidesFor = (max) => {
+    return Math.min(totalCategories, max) || 1;
+  };
+
+  const canLoop = totalCategories > baseSlidesToShow;
 
   var settings = {
     infinite: true,
@@ -66,6 +94,7 @@ function SliderCategory() {
   return (
     <div className="relative md:bottom-20 z-20 max-w-[1200px] mx-auto bg-amber-50 border-1 border-amber-500">
       <Slider {...settings}>
+<<<<<<< Updated upstream
       {
         categories.map((item, index) => (
           <div key={index}>
@@ -77,9 +106,32 @@ function SliderCategory() {
           </div>
         ))
       }
+=======
+        {categories.map((item, index) => (
+          <div key={index}>
+            <div
+              onClick={() =>
+                navigate(
+                  `/categories/${item.slug.replace(/(-cho-cun|-cho-meo)$/, "")}`,
+                )
+              }
+              className={`h-30 md:h-40 flex flex-col justify-center items-center border-amber-500 group hover:cursor-pointer ${index === 0 ? "" : "border-l-1"}`}
+            >
+              <img
+                src={item.image}
+                alt=""
+                className="size-16 md:size-20 transition-transform duration-500 group-hover:rotate-y-[360deg]"
+              />
+              <span className="group-hover:text-amber-700 text-[12px] md:text-base">
+                {item.name.replace(/( cho cún| cho mèo)$/, "")}
+              </span>
+            </div>
+          </div>
+        ))}
+>>>>>>> Stashed changes
       </Slider>
     </div>
-  )
+  );
 }
 
 export default SliderCategory;

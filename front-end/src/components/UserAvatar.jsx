@@ -7,7 +7,7 @@ const UserAvatar = ({ src, alt, size = "md" }) => {
   };
 
   const convertBase64ToImage = (base64) => {
-    if (!base64) return "/avarar.png";
+    if (!base64) return "/avatar.png";
     return `data:image/jpeg;base64,${base64}`;
   };
 

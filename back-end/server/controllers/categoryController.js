@@ -29,14 +29,19 @@ export const getCategoryById = async (req, res) => {
 };
 
 export const createCategory = async (req, res) => {
-  const { name, description, image } = req.body;
+  const { name, description, image, type, slug_type } = req.body;
+  const categoryType = type || "KHÁC";
+  const categorySlugType = slug_type || createSlug(categoryType);
+  const categoryDescription = description?.trim() ? description : `Danh mục ${name}`;
   const slug = createSlug(name); // Tạo slug từ tên danh mục
 
   const category = new Category({
     name,
-    description,
+    description: categoryDescription,
     image,
     slug, // Thêm slug vào dữ liệu
+    type: categoryType,
+    slug_type: categorySlugType,
   });
 
   try {

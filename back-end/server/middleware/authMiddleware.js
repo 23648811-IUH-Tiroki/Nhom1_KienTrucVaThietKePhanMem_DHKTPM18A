@@ -11,6 +11,9 @@ export const protectedRoute = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại!" });
         }
+        if (user.isBlocked) {
+            return res.status(403).json({ message: "Tài khoản đã bị khóa." });
+        }
         req.user = user;
         next();
     } catch (error) {
@@ -20,7 +23,7 @@ export const protectedRoute = async (req, res, next) => {
 }
 
 export const requireAdmin = (req, res, next) => {
-    if (req.user?.role !== "admin") {
+    if (!(req.user?.role === "admin" || req.user?.role === "superadmin")) {
         return res.status(403).json({
             message: "Bạn không có quyền truy cập trang này"
         });

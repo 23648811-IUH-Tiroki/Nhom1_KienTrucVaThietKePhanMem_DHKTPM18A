@@ -30,8 +30,8 @@ router.get('/paginated', getUsersWithPagination);
 router.get('/search', searchUsers);
 router.get('/:id', getUserById);
 router.post('/', createUser);
-
 router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+
+// Admin user management is handled under /api/admin for block/role actions.
 
 export default router;

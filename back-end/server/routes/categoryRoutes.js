@@ -10,7 +10,7 @@ import {
     getProductByCatetoryType,
     getProductByCatetoryName
 } from '../controllers/categoryController.js'
-import { requireAdmin } from '../middleware/authMiddleware.js';
+import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -20,6 +20,7 @@ router.get("/catetory/:slug_type", getCategoryByType);
 router.get('/search', searchCategories);
 router.get("/name/:slug", getProductByCatetoryName)
 
+router.use(protectedRoute);
 router.use(requireAdmin);
 
 // router.get('/:id', getCategoryById);

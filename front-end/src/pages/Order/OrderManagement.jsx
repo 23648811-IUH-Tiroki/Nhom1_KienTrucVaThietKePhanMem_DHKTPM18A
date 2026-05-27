@@ -42,6 +42,34 @@ const OrderManagement = () => {
     averageOrderValue: 0,
   });
 
+<<<<<<< Updated upstream
+=======
+  const normalizeStatus = (status) => {
+    if (!status) return "pending";
+    const normalized = String(status).trim();
+
+    switch (normalized) {
+      case "pending":
+      case "Chờ xác nhận":
+        return "pending";
+      case "confirmed":
+      case "Đã xác nhận":
+        return "confirmed";
+      case "shipping":
+      case "Đang giao":
+        return "shipping";
+      case "delivered":
+      case "Đã giao":
+        return "delivered";
+      case "cancelled":
+      case "Đã hủy":
+        return "cancelled";
+      default:
+        return "pending";
+    }
+  };
+
+>>>>>>> Stashed changes
   const fetchCurrentUser = useCallback(async () => {
     try {
       const userLocal = JSON.parse(localStorage.getItem("user"));

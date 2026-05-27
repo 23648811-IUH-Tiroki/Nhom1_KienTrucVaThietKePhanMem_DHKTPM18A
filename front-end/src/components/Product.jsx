@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoMdCart } from "react-icons/io";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import DialogProduct from "./DialogProduct";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -127,6 +128,18 @@ function Product({ product }) {
           >
             {product.name}
           </Link>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center">
+                {Array.from({ length: 5 }, (_, i) => i + 1).map((star) =>
+                  star <= Math.round(Number(product.rating || 0)) ? (
+                    <FaStar key={star} className="text-amber-500 text-sm" />
+                  ) : (
+                    <FaRegStar key={star} className="text-slate-300 text-sm" />
+                  ),
+                )}
+              </div>
+              <span className="text-xs text-slate-500">({product.numReviews || 0})</span>
+            </div>
           <div>
             <span className="text-1xl text-[#c49a6c] text-start">
               {product.price.toLocaleString("vi-VN") + "₫"}

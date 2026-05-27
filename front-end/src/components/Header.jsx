@@ -184,14 +184,36 @@ const Header = () => {
     }
   };
 
+  const getAdaptiveSearchDelay = () => {
+    const connection =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    if (!connection) {
+      return 300;
+    }
+
+    const typeDelayMap = {
+      "slow-2g": 1200,
+      "2g": 1000,
+      "3g": 650,
+      "4g": 250,
+    };
+
+    const typeDelay = typeDelayMap[connection.effectiveType] || 300;
+    const rttDelay = connection.rtt ? Math.round(connection.rtt * 1.5) : 0;
+
+    return Math.min(1200, Math.max(200, Math.max(typeDelay, rttDelay)));
+  };
+
   useEffect(() => {
+    const debounceDelay = getAdaptiveSearchDelay();
     const debounceTimer = setTimeout(() => {
       if (searchTerm.trim()) {
         fetchSearchResults(searchTerm);
       } else {
         setSearchResults([]);
       }
-    }, 300);
+    }, debounceDelay);
 
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);

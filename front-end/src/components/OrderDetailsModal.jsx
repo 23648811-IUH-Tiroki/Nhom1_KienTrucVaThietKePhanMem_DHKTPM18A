@@ -4,13 +4,17 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaClock,
+  FaStar,
+  FaRegStar,
 } from "react-icons/fa";
+import ReviewButton from "./reviews/ReviewButton";
 
 export default function OrderDetailsModal({
   selectedOrder,
   formatDate,
   getStatusInfo,
   setShowModal,
+  reviewMap = new Map(),
 }) {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -117,17 +121,26 @@ export default function OrderDetailsModal({
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {selectedOrder.items.map((item, index) => (
+                        {selectedOrder.items.map((item, index) => {
+                          const product = item.product_id || {};
+                          const productId = String(product._id || product.id || "");
+                          const review = reviewMap.get(productId) || null;
+                          const reviewable = ["delivered", "completed"].includes(
+                            selectedOrder.statusNormalized || selectedOrder.status,
+                          );
+                          const stars = Array.from({ length: 5 }, (_, starIndex) => starIndex + 1);
+
+                          return (
                           <tr key={index}>
                             <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                              {item.product_id?.name ||
+                              {product?.name ||
                                 "Sản phẩm không xác định"}
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                               {new Intl.NumberFormat("vi-VN", {
                                 style: "currency",
                                 currency: "VND",
-                              }).format(item.product_id?.price || 0)}
+                              }).format(product?.price || 0)}
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                               {item.quantity}
@@ -140,8 +153,33 @@ export default function OrderDetailsModal({
                                 (item.product_id?.price || 0) * item.quantity
                               )}
                             </td>
+                            <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 font-medium">
+                              {review ? (
+                                <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-1">
+                                    {stars.map((star) =>
+                                      star <= Math.round(Number(review.rating || 0)) ? (
+                                        <FaStar key={star} className="text-amber-500" />
+                                      ) : (
+                                        <FaRegStar key={star} className="text-slate-300" />
+                                      ),
+                                    )}
+                                  </div>
+                                  <ReviewButton to={`/review/${productId}/${selectedOrder._id}`} variant="secondary">
+                                    Chỉnh sửa đánh giá
+                                  </ReviewButton>
+                                </div>
+                              ) : reviewable ? (
+                                <ReviewButton to={`/review/${productId}/${selectedOrder._id}`}>
+                                  Đánh giá sản phẩm
+                                </ReviewButton>
+                              ) : (
+                                <span className="text-gray-500">Chưa đủ điều kiện</span>
+                              )}
+                            </td>
                           </tr>
-                        ))}
+                        );
+                        })}
                       </tbody>
                     </table>
                   </div>

@@ -20,6 +20,27 @@ const ContactSidebar = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
 
+  const getAdaptiveAIDelay = () => {
+    const connection =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    if (!connection) {
+      return 300;
+    }
+
+    const typeDelayMap = {
+      "slow-2g": 1200,
+      "2g": 1000,
+      "3g": 700,
+      "4g": 250,
+    };
+
+    const typeDelay = typeDelayMap[connection.effectiveType] || 300;
+    const rttDelay = connection.rtt ? Math.round(connection.rtt * 1.25) : 0;
+
+    return Math.min(1500, Math.max(200, Math.max(typeDelay, rttDelay)));
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -40,7 +61,16 @@ const ContactSidebar = () => {
     setIsLoading(true);
 
     try {
-      const res = await getAIResponse(currentMessage);
+      const delayMs = getAdaptiveAIDelay();
+      const res = await new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            resolve(await getAIResponse(currentMessage));
+          } catch (error) {
+            reject(error);
+          }
+        }, delayMs);
+      });
 
       const aiResponse = {
         role: "ai",

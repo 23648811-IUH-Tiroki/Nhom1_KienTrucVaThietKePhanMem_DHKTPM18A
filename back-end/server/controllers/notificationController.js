@@ -86,7 +86,7 @@ export const generateSystemNotifications = async (req, res) => {
             });
         }
     
-        const pendingOrders = await Order.find({ status: "Chờ xử lý" })
+        const pendingOrders = await Order.find({ status: "pending" })
             .sort({ order_date: -1 })
             .limit(5);
             

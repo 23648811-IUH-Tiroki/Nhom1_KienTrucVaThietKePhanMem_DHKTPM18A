@@ -30,9 +30,14 @@ const ProductTable = ({
     return () => clearTimeout(timer);
   }, [searchTerm, onSearch]);
 
-  const handleFilter = (e) => {
-    e.preventDefault();
-    onFilter(categoryFilter);
+  const handleFilter = (categoryId) => {
+    onFilter(categoryId);
+  };
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setCategoryFilter(value);
+    handleFilter(value);
   };
 
   return (
@@ -53,10 +58,10 @@ const ProductTable = ({
           </div>
         </div>
         <div className="flex space-x-2">
-          <form onSubmit={handleFilter} className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <select
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
+              onChange={handleCategoryChange}
               className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10 cursor-pointer"
             >
               <option value="">Tất cả danh mục</option>
@@ -66,15 +71,17 @@ const ProductTable = ({
                 </option>
               ))}
             </select>
-            <button
-              type="submit"
+            {/* <button
+              type="button"
+              onClick={() => handleFilter(categoryFilter)}
               className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
             >
               <Funnel className="h-4 w-4 mr-1" />
               Lọc
-            </button>
-          </form>
+            </button> */}
+          </div>
           <button
+            type="button"
             onClick={onCreate}
             className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
           >
@@ -124,68 +131,80 @@ const ProductTable = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    {product.images?.length > 0 && (
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <img
-                          className="h-10 w-10 rounded-full object-cover"
-                          src={product.images[0]}
-                          alt={product.name}
-                        />
-                      </div>
-                    )}
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.name}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    {product.category_id?.name || "N/A"}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(product.price)}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      product.stock > 10
-                        ? "bg-green-100 text-green-800"
-                        : product.stock > 0
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {product.stock} trong kho
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    onClick={() => onEdit(product)}
-                    className="text-blue-600 hover:text-blue-900 mr-4 cursor-pointer"
-                  >
-                    <Pencil className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(product._id)}
-                    className="text-red-600 hover:text-red-900 cursor-pointer"
-                  >
-                    <Trash className="h-5 w-5" />
-                  </button>
+            {products.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-6 py-8 text-center text-sm text-gray-500">
+                  {categoryFilter
+                    ? "Chưa có sản phẩm nào thuộc danh mục này"
+                    : "Chưa có sản phẩm nào"}
                 </td>
               </tr>
-            ))}
+            ) : (
+              products.map((product) => (
+                <tr key={product._id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      {product.images?.length > 0 && (
+                        <div className="flex-shrink-0 h-10 w-10">
+                          <img
+                            className="h-10 w-10 rounded-full object-cover"
+                            src={product.images[0]}
+                            alt={product.name}
+                          />
+                        </div>
+                      )}
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {product.category_id?.name || "N/A"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(product.price)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        product.stock > 10
+                          ? "bg-green-100 text-green-800"
+                          : product.stock > 0
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {product.stock} trong kho
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      type="button"
+                      onClick={() => onEdit(product)}
+                      className="text-blue-600 hover:text-blue-900 mr-4 cursor-pointer"
+                    >
+                      <Pencil className="h-5 w-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(product._id)}
+                      className="text-red-600 hover:text-red-900 cursor-pointer"
+                    >
+                      <Trash className="h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

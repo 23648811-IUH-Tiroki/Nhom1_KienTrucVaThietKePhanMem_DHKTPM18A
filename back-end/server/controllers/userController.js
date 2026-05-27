@@ -1,5 +1,15 @@
 import User from '../models/User.js'
 
+const buildUserStats = async () => {
+  const [total, active, inactive] = await Promise.all([
+    User.countDocuments(),
+    User.countDocuments({ status: "Active" }),
+    User.countDocuments({ status: "Inactive" }),
+  ]);
+
+  return { total, active, inactive };
+};
+
 export const getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
@@ -10,10 +20,12 @@ export const getAllUsers = async (req, res) => {
       .limit(parseInt(limit));
 
     const total = await User.countDocuments();
+    const stats = await buildUserStats();
 
     res.json({
       users: users || [],
       total: total || 0,
+      stats,
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / limit)
     });
@@ -22,7 +34,8 @@ export const getAllUsers = async (req, res) => {
     res.status(500).json({
       message: err.message,
       users: [],
-      total: 0
+      total: 0,
+      stats: { total: 0, active: 0, inactive: 0 }
     });
   }
 };
@@ -55,9 +68,84 @@ export const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    Object.assign(user, req.body);
-    const updatedUser = await user.save();
-    res.json(updatedUser); // Trả về user đã cập nhật
+    const allowedAdminFields = [
+      "fullName",
+      "phone",
+      "role",
+      "status",
+      "avatar",
+      "gender",
+      "address",
+      "shippingAddress",
+      "birthDate",
+      "sold",
+    ];
+
+    const allowedSelfFields = [
+      "fullName",
+      "phone",
+      "address",
+      "shippingAddress",
+      "birthDate",
+      "avatar",
+      "gender",
+    ];
+
+    const updates = {};
+
+    const normalizeGender = (value) => {
+      if (typeof value === "boolean") return value;
+      if (typeof value === "number") return value === 1;
+      if (typeof value !== "string") return undefined;
+
+      const normalized = value.trim().toLowerCase();
+      if (["nam", "male", "m", "true", "1"].includes(normalized)) return true;
+      if (["nu", "nữ", "female", "f", "false", "0"].includes(normalized)) return false;
+      return undefined;
+    };
+
+    // Admin (via requireAdmin) can update a limited set of fields
+    if (req.user && req.user.role === "admin") {
+      Object.keys(req.body || {}).forEach((key) => {
+        if (key === "email" || key === "password") return; // disallow sensitive fields
+        if (allowedAdminFields.includes(key)) {
+          updates[key] = req.body[key];
+        }
+      });
+    } else {
+      // Non-admin can only update their own allowed fields
+      Object.keys(req.body || {}).forEach((key) => {
+        if (key === "email" || key === "password" || key === "role" || key === "status") return;
+        if (allowedSelfFields.includes(key)) {
+          updates[key] = req.body[key];
+        }
+      });
+    }
+
+    if (Object.prototype.hasOwnProperty.call(updates, "gender")) {
+      const normalizedGender = normalizeGender(updates.gender);
+      if (typeof normalizedGender === "undefined") {
+        delete updates.gender;
+      } else {
+        updates.gender = normalizedGender;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "Không có trường hợp lệ để cập nhật hoặc bạn không có quyền." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: updates },
+      { new: true, runValidators: true, context: "query" }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(updatedUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -103,10 +191,12 @@ export const getUsersWithPagination = async (req, res) => {
       .limit(parseInt(limit));
 
     const total = await User.countDocuments();
+    const stats = await buildUserStats();
 
     res.json({
       users: users || [],
       total: total || 0,
+      stats,
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / limit)
     });
@@ -115,7 +205,8 @@ export const getUsersWithPagination = async (req, res) => {
     res.status(500).json({
       message: err.message,
       users: [],
-      total: 0
+      total: 0,
+      stats: { total: 0, active: 0, inactive: 0 }
     });
   }
 };
@@ -145,10 +236,12 @@ export const searchUsers = async (req, res) => {
 
     const users = await User.find(query);
     const total = await User.countDocuments(query);
+    const stats = await buildUserStats();
 
     res.json({
       users: users || [],
       total: total || 0,
+      stats,
     });
   } catch (err) {
     console.error("Error searching users:", err);
@@ -156,6 +249,7 @@ export const searchUsers = async (req, res) => {
       message: err.message,
       users: [],
       total: 0,
+      stats: { total: 0, active: 0, inactive: 0 },
     });
   }
 };

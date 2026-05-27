@@ -132,6 +132,10 @@ const InventoryManagement = () => {
     }
   };
 
+  const handleCategoryCreated = (newCategory) => {
+    setCategories((prevCategories) => [...prevCategories, newCategory]);
+  };
+
    const handleSearch = useCallback(
      async (term) => {
        try {
@@ -273,6 +277,7 @@ const InventoryManagement = () => {
             categories={categories}
             onSubmit={handleSubmit}
             onCancel={() => setIsFormOpen(false)}
+            onCategoryCreated={handleCategoryCreated}
           />
         </div>
       </Modal>

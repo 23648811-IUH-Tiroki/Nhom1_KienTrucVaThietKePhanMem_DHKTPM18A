@@ -261,7 +261,7 @@ export const getDashboardNotifications = async (req, res) => {
     const lowStockProducts = await Product.find({ stock: { $lte: lowStockThreshold } })
       .limit(3);
     
-    const pendingOrders = await Order.find({ status: "Chờ xử lý" })
+    const pendingOrders = await Order.find({ status: "pending" })
       .sort({ order_date: -1 })
       .limit(3);
     
