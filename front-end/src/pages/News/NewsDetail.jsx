@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Breadcrumb2 from "../../components/Breadcrumb2";
 import CommentForm from "../../components/CommentForm";
 import dog1 from "../../assets/images/dog1.jpg";

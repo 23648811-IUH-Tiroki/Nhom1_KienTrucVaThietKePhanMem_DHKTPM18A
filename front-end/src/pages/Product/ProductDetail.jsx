@@ -1,24 +1,22 @@
 /* eslint-disable react/prop-types */
 import { Link, useNavigate, useParams } from "react-router-dom";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import { TiTick } from "react-icons/ti";
 import { FaShippingFast } from "react-icons/fa";
 import { RiRefund2Line } from "react-icons/ri";
 import {
-  MdAssignmentReturn,
-  MdOutlineArrowBackIos,
-  MdOutlineArrowForwardIos,
-  MdOutlineRemoveRedEye,
-  MdOutlineStar,
+    MdAssignmentReturn,
+    MdOutlineArrowBackIos,
+    MdOutlineArrowForwardIos,
+    MdOutlineRemoveRedEye,
 } from "react-icons/md";
-import image1 from "../../assets/images/image1.jpg";
 import Slider from "react-slick";
 import { useEffect, useState } from "react";
 import DialogProduct from "../../components/DialogProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { fetachProductByName, fetchProducts } from "../../stores/productSlice";
+import Breadcrumb2 from "../../components/Breadcrumb2";
 import { Image } from "antd";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import "swiper/css";
@@ -26,591 +24,640 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { IoMdCart } from "react-icons/io";
-import { addToCart } from "../../stores/cartSlice";
-import { ScaleLoader } from "react-spinners";
 import { useCart } from "../../context/CartContext";
 import { toast } from "react-toastify";
 
 const services = [
-  {
-    icon: <TiTick />,
-    title: "100% hàng thật",
-  },
-  {
-    icon: <FaShippingFast />,
-    title: "Freeship mọi nơi",
-  },
-  {
-    icon: <RiRefund2Line />,
-    title: "Hoàn 200% nếu hàng giả",
-  },
-  {
-    icon: <MdAssignmentReturn />,
-    title: "30 ngày đổi trả",
-  },
+    {
+        icon: <TiTick />,
+        title: "100% hàng thật",
+    },
+    {
+        icon: <FaShippingFast />,
+        title: "Freeship mọi nơi",
+    },
+    {
+        icon: <RiRefund2Line />,
+        title: "Hoàn 200% nếu hàng giả",
+    },
+    {
+        icon: <MdAssignmentReturn />,
+        title: "30 ngày đổi trả",
+    },
 ];
 
 const ProductDetail = () => {
-  const [quantity, setQuantity] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("mo-ta");
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("");
-  const [selectedImageId, setSelectedImageId] = useState(0);
+    const [quantity, setQuantity] = useState(1);
+    const [open, setOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState("mo-ta");
+    const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedImageId, setSelectedImageId] = useState(0);
 
-  const { addToCart } = useCart();
-  const { slug } = useParams();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { productDetail, items: products } = useSelector(
-    (state) => state.products
-  );
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(fetachProductByName(slug));
-  }, [slug, dispatch]);
-
-  useEffect(() => {
-    if (productDetail?.images?.length) {
-      setSelectedImage(productDetail.images[0]);
-    }
-  }, [productDetail]);
-
-  const CustomPrevArrow = (props) => {
-    const { onClick } = props;
-    return (
-      <MdOutlineArrowBackIos
-        className="absolute top-1/2 -left-2 bg-amber-50 rounded-full p-2 -translate-y-1/2 z-10 hover:cursor-pointer"
-        size={30}
-        onClick={onClick}
-      />
+    const { addToCart } = useCart();
+    const { slug } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { productDetail, items: products, load, error } = useSelector(
+        (state) => state.products
     );
-  };
 
-  const CustomNextArrow = (props) => {
-    const { onClick } = props;
+    useEffect(() => {
+        dispatch(fetchProducts());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (!slug) return;
+        dispatch(fetachProductByName(slug));
+    }, [slug, dispatch]);
+
+    useEffect(() => {
+        if (productDetail?.images?.length) {
+            setSelectedImageId(0);
+        }
+    }, [productDetail]);
+
+    const CustomPrevArrow = (props) => {
+        const { onClick } = props;
+        return (
+            <MdOutlineArrowBackIos
+                className="absolute top-1/2 -left-3 bg-white/90 rounded-full p-2 -translate-y-1/2 z-10 shadow ring-1 ring-black/5 hover:bg-amber-50 transition hover:cursor-pointer"
+                size={30}
+                onClick={onClick}
+            />
+        );
+    };
+
+    const CustomNextArrow = (props) => {
+        const { onClick } = props;
+        return (
+            <MdOutlineArrowForwardIos
+                className="absolute top-1/2 -right-3 bg-white/90 rounded-full p-2 -translate-y-1/2 z-10 shadow ring-1 ring-black/5 hover:bg-amber-50 transition hover:cursor-pointer"
+                size={30}
+                onClick={onClick}
+            />
+        );
+    };
+
+    const settings = {
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        pauseOnHover: true,
+        rows: 1,
+        lazyLoad: "ondemand",
+        nextArrow: <CustomNextArrow />,
+        prevArrow: <CustomPrevArrow />,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                },
+            },
+        ],
+    };
+
+    const handleDecrease = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleIncrease = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handleThumbnailClick = (_image, index) => {
+        setSelectedImageId(index);
+    };
+
+    const handleViewProduct = (product) => {
+        setSelectedProduct(product);
+        setOpen(true);
+    };
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?._id || user?.id;
+
+    const handleBuyNow = async () => {
+        if (!userId) {
+            navigate("/login");
+            return;
+        }
+
+        navigate("/checkout", {
+            state: {
+                buyNowItems: [
+                    {
+                        product_id: productDetail,
+                        quantity,
+                    },
+                ],
+            },
+        });
+    };
+
+    const handleAddToCart = async () => {
+        if (!userId) {
+            navigate("/login");
+            return;
+        }
+
+        const pagePathAtClick = window.location.pathname;
+        const result = await addToCart(userId, productDetail._id, quantity);
+
+        if (window.location.pathname !== pagePathAtClick) {
+            return;
+        }
+
+        if (!result.success) {
+            toast.error(result.message || "Đã xảy ra lỗi khi thêm vào giỏ hàng");
+        }
+    };
+
+    if (load && !productDetail) {
+        return (
+            <MainLayout>
+                <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-10">
+                    <div className="h-40 md:h-56 rounded-2xl bg-slate-200 animate-pulse" />
+                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.1fr,0.9fr] gap-6">
+                        <div className="space-y-4">
+                            <div className="h-96 rounded-2xl bg-white border border-slate-100 animate-pulse" />
+                            <div className="h-64 rounded-2xl bg-white border border-slate-100 animate-pulse" />
+                        </div>
+                        <div className="h-80 rounded-2xl bg-white border border-slate-100 animate-pulse" />
+                    </div>
+                </div>
+            </MainLayout>
+        );
+    }
+
+    if (!productDetail) {
+        return (
+            <MainLayout>
+                <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-12">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center">
+                        <h2 className="text-xl font-semibold text-slate-800">
+                            Khong tim thay san pham
+                        </h2>
+                        <p className="mt-2 text-sm text-slate-500">
+                            {error || "San pham hien tai khong kha dung."}
+                        </p>
+                        <Link
+                            to="/"
+                            className="mt-4 inline-flex items-center justify-center rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition"
+                        >
+                            Quay ve trang chu
+                        </Link>
+                    </div>
+                </div>
+            </MainLayout>
+        );
+    }
+
+    const breadcrumbLinks = [
+        { label: "Trang chu", href: "/" },
+        {
+            label: productDetail.category_id?.type || "San pham",
+            href: productDetail.category_id?.slug
+                ? `/categories/${productDetail.category_id.slug}`
+                : "/",
+        },
+        { label: productDetail.name || "Chi tiet san pham" },
+    ];
+
     return (
-      <MdOutlineArrowForwardIos
-        className="absolute top-1/2 -right-2 bg-amber-50 rounded-full p-2 -translate-y-1/2 hover:cursor-pointer"
-        size={30}
-        onClick={onClick}
-      />
-    );
-  };
+        <MainLayout>
+            <Breadcrumb2 links={breadcrumbLinks} banner={null} />
+            <div className="bg-white border-b border-amber-100 hidden md:block">
+                <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                    <div className="flex flex-wrap items-center justify-center gap-6 py-3 text-sm text-slate-700">
+                        <span className="font-semibold text-slate-900">Cam kết</span>
+                        {services.map((service, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <span className="text-amber-600">{service.icon}</span>
+                                <span>{service.title}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
-  const settings = {
-    infinite: true,
-    slidesToShow: 5,
-    slidesToScroll: 2,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    pauseOnHover: true,
-    rows: 2,
-    nextArrow: <CustomNextArrow />,
-    prevArrow: <CustomPrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-    ],
-  };
+            <section className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                    <div className="contents">
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-4 h-full flex flex-col lg:order-1">
+                            <Swiper
+                                style={{
+                                    "--swiper-navigation-color": "#ffffff",
+                                    "--swiper-pagination-color": "#ffffff",
+                                }}
+                                spaceBetween={10}
+                                navigation={true}
+                                thumbs={{
+                                    swiper:
+                                        thumbsSwiper && !thumbsSwiper.destroyed
+                                            ? thumbsSwiper
+                                            : null,
+                                }}
+                                modules={[FreeMode, Navigation, Thumbs]}
+                                onSlideChange={(swiper) => {
+                                    setSelectedImageId(swiper.activeIndex);
+                                }}
+                                className="mySwiper2 w-full max-w-sm mx-auto rounded-xl overflow-hidden"
+                            >
+                                {productDetail?.images?.map((image, index) => (
+                                    <SwiperSlide
+                                        key={index}
+                                        className="flex justify-center items-center bg-slate-50"
+                                    >
+                                        <div className="w-full max-w-sm mx-auto aspect-square">
+                                            <Image
+                                                src={image}
+                                                className="block w-full h-full object-cover"
+                                                preview={{ mask: "Xem ảnh" }}
+                                            />
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
+                            <div className="mt-5">
+                                <Swiper
+                                    onSwiper={setThumbsSwiper}
+                                    spaceBetween={10}
+                                    slidesPerView={4}
+                                    freeMode={true}
+                                    watchSlidesProgress={true}
+                                    modules={[FreeMode, Navigation, Thumbs]}
+                                    className="mySwiper h-10 md:h-12 box-border"
+                                >
+                                    {productDetail?.images?.map((image, index) => (
+                                        <SwiperSlide
+                                            key={index}
+                                            className="w-[25%] h-full cursor-pointer"
+                                            onClick={() => handleThumbnailClick(image, index)}
+                                        >
+                                            <img
+                                                src={image}
+                                                className={`block w-full h-full object-cover rounded-xl border ${selectedImageId === index
+                                                    ? "border-amber-500 ring-2 ring-amber-200"
+                                                    : "border-transparent opacity-70 hover:opacity-100"
+                                                    }`}
+                                                alt={`Thumbnail ${index}`}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            </div>
+                        </div>
 
-  const handleIncrease = () => {
-    setQuantity(quantity + 1);
-  };
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-5 lg:col-span-2 lg:order-3">
+                            <div className="flex flex-wrap gap-3 border-b border-slate-200 pb-4">
+                                {[
+                                    { id: "mo-ta", label: "Mô tả" },
+                                    { id: "chinh-sach", label: "Chính sách đổi trả" },
+                                    { id: "huong-dan", label: "Hướng dẫn sử dụng" },
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition ${activeTab === tab.id
+                                            ? "bg-amber-600 text-white shadow-sm"
+                                            : "text-slate-600 hover:bg-amber-50"
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
 
-  const handleThumbnailClick = (image, index) => {
-    setSelectedImage(image);
-    setSelectedImageId(index);
-  };
+                            <div className="mt-5 text-slate-700 leading-relaxed">
+                                {activeTab === "mo-ta" && (
+                                    <div className="flex flex-col gap-3">
+                                        <h3 className="font-semibold text-slate-900">
+                                            Mô tả sản phẩm
+                                        </h3>
+                                        <span>- Tên sản phẩm: {productDetail?.name}</span>
+                                        <p>
+                                            Đối với các bé trưởng thành, bát thức ăn bệt gây tác hại
+                                            mỏi xương cổ, ảnh hưởng xương sống. Quá trình nhai nuốt
+                                            cũng không hiệu quả do phải cúi thấp. Bát thức ăn nâng cao
+                                            và điều chỉnh được độ nghiêng 15 độ là giải pháp an toàn
+                                            cho vật nuôi. Tư thế thoải mái, dễ chịu khi nhai nuốt sẽ
+                                            làm vật nuôi dễ dàng hấp thụ thức ăn. Tránh tác động xấu về
+                                            lâu dài lên hệ cơ xương và tiêu hóa.
+                                        </p>
+                                        <span>
+                                            - Chất liệu: Nhựa PP an toàn cho sức khỏe và thân thiện
+                                            với môi trường. Chịu nhiệt tốt. Dễ dàng lau chùi.
+                                        </span>
+                                        <span>- Kích thước: dài, rộng 13 cm, cao 14.5 cm.</span>
+                                    </div>
+                                )}
 
-  const handleViewProduct = (product) => {
-    setSelectedProduct(product);
-    setOpen(true);
-  };
+                                {activeTab === "chinh-sach" && (
+                                    <div className="flex flex-col gap-4">
+                                        <h3 className="font-semibold text-lg text-slate-900">
+                                            Chính sách đổi trả
+                                        </h3>
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?._id || user?.id;
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Quý khách có thể đổi hàng đã mua trong các trường hợp
+                                                sau:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
+                                                <li>Hàng bị giao nhầm, nhầm size.</li>
+                                            </ul>
+                                            <p className="text-slate-600">
+                                                <span className="font-medium">Thời hạn đổi hàng:</span>
+                                                05 ngày kể từ ngày mua/nhận hàng.
+                                            </p>
+                                        </div>
 
-  const handleBuyNow = async () => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Điều kiện đổi hàng:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>
+                                                    Hàng chưa qua sử dụng, giặt ủi, phải còn nguyên tem
+                                                    mác, không dính bẩn,…
+                                                </li>
+                                                <li>
+                                                    Hàng đổi phải có giá bằng hoặc cao hơn hàng đã mua.
+                                                </li>
+                                            </ul>
+                                        </div>
 
-    navigate("/checkout", {
-      state: {
-        buyNowItems: [{
-          product_id: productDetail,
-          quantity,
-        }],
-      },
-    });
-  };
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                Phí đổi hàng:
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>
+                                                    Nếu hàng bị lỗi kỹ thuật do nhà sản xuất: miễn phí
+                                                    toàn bộ phí chuyển hàng (gửi trả và giao hàng)
+                                                </li>
+                                                <li>
+                                                    Trường hợp khác Quý khách hàng sẽ chịu chi phí chuyển
+                                                    hàng (gửi trả và giao hàng).
+                                                </li>
+                                            </ul>
+                                        </div>
 
-  const handleAddToCart = async () => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
+                                        <div className="space-y-2">
+                                            <h3 className="font-medium text-slate-800">
+                                                CHÍNH SÁCH BẢO HÀNH.
+                                            </h3>
+                                            <ul className="list-disc list-inside text-slate-600">
+                                                <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
+                                                <li>Thời hạn bảo hành dây kéo : trọn đời.</li>
+                                            </ul>
+                                        </div>
 
-    const pagePathAtClick = window.location.pathname;
-    const result = await addToCart(userId, productDetail._id, quantity);
+                                        <h3 className="font-medium text-slate-800">
+                                            Chân thành cảm ơn Quý Khách Hàng đã quan tâm đến các sản
+                                            phẩm nhãn hiệu Pet Shop.
+                                        </h3>
+                                    </div>
+                                )}
 
-    if (window.location.pathname !== pagePathAtClick) {
-      return;
-    }
+                                {activeTab === "huong-dan" && (
+                                    <div className="flex flex-col gap-2">
+                                        <h3 className="font-semibold text-slate-900">
+                                            Hướng dẫn sử dụng
+                                        </h3>
+                                        <p>
+                                            - Lắp đặt bát ăn theo đúng hướng dẫn để đảm bảo độ nghiêng
+                                            phù hợp cho thú cưng.
+                                        </p>
+                                        <p>
+                                            - Sử dụng nước ấm và khăn mềm để vệ sinh, tránh dùng hóa
+                                            chất mạnh.
+                                        </p>
+                                        <p>
+                                            - Đặt bát ăn ở nơi bằng phẳng, tránh khu vực có nhiều bụi
+                                            bẩn.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
 
-    if (!result.success) {
-      toast.error(result.message || "Đã xảy ra lỗi khi thêm vào giỏ hàng");
-    }
-  };
+                    </div>
 
-  if (!productDetail) {
-    return (
-      <div className="h-screen w-screen flex justify-center items-center">
-        <ScaleLoader />
-      </div>
-    );
-  }
+                    <div className="space-y-6 lg:self-stretch lg:order-2">
+                        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-6 h-full flex flex-col">
+                            <div className="flex flex-col gap-4 flex-1">
+                                <div>
+                                    <h2 className="font-display text-2xl font-semibold text-slate-900">
+                                        {productDetail?.name}
+                                    </h2>
+                                    <span className="text-sm text-slate-500">
+                                        Đã bán: {productDetail.sold}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <h5 className="font-semibold text-3xl text-rose-600">
+                                        {new Intl.NumberFormat("vi-VN").format(productDetail.price)}
+                                        đ
+                                    </h5>
+                                    <span className="text-xs px-2 py-1 rounded-full bg-amber-50 text-amber-700">
+                                        Giá tốt hôm nay
+                                    </span>
+                                </div>
 
-  return (
-    <MainLayout>
-      <ul className="gap-10 border-b justify-center border-[#c49a6c] items-center hidden md:flex">
-        <Link className="font-bold text-blue-900">Cam kết</Link>
-        {services.map((service, index) => (
-          <li key={index} className="py-3">
-            <Link className="flex gap-2 justify-center items-center">
-              <span className="text-blue-600">{service.icon}</span>
-              <span className="text-black text-[15px]">{service.title}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+                                <div className="h-px bg-slate-100" />
 
-      <div className="relative">
-        <img className="h-32 md:w-full md:h-full" src={image1} alt="" />
-        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-base md:text-[20px] text-white font-bold text-center">
-          <h1
-            style={{ color: "white" }}
-            className="mb-4 text-2xl hidden md:block"
-          >
-            {productDetail.name}
-          </h1>
-          <div>
-            <Link to="/" className="hover:text-[#c49a6c]">
-              Trang chủ
-            </Link>
-            <span> &gt; </span>
-            <Link to="/shop-meo" className="hover:text-[#c49a6c]">
-              {productDetail.category_id?.type}
-            </Link>
-            <span> &gt; </span>
-            <span className="text-[#e17100] font-semibold">
-              {productDetail.name}
-            </span>
-          </div>
-        </div>
-      </div>
+                                <div className="flex flex-col gap-4">
+                                    <div>
+                                        <h3 className="font-semibold text-slate-800 mb-2">
+                                            Số lượng
+                                        </h3>
+                                        <div className="flex items-center w-fit bg-white border border-slate-200 rounded-full">
+                                            <button
+                                                className="size-10 text-lg font-bold bg-slate-50 hover:bg-slate-100 transition rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                                                onClick={handleDecrease}
+                                                disabled={quantity <= 1}
+                                                aria-label="Giảm số lượng"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="px-6 text-lg font-medium">
+                                                {quantity}
+                                            </span>
+                                            <button
+                                                className="size-10 text-lg font-bold bg-slate-50 hover:bg-slate-100 transition rounded-full"
+                                                onClick={handleIncrease}
+                                                aria-label="Tăng số lượng"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
 
-      <div className="max-w-337.5 mx-auto flex flex-col gap-5 px-5">
-        <div className="flex gap-5 mt-5">
-          <div className="w-full md:w-8/10 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="bg-white shadow-md rounded-lg p-4">
-              <Swiper
-                style={{
-                  "--swiper-navigation-color": "#fff",
-                  "--swiper-pagination-color": "#fff",
-                }}
-                spaceBetween={10}
-                navigation={true}
-                thumbs={{ swiper: thumbsSwiper }}
-                modules={[FreeMode, Navigation, Thumbs]}
-                onSlideChange={(swiper) => {
-                  setSelectedImage(productDetail.images[swiper.activeIndex]);
-                  setSelectedImageId(swiper.activeIndex);
-                }}
-                className="mySwiper2 h-75 md:h-100 w-full rounded-lg overflow-hidden"
-              >
-                {productDetail?.images?.map((image, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className="flex justify-center items-center bg-white"
-                  >
-                    <Image
-                      src={image}
-                      className="block w-full h-full object-cover"
-                      preview={{ mask: "Xem ảnh" }}
+                                    <div>
+                                        <h3 className="font-semibold text-slate-800 mb-2">
+                                            Tổng tiền
+                                        </h3>
+                                        <span className="font-semibold text-3xl text-slate-900">
+                                            {new Intl.NumberFormat("vi-VN").format(
+                                                quantity * productDetail.price
+                                            )}
+                                            đ
+                                        </span>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-3 mt-auto pt-4">
+                                        <button
+                                            onClick={handleBuyNow}
+                                            className="bg-amber-600 text-white w-full py-3 text-lg rounded-xl font-semibold hover:bg-amber-500 transition"
+                                        >
+                                            Mua ngay
+                                        </button>
+                                        <button
+                                            onClick={handleAddToCart}
+                                            className="border border-amber-600 text-amber-700 w-full py-3 text-lg rounded-xl font-semibold hover:bg-amber-50 transition"
+                                        >
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pb-10">
+                <div className="bg-white border border-slate-100 shadow-sm rounded-2xl p-5">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-2xl text-slate-900">
+                            Sản phẩm tương tự
+                        </h3>
+                    </div>
+                    <Slider {...settings}>
+                        {products.filter(Boolean).map((product, index) => (
+                            <div key={index} className="px-2">
+                                <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md">
+                                    <div className="relative group">
+                                        <Link to={`/product/${product?.slug || ""}`}>
+                                            <img
+                                                className="w-full h-48 object-cover"
+                                                src={product?.images?.[0] || "/pet.png"}
+                                                alt={product?.name || "Sản phẩm"}
+                                            />
+                                        </Link>
+                                        <div className="flex gap-3 absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
+                                            <button
+                                                onClick={() => handleViewProduct(product)}
+                                                className="bg-white/90 p-2 rounded-full shadow hover:bg-amber-50"
+                                                aria-label="Xem nhanh"
+                                            >
+                                                <MdOutlineRemoveRedEye size={22} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleAddToCart(product)}
+                                                className="bg-white/90 p-2 rounded-full shadow hover:bg-amber-50"
+                                                aria-label="Thêm vào giỏ"
+                                            >
+                                                <IoMdCart size={22} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 flex flex-col gap-2">
+                                        <Link
+                                            to={`/product/${product?.slug || ""}`}
+                                            className="line-clamp-2 text-slate-800 hover:text-amber-600 transition"
+                                        >
+                                            {product?.name || "Sản phẩm không có tên"}
+                                        </Link>
+                                        <div>
+                                            <span className="text-lg font-semibold text-amber-600">
+                                                {(product?.price || 0).toLocaleString("vi-VN") +
+                                                    "₫"}
+                                            </span>
+                                            <button className="mt-3 bg-amber-600 text-white border border-amber-600 transition-colors hover:bg-white hover:text-amber-700 w-full py-2 rounded-xl font-medium">
+                                                Mua ngay
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </Slider>
+                    <DialogProduct
+                        open={open}
+                        product={selectedProduct}
+                        setOpen={setOpen}
                     />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                </div>
+            </section>
 
-              <hr className="my-5 opacity-10" />
-
-              <Swiper
-                onSwiper={setThumbsSwiper}
-                spaceBetween={10}
-                slidesPerView={4}
-                freeMode={true}
-                watchSlidesProgress={true}
-                modules={[FreeMode, Navigation, Thumbs]}
-                className="mySwiper h-20 md:h-25 box-border py-2.5 mt-4"
-              >
-                {productDetail?.images?.map((image, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className={`w-[25%] h-full transition-opacity duration-200 cursor-pointer ${
-                      selectedImageId === index
-                        ? "border-2 border-amber-500 rounded-lg"
-                        : "border-2 border-transparent"
-                    }`}
-                    onClick={() => handleThumbnailClick(image, index)}
-                  >
-                    <img
-                      src={image}
-                      className={`block w-full h-full object-cover rounded-lg ${
-                        selectedImageId === index
-                          ? "opacity-100"
-                          : "opacity-75 hover:opacity-100"
-                      }`}
-                      alt={`Thumbnail ${index}`}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-
-            <div className="bg-white shadow-md rounded-lg">
-              <div className="p-3 flex flex-col gap-3">
-                <div className="flex gap-5 items-center">
-                  <div className="p-3 flex flex-col gap-3 rounded-[5px]">
-                    <h1 className="text-[22px] font-semibold">
-                      {productDetail?.name}
-                    </h1>
-                    <span className="opacity-50">
-                      Đã bán: {productDetail.sold}
-                    </span>
-                    <div className="flex items-center gap-5">
-                      <h5 className="font-bold text-[25px] text-red-600">
-                        {new Intl.NumberFormat("vi-VN").format(
-                          productDetail.price
-                        )}
-                        đ
-                      </h5>
+            <section className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pb-12">
+                <div className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden">
+                    <div className="border-b border-slate-100 p-5">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                            Liên hệ
+                        </h3>
+                        <p className="text-sm text-slate-600 mb-2">
+                            <span className="font-medium">Showroom Hà Nội:</span> 185 Lệ
+                            Mật, Phường Đức Giang, Quận Long Biên, Thành phố Hà Nội
+                        </p>
+                        <p className="text-sm text-slate-600 mb-2">
+                            <span className="font-medium">Showroom HCM:</span> 180 Nguyễn
+                            Văn Thương, Phường 25, Quận Bình Thạnh, Hồ Chí Minh
+                        </p>
+                        <p className="text-sm text-slate-600 mb-2">
+                            <span className="font-medium">Hotline:</span> 0888.042.637
+                        </p>
+                        <p className="text-sm text-slate-600">
+                            <span className="font-medium">Email:</span>
+                            info@hangxingiatot.com
+                        </p>
                     </div>
-                  </div>
-                </div>
 
-                <hr />
-
-                <div className="flex flex-col gap-4">
-                  <h1 className="font-semibold text-lg text-gray-800">
-                    Số lượng
-                  </h1>
-                  <div className="flex items-center w-fit bg-white border border-gray-300 rounded-full shadow-sm">
-                    <button
-                      className="size-10 text-lg font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={handleDecrease}
-                      disabled={quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span className="px-6 text-lg font-medium">{quantity}</span>
-                    <button
-                      className="size-10 text-lg font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition rounded-full"
-                      onClick={handleIncrease}
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <h1 className="font-semibold text-lg text-gray-800">
-                    Tổng tiền
-                  </h1>
-                  <span className="font-semibold text-3xl text-gray-800">
-                    {new Intl.NumberFormat("vi-VN").format(
-                      quantity * productDetail.price
-                    )}
-                    đ
-                  </span>
-
-                  <div className="flex gap-5">
-                    <button
-                      onClick={() => handleBuyNow(productDetail)}
-                      className="bg-amber-600 text-white w-full py-2 text-[20px] rounded-[10px] cursor-pointer border-2 text-brown-hover hover:bg-transparent"
-                    >
-                      Mua ngay
-                    </button>
-                    <button
-                      onClick={() => handleAddToCart(productDetail)}
-                      className="border-2 border-amber-600 w-full py-2 text-[20px] rounded-[10px] cursor-pointer hover:bg-amber-600 hover:text-white"
-                    >
-                      Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden md:block md:w-2/10 bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="border-b-2 border-gray-200 p-6">
-              <h1 className="text-xl font-semibold text-gray-800 mb-4">
-                Liên hệ
-              </h1>
-              <p className="text-sm text-gray-600 mb-2">
-                <span className="font-medium">Showroom Hà Nội:</span> 185 Lệ
-                Mật, Phường Đức Giang, Quận Long Biên, Thành phố Hà Nội
-              </p>
-              <p className="text-sm text-gray-600 mb-2">
-                <span className="font-medium">Showroom HCM:</span> 180 Nguyễn
-                Văn Thương, Phường 25, Quận Bình Thạnh, Hồ Chí Minh
-              </p>
-              <p className="text-sm text-gray-600 mb-2">
-                <span className="font-medium">Hotline:</span> 0888.042.637
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-medium">Email:</span>{" "}
-                info@hangxingiatot.com
-              </p>
-            </div>
-
-            <div className="p-6">
-              <h1 className="text-xl font-semibold text-gray-800 mb-4">
-                DỊCH VỤ BÁN HÀNG
-              </h1>
-              <ul className="space-y-2">
-                <li className="text-sm text-gray-600 flex items-center">
-                  <span className="mr-2">✅</span>Sản phẩm chất lượng
-                </li>
-                <li className="text-sm text-gray-600 flex items-center">
-                  <span className="mr-2">✅</span>Giao hàng toàn quốc
-                </li>
-                <li className="text-sm text-gray-600 flex items-center">
-                  <span className="mr-2">✅</span>Tư vấn, chăm sóc nhiệt tình
-                </li>
-                <li className="text-sm text-gray-600 flex items-center">
-                  <span className="mr-2">✅</span>Đổi trả sản phẩm trong 7 ngày
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-3 bg-white shadow-md rounded-lg">
-          <div className="flex border-b border-gray-500">
-            {[
-              { id: "mo-ta", label: "Mô tả" },
-              { id: "chinh-sach", label: "Chính sách đổi trả" },
-              { id: "huong-dan", label: "Hướng dẫn sử dụng" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === tab.id ? "bg-brown text-white" : "text-gray-500"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-3">
-            {activeTab === "mo-ta" && (
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium">Mô tả sản phẩm</h3>
-                <span>- Tên sản phẩm: {productDetail?.name}</span>
-                <p>
-                  Đối với các bé trưởng thành, bát thức ăn bệt gây tác hại mỏi
-                  xương cổ, ảnh hưởng xương sống. Quá trình nhai nuốt cũng không
-                  hiệu quả do phải cúi thấp. Bát thức ăn nâng cao và điều chỉnh
-                  được độ nghiêng 15 độ là giải pháp an toàn cho vật nuôi. Tư
-                  thế thoải mái, dễ chịu khi nhai nuốt sẽ làm vật nuôi dễ dàng
-                  hấp thụ thức ăn. Tránh tác động xấu về lâu dài lên hệ cơ xương
-                  và tiêu hóa.
-                </p>
-                <span>
-                  - Chất liệu: Nhựa PP an toàn cho sức khỏe và thân thiện với
-                  môi trường. Chịu nhiệt tốt. Dễ dàng lau chùi.
-                </span>
-                <span>- Kích thước: dài, rộng 13 cm, cao 14.5 cm.</span>
-              </div>
-            )}
-
-            {activeTab === "chinh-sach" && (
-              <div className="flex flex-col gap-4 p-4">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Chính sách đổi trả
-                </h3>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium text-gray-700">
-                    Quý khách có thể đổi hàng đã mua trong các trường hợp sau:
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-600">
-                    <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
-                    <li>Hàng bị giao nhầm, nhầm size.</li>
-                  </ul>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Thời hạn đổi hàng:</span> 05
-                    ngày kể từ ngày mua/nhận hàng.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium text-gray-700">
-                    Điều kiện đổi hàng:
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-600">
-                    <li>
-                      Hàng chưa qua sử dụng, giặt ủi, phải còn nguyên tem mác,
-                      không dính bẩn,…
-                    </li>
-                    <li>Hàng đổi phải có giá bằng hoặc cao hơn hàng đã mua.</li>
-                  </ul>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium text-gray-700">Phí đổi hàng:</h3>
-                  <ul className="list-disc list-inside text-gray-600">
-                    <li>
-                      Nếu hàng bị lỗi kỹ thuật do nhà sản xuất: miễn phí toàn bộ
-                      phí chuyển hàng (gửi trả và giao hàng)
-                    </li>
-                    <li>
-                      Trường hợp khác Quý khách hàng sẽ chịu chi phí chuyển hàng
-                      (gửi trả và giao hàng).
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-medium text-gray-700">
-                    CHÍNH SÁCH BẢO HÀNH.
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-600">
-                    <li>Hàng có lỗi kỹ thuật do nhà sản xuất.</li>
-                    <li>Thời hạn bảo hành dây kéo : trọn đời.</li>
-                  </ul>
-                </div>
-
-                <h3 className="font-medium text-gray-700">
-                  Chân thành cảm ơn Quý Khách Hàng đã quan tâm đến các sản phẩm
-                  nhãn hiệu Pet Shop.
-                </h3>
-              </div>
-            )}
-
-            {activeTab === "huong-dan" && (
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium">Hướng dẫn sử dụng</h3>
-                <p>
-                  - Lắp đặt bát ăn theo đúng hướng dẫn để đảm bảo độ nghiêng phù
-                  hợp cho thú cưng.
-                </p>
-                <p>
-                  - Sử dụng nước ấm và khăn mềm để vệ sinh, tránh dùng hóa chất
-                  mạnh.
-                </p>
-                <p>
-                  - Đặt bát ăn ở nơi bằng phẳng, tránh khu vực có nhiều bụi bẩn.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="p-3 bg-white shadow-md rounded-lg flex flex-col gap-2">
-          <h3 className="font-medium text-2xl">Sản phẩm tương tự</h3>
-          <Slider {...settings}>
-            {products.filter(Boolean).map((product, index) => (
-              <div key={index} className="p-3">
-                <div>
-                <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer block">
-                  <div className="relative group hover:cursor-pointer">
-                      <Link to={`/product/${product?.slug || ""}`}>
-                        <img
-                          className="hover:opacity-70 w-full h-48 object-cover"
-                          src={product?.images?.[0] || "/pet.png"}
-                          alt={product?.name || "Sản phẩm"}
-                        />
-                      </Link>
-                      <div className="flex gap-3 absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100">
-                        <button
-                          onClick={() => handleViewProduct(product)}
-                          className="bg-amber-50 p-2 rounded-[5px] group hover:bg-gray-400"
-                        >
-                          <MdOutlineRemoveRedEye
-                            className="hover:text-white"
-                            size={25}
-                          />
-                        </button>
-                        <button
-                          onClick={() => handleAddToCart(product)}
-                          className="bg-amber-50 p-2 rounded-[5px] group hover:bg-gray-400"
-                        >
-                          <IoMdCart className="hover:text-white" size={25} />
-                        </button>
-                      </div>
+                    <div className="p-5">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                            Dịch vụ bán hàng
+                        </h3>
+                        <ul className="space-y-2 text-sm text-slate-600">
+                            <li className="flex items-center gap-2">
+                                <span>✅</span>Sản phẩm chất lượng
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <span>✅</span>Giao hàng toàn quốc
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <span>✅</span>Tư vấn, chăm sóc nhiệt tình
+                            </li>
+                            <li className="flex items-center gap-2">
+                                <span>✅</span>Đổi trả sản phẩm trong 7 ngày
+                            </li>
+                        </ul>
                     </div>
-                    <div className="py-3 px-4 flex flex-col gap-1 justify-between h-full">
-                      <Link
-                        to={`/product/${product?.slug || ""}`}
-                        className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
-                        >
-                        {product?.name || "Sản phẩm không có tên"}
-                      </Link>
-                      <div>
-                        <span className="text-1xl text-[#c49a6c] text-start">
-                          {(product?.price || 0).toLocaleString("vi-VN") + "₫"}
-                        </span>
-                        <button className="mt-3 mb-2 bg-[#e17100] text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium cursor-pointer">
-                          Mua ngay
-                        </button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
-          <DialogProduct
-            open={open}
-            product={selectedProduct}
-            setOpen={setOpen}
-          />
-        </div>
-      </div>
-    </MainLayout>
-  );
+            </section>
+        </MainLayout>
+    );
 };
 
 export default ProductDetail;

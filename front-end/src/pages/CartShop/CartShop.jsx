@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Breadcrumb2 from "../../components/Breadcrumb2";
 import { FaTrash } from "react-icons/fa";
 import { useCart } from "../../context/CartContext";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Product from "../../components/Product";
 import { ScaleLoader } from "react-spinners";
 import { searchProducts } from "../../services/productService";

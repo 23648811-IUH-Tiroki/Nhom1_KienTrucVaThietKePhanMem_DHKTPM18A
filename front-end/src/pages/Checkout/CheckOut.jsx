@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "../page.scss";
@@ -408,7 +408,7 @@ const CheckOut = () => {
           quantity: item.quantity,
         })),
         total_price: calculateTotal(),
-        status: "Chờ xử lý",
+        status: "pending",
         fullName: formData.receiverName,
         email: formData.email,
         phone: formData.phone,
@@ -487,22 +487,22 @@ const CheckOut = () => {
               <div className="mb-5">
                 <div
                   className={`border ${deliveryOption === "delivery"
-                      ? "border-blue-0"
-                      : "border-gray-300"
+                    ? "border-blue-0"
+                    : "border-gray-300"
                     } rounded p-3 mb-3 cursor-pointer`}
                   onClick={() => handleDeliveryOptionChange("delivery")}
                 >
                   <div className="flex items-center">
                     <div
                       className={`flex items-center justify-center w-6 h-6 border-2 ${deliveryOption === "delivery"
-                          ? "border-blue-0"
-                          : "border-gray-300"
+                        ? "border-blue-0"
+                        : "border-gray-300"
                         } rounded-full mr-2`}
                     >
                       <div
                         className={`w-3 h-3 ${deliveryOption === "delivery"
-                            ? "bg-blue-0"
-                            : "bg-transparent"
+                          ? "bg-blue-0"
+                          : "bg-transparent"
                           } rounded-full`}
                       ></div>
                     </div>
@@ -512,22 +512,22 @@ const CheckOut = () => {
 
                 <div
                   className={`border ${deliveryOption === "pickup"
-                      ? "border-blue-0"
-                      : "border-gray-300"
+                    ? "border-blue-0"
+                    : "border-gray-300"
                     } rounded p-3 cursor-pointer`}
                   onClick={() => handleDeliveryOptionChange("pickup")}
                 >
                   <div className="flex items-center">
                     <div
                       className={`flex items-center justify-center w-6 h-6 border-2 ${deliveryOption === "pickup"
-                          ? "border-blue-0"
-                          : "border-gray-300"
+                        ? "border-blue-0"
+                        : "border-gray-300"
                         } rounded-full mr-2`}
                     >
                       <div
                         className={`w-3 h-3 ${deliveryOption === "pickup"
-                            ? "bg-blue-0"
-                            : "bg-transparent"
+                          ? "bg-blue-0"
+                          : "bg-transparent"
                           } rounded-full`}
                       ></div>
                     </div>
@@ -750,8 +750,8 @@ const CheckOut = () => {
 
             <div
               className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer ${selectedMethod === "cod"
-                  ? "border-blue-0 bg-blue-100"
-                  : "border-gray-300"
+                ? "border-blue-0 bg-blue-100"
+                : "border-gray-300"
                 }`}
               onClick={() => handlePaymentSelection("cod")}
             >
@@ -768,8 +768,8 @@ const CheckOut = () => {
 
             <div
               className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${selectedMethod === "bank"
-                  ? "border-blue-0 bg-blue-100"
-                  : "border-gray-300"
+                ? "border-blue-0 bg-blue-100"
+                : "border-gray-300"
                 }`}
               onClick={() => handlePaymentSelection("bank")}
             >

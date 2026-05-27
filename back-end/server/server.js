@@ -29,6 +29,7 @@ import dashboadRoutes from "./routes/dashboardRoutes.js";
 import { protectedRoute } from "./middleware/authMiddleware.js";
 import { rateLimiter } from "./middleware/rateLimiter.js";
 import redisClient from "./configs/redisClient.js";
+import User from "./models/User.js";
 import { createRequire } from "module";
 // Load connect-redis (CJS) via createRequire to avoid ESM import issues
 const require = createRequire(import.meta.url);
@@ -69,9 +70,30 @@ app.use(
 app.use(express.json());
 
 // Connect to MongoDB
+const ensureUserPhoneIndex = async () => {
+  try {
+    const indexes = await User.collection.indexes();
+    const phoneIndex = indexes.find((index) => index.name === "phone_1");
+
+    if (phoneIndex && !phoneIndex.sparse) {
+      await User.collection.dropIndex("phone_1");
+    }
+
+    await User.collection.createIndex(
+      { phone: 1 },
+      { unique: true, sparse: true, name: "phone_1" },
+    );
+  } catch (error) {
+    console.warn("⚠️ Unable to ensure phone index:", error.message);
+  }
+};
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB"))
+  .then(async () => {
+    console.log("Connected to MongoDB");
+    await ensureUserPhoneIndex();
+  })
   .catch((err) => {
     console.warn("⚠️ MongoDB connection failed. Server continuing without DB.");
     console.warn("Error:", err.message);

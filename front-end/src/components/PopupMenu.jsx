@@ -38,7 +38,7 @@ const PopupMenu = ({ trigger, options, menuType }) => {
       <div
         className={`popup-menu absolute left-0 ${
           menuType === "menuOptionsCategories" ? "w-65" : "w-55"
-        } mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50 ${
+        } mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-[99999] ${
           isOpen ? "open" : ""
         }`}
       >

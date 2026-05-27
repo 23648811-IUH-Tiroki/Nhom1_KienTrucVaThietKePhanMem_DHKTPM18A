@@ -1,0 +1,112 @@
+# GitLab CI/CD pipeline mẫu cho project
+# - Pipeline gồm các stage: install, test, build, docker, deploy.
+# - Mục tiêu: cài dependency, chạy test (nếu có), build frontend, và tùy chọn build/push Docker images lên GitLab Container Registry.
+# - Để dùng phần Docker build/push, cấu hình biến CI/CD: `CI_REGISTRY`, `CI_REGISTRY_USER`, `CI_REGISTRY_PASSWORD` hoặc dùng GitLab built-in `CI_REGISTRY_USER`/`CI_REGISTRY_PASSWORD`.
+
+variables:
+  NODE_ENV: 'test'
+  BACKEND_DIR: back-end
+  FRONTEND_DIR: front-end
+
+stages:
+  - install
+  - test
+  - build
+  - docker
+  - deploy
+
+# Caching for npm to speed up pipeline
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+install_backend:
+  image: node:18
+  stage: install
+  script:
+    - cd $BACKEND_DIR
+    - npm ci
+  artifacts:
+    paths:
+      - $BACKEND_DIR/node_modules
+    expire_in: 1h
+
+install_frontend:
+  image: node:18
+  stage: install
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci
+  artifacts:
+    paths:
+      - $FRONTEND_DIR/node_modules
+    expire_in: 1h
+
+test_backend:
+  image: node:18
+  stage: test
+  script:
+    - cd $BACKEND_DIR
+    - npm test || echo "No tests or tests failed (allowed)"
+  allow_failure: true
+
+test_frontend:
+  image: node:18
+  stage: test
+  script:
+    - cd $FRONTEND_DIR
+    - npm test || echo "No tests or tests failed (allowed)"
+  allow_failure: true
+
+build_backend:
+  image: node:18
+  stage: build
+  script:
+    - cd $BACKEND_DIR
+    - if [ -f package.json ] && grep -q "build" package.json; then npm run build || true; fi
+  artifacts:
+    when: always
+    paths:
+      - $BACKEND_DIR
+
+build_frontend:
+  image: node:18
+  stage: build
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - $FRONTEND_DIR/dist
+    expire_in: 1 week
+
+# Optional: build and push docker images to registry (requires registry credentials)
+docker_build_and_push:
+  image: docker:24
+  services:
+    - docker:dind
+  stage: docker
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "Logging into registry"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/backend:latest back-end
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:latest front-end
+    - docker push $CI_REGISTRY_IMAGE/backend:latest
+    - docker push $CI_REGISTRY_IMAGE/frontend:latest
+  only:
+    - main
+    - master
+
+deploy_manual:
+  image: alpine
+  stage: deploy
+  script:
+    - echo "This is a manual deploy job. Implement deploy steps here (SSH, ansible, terraform apply, etc)."
+  when: manual
+  only:
+    - main

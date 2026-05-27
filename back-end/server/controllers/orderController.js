@@ -3,9 +3,40 @@ import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 // import { current } from "@reduxjs/toolkit";
 
+const normalizeStatus = (value) => {
+  if (!value) return value;
+  const normalized = String(value).trim();
+
+  switch (normalized) {
+    case "pending":
+    case "Chờ xử lý":
+    case "Chờ xác nhận":
+      return "pending";
+    case "confirmed":
+    case "Đang xử lý":
+    case "Đã xác nhận":
+      return "confirmed";
+    case "shipping":
+    case "Đang giao hàng":
+    case "Đang giao":
+      return "shipping";
+    case "delivered":
+    case "Đã giao hàng":
+    case "Đã giao":
+    case "Hoàn tất":
+      return "delivered";
+    case "cancelled":
+    case "Đã hủy":
+      return "cancelled";
+    default:
+      return normalized;
+  }
+};
+
 export const createOrder = async (req, res) => {
   try {
     const { user_id, items, total_price, status } = req.body;
+    const normalizedStatus = normalizeStatus(status) || "pending";
 
     for (const item of items) {
       const product = await Product.findById(item.product_id);
@@ -30,7 +61,7 @@ export const createOrder = async (req, res) => {
       user_id,
       items,
       total_price,
-      status,
+      status: normalizedStatus,
     });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
@@ -96,7 +127,12 @@ export const getOrderById = async (req, res) => {
 export const updateOrder = async (req, res) => {
   try {
     const { status } = req.body;
+    const normalizedStatus = normalizeStatus(status);
     const orderId = req.params.id;
+
+    if (!normalizedStatus) {
+      return res.status(400).json({ message: "Trạng thái không hợp lệ." });
+    }
 
     const currentOrder = await Order.findById(orderId);
 
@@ -104,7 +140,33 @@ export const updateOrder = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    if (status === "Đã hủy" && currentOrder.status !== "Đã hủy") {
+    const isAdmin = req.user?.role === "admin";
+    if (!isAdmin) {
+      const currentStatus = normalizeStatus(currentOrder.status);
+
+      if (normalizedStatus !== "cancelled") {
+        return res.status(403).json({
+          message: "Bạn không có quyền cập nhật trạng thái đơn hàng.",
+        });
+      }
+
+      if (currentOrder.user_id?.toString() !== req.user?._id?.toString()) {
+        return res.status(403).json({
+          message: "Bạn chỉ được huỷ đơn hàng của chính mình.",
+        });
+      }
+
+      if (!["pending", "confirmed"].includes(currentStatus)) {
+        return res.status(400).json({
+          message: "Không thể huỷ đơn hàng ở trạng thái hiện tại.",
+        });
+      }
+    }
+
+    if (
+      normalizedStatus === "cancelled" &&
+      normalizeStatus(currentOrder.status) !== "cancelled"
+    ) {
       for (const item of currentOrder.items) {
         const product = await Product.findById(item.product_id);
         if (product) {
@@ -116,7 +178,7 @@ export const updateOrder = async (req, res) => {
     }
     const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { status: normalizedStatus, updatedAt: new Date() },
       { new: true }
     )
       .populate("user_id")

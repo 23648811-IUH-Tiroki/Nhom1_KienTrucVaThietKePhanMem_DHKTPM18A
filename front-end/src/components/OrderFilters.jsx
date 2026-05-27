@@ -30,11 +30,11 @@ export default function OrderFilters({
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="all">Tất cả trạng thái</option>
-            <option value="Chờ xử lý">Chờ xử lý</option>
-            <option value="Đang xử lý">Đang xử lý</option>
-            <option value="Đang giao hàng">Đang giao hàng</option>
-            <option value="Đã giao hàng">Đã giao hàng</option>
-            <option value="Đã hủy">Đã hủy</option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="shipping">Đang giao</option>
+            <option value="delivered">Đã giao</option>
+            <option value="cancelled">Đã hủy</option>
           </select>
         </div>
       </div>

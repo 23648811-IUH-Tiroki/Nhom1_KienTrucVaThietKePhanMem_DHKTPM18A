@@ -30,7 +30,7 @@ export const fetachProductByName = createAsyncThunk(
   "products/fetachProductByName",
   async (slug) => {
     const response = await fetchProductBySlugRequest(slug)
-    return response.data
+    return response.data?.data ?? response.data
   }
 )
 
@@ -43,20 +43,20 @@ export const featchProductSale = createAsyncThunk(
 )
 
 export const featchProductByCategoryName = createAsyncThunk(
-  "products/featchProductByCategoryName", 
-  async ({slug, currentPage, limit = 8}) => {
+  "products/featchProductByCategoryName",
+  async ({ slug, currentPage, limit = 8 }) => {
     console.log('currentPage: ', currentPage);
-    
+
     const response = await fetchProductsByCategoryNameRequest(slug, currentPage, limit)
     return response.data
   }
 )
 
 export const featchProductFilterProduct = createAsyncThunk(
-  "products/featchProductFilterProduct", 
+  "products/featchProductFilterProduct",
   async (priceRanges) => {
     console.log(priceRanges);
-    
+
     const response = await filterProductsByPriceRequest(priceRanges);
     return response.data;
   }
@@ -113,10 +113,12 @@ const productSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // product by name (slug)
+    // product by name (slug)
     builder
       .addCase(fetachProductByName.pending, (state) => {
         state.load = true;
+        state.productDetail = null;
+        state.error = null;
       })
       .addCase(fetachProductByName.fulfilled, (state, action) => {
         state.productDetail = action.payload;
@@ -127,11 +129,11 @@ const productSlice = createSlice({
         state.error = action.error.message;
       });
 
-    builder.addCase(featchProductSale.fulfilled, (state, action)=>{
+    builder.addCase(featchProductSale.fulfilled, (state, action) => {
       state.productSale = action.payload
     })
 
-    builder.addCase(featchProductByCategoryName.fulfilled, (state, action)=>{
+    builder.addCase(featchProductByCategoryName.fulfilled, (state, action) => {
       state.productByCateoty = action.payload.products;
       state.totalPages = action.payload.totalPages;
     })

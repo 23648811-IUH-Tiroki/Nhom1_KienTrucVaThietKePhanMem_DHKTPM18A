@@ -1,6 +1,6 @@
 import Banner from "../../components/Banner";
 import SliderCategory from "../../components/SliderCategory";
-import MainLayout from "../../layout/mainLayout";
+import MainLayout from "../../layout/MainLayout";
 import ListProduct from "../../components/ListProduct";
 import Marquee from "react-fast-marquee";
 import SaleProduct from "../../components/SaleProduct";

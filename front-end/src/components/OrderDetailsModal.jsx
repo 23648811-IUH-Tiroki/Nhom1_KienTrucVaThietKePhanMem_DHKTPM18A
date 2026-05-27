@@ -74,11 +74,17 @@ export default function OrderDetailsModal({
                       <p className="text-sm text-gray-600 mt-1">
                         <span className="font-medium">Trạng thái:</span>{" "}
                         <span
-                          className={`inline-flex items-center ${getStatusInfo(selectedOrder.status).color
+                          className={`inline-flex items-center ${getStatusInfo(selectedOrder.statusNormalized || selectedOrder.status).color
                             } text-xs px-2 py-1 rounded-full`}
                         >
-                          {getStatusInfo(selectedOrder.status).icon}
-                          <span className="ml-1">{selectedOrder.status}</span>
+                          {getStatusInfo(
+                            selectedOrder.statusNormalized || selectedOrder.status
+                          ).icon}
+                          <span className="ml-1">
+                            {getStatusInfo(
+                              selectedOrder.statusNormalized || selectedOrder.status
+                            ).label || selectedOrder.status}
+                          </span>
                         </span>
                       </p>
                       <p className="text-sm text-gray-600 mt-1">

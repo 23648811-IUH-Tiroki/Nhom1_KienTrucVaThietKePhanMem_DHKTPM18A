@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import MainLayout from '../../layout/mainLayout';
+import MainLayout from '../../layout/MainLayout';
 import image1 from '../../assets/images/image1.jpg';
 import SliderCategory from '../../components/SliderCategory';
 import Filter from '../../components/Filter';
