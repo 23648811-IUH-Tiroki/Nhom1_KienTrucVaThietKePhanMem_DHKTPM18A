@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart2,
   Bell,
@@ -56,6 +57,7 @@ const Dashboard = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(
     document.documentElement.classList.contains("dark-theme")
   );
+  const navigate = useNavigate();
 
   // Fetch current user
   const fetchCurrentUser = useCallback(async () => {
@@ -391,10 +393,12 @@ const Dashboard = () => {
         />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                Tổng Quan Dashboard
-              </h2>
+            <div className="sticky top-0 z-20 bg-gray-100 dark:bg-gray-900 pb-4 pt-2 -mx-4 px-4 md:-mx-6 md:px-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                  Tổng Quan Dashboard
+                </h2>
+              </div>
               <div className="flex flex-col md:flex-row gap-2 w-modern md:w-auto">
                 <select
                   value={timeFilter}
@@ -594,7 +598,7 @@ const Dashboard = () => {
                         Không có thông báo mới
                       </p>
                     ) : (
-                      <ul className="space-y-3 max-h-[300px] overflow-y-auto">
+                      <ul className="space-y-3 max-h-75 overflow-y-auto">
                         {notifications.map((notification, index) => (
                           <li
                             key={index}

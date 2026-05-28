@@ -50,7 +50,6 @@ const Header = () => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const headerRef = useRef(null);
-
   // useEffect(() => {
   //   const handleScroll = () => {
   //     if (window.scrollY > 100) {
@@ -377,11 +376,11 @@ const Header = () => {
       href: `/dashboard/`,
     },
 
-    {
-      label: "Quản lý người dùng",
-      icon: <RiAdminFill className="mr-2" />,
-      href: `/user-management`,
-    },
+    // {
+    //   label: "Quản lý người dùng",
+    //   icon: <RiAdminFill className="mr-2" />,
+    //   href: `/user-management`,
+    // },
     ...(isAdmin
       ? [
         {
@@ -470,7 +469,6 @@ const Header = () => {
                   />
                 )}
               </div>
-
               {/* user */}
               <div className="flex items-center space-x-4 cursor-pointer user-menu">
                 {loggedIn ? (
