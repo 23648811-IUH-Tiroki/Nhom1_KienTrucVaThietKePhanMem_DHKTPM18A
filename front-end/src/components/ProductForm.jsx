@@ -113,7 +113,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
             name="name"
             defaultValue={product?.name || ""}
             required
-            className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
           />
         </div>
         <div>
@@ -124,7 +124,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
             step="0.01"
             defaultValue={product?.price || ""}
             required
-            className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
           />
         </div>
         <div>
@@ -136,7 +136,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
             name="stock"
             defaultValue={product?.stock || ""}
             required
-            className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
           />
         </div>
         <div>
@@ -153,7 +153,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
               }
             }}
             required
-            className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
           >
             <option value="">Chọn danh mục</option>
             {categories.map((category) => (
@@ -174,7 +174,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   placeholder="Nhập tên danh mục mới"
-                  className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
                 />
               </div>
               <div>
@@ -184,7 +184,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
                 <select
                   value={newCategoryType}
                   onChange={(e) => setNewCategoryType(e.target.value)}
-                  className="mt-1 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="mt-1 block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
                 >
                   <option value="KHÁC">KHÁC</option>
                   <option value="SHOP CHO CÚN">SHOP CHO CÚN</option>
@@ -202,7 +202,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
           name="description"
           rows={3}
           defaultValue={product?.description || ""}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
         />
       </div>
 
@@ -216,7 +216,7 @@ const ProductForm = ({ product, categories, onSubmit, onCancel, onCategoryCreate
             value={newImageUrl}
             onChange={(e) => setNewImageUrl(e.target.value)}
             placeholder="Nhập URL hình ảnh hoặc để trống để chọn file"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="block w-full h-11 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
           />
           <button
             type="button"

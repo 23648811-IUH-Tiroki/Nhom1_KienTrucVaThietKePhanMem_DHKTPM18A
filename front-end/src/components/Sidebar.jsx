@@ -1,4 +1,4 @@
-import { Home, Users, Settings, LogOut, Bell } from "lucide-react";
+import { Home, Users, Settings, LogOut, Bell, Layers } from "lucide-react";
 import { FaBell } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { RiGalleryView2 } from "react-icons/ri";
@@ -72,6 +72,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
       icon: <MdOutlineInventory2 size={18} className="mr-3" />,
     },
     {
+      path: "/admin/categories",
+      label: "Quản lý danh mục",
+      icon: <Layers size={18} className="mr-3" />,
+    },
+    {
       path: "/order-management",
       label: "Quản lý đơn hàng",
       icon: <RiGalleryView2 size={18} className="mr-3" />,
@@ -92,9 +97,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
     <>
       <LoadingOverlay isVisible={isLoggingOut} />
       <aside
-        className={`${
-          sidebarOpen ? "w-64" : "w-20"
-        } hidden md:flex flex-col transition-all duration-300 ease-in-out`}
+        className={`${sidebarOpen ? "w-64" : "w-20"
+          } hidden md:flex flex-col transition-all duration-300 ease-in-out`}
       >
         <div className="flex items-center justify-between p-4 sidebar-header">
           {sidebarOpen ? (
@@ -124,11 +128,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`flex items-center p-2 ${
-                    location.pathname === item.path
+                  className={`flex items-center p-2 ${location.pathname === item.path
                       ? "nav-item-active"
                       : "nav-item"
-                  }`}
+                    }`}
                 >
                   {item.icon}
                   {sidebarOpen && item.label}

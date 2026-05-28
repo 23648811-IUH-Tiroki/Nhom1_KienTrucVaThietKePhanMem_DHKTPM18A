@@ -4,7 +4,6 @@ const categorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   description: {
     type: String,
@@ -26,6 +25,8 @@ const categorySchema = new mongoose.Schema({
     required: true,
   },
 }, { collection: 'categories' });
+
+categorySchema.index({ name: 1, type: 1 }, { unique: true });
 
 const Category = mongoose.model('Category', categorySchema);
 

@@ -1,16 +1,97 @@
 import Category from '../models/Category.js';
-import slugify from 'slugify'; // Thêm thư viện slugify
+import slugify from 'slugify';
 import Product from '../models/Product.js';
 
-// Tạo slug từ tên danh mục
-const createSlug = (name) => {
-  return slugify(name, { lower: true, strict: true });
+const createSlug = (value) => {
+  return slugify(String(value || ''), { lower: true, strict: true });
+};
+
+const normalizeCategoryPayload = (payload = {}, existingCategory = null) => {
+  const name = String(payload.name ?? existingCategory?.name ?? '').trim();
+  const type = String(payload.type ?? existingCategory?.type ?? '').trim();
+  const image = String(payload.image ?? existingCategory?.image ?? '').trim();
+  const descriptionValue = String(
+    payload.description ?? existingCategory?.description ?? ''
+  ).trim();
+
+  const slugSource = payload.slug ?? existingCategory?.slug ?? name;
+  const slug = createSlug(slugSource) || `category-${Date.now()}`;
+  const slugTypeSource = payload.slug_type ?? existingCategory?.slug_type ?? type;
+  const slug_type = createSlug(slugTypeSource) || createSlug(type);
+
+  return {
+    name,
+    description: descriptionValue || (name ? `Danh mục ${name}` : ''),
+    image,
+    slug,
+    type,
+    slug_type,
+  };
+};
+
+const ensureUniqueCategory = async (payload, excludeId = null) => {
+  const idFilter = excludeId ? { $ne: excludeId } : { $exists: true };
+
+  if (payload.slug) {
+    const existingSlug = await Category.findOne({
+      slug: payload.slug,
+      _id: idFilter,
+    });
+    if (existingSlug) {
+      return 'Slug đã tồn tại. Vui lòng chọn slug khác.';
+    }
+  }
+
+  if (payload.name && payload.type) {
+    const existingName = await Category.findOne({
+      name: payload.name,
+      type: payload.type,
+      _id: idFilter,
+    });
+    if (existingName) {
+      return 'Tên danh mục đã tồn tại trong cùng loại.';
+    }
+  }
+
+  return null;
 };
 
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
-    res.json(categories);
+    const pageRaw = Number.parseInt(req.query.page, 10);
+    const limitRaw = Number.parseInt(req.query.limit, 10);
+    const search = String(req.query.search || req.query.query || '').trim();
+    const type = String(req.query.type || '').trim();
+
+    const shouldPaginate = Number.isFinite(pageRaw) || Number.isFinite(limitRaw);
+    const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? limitRaw : 10;
+
+    const filter = {};
+    if (search) {
+      filter.name = { $regex: search, $options: 'i' };
+    }
+    if (type) {
+      filter.type = type;
+    }
+
+    if (!shouldPaginate) {
+      const categories = await Category.find(filter).sort({ name: 1 });
+      return res.json(categories);
+    }
+
+    const skip = (page - 1) * limit;
+    const [categories, total] = await Promise.all([
+      Category.find(filter).sort({ name: 1 }).skip(skip).limit(limit),
+      Category.countDocuments(filter),
+    ]);
+
+    res.json({
+      data: categories,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -29,24 +110,30 @@ export const getCategoryById = async (req, res) => {
 };
 
 export const createCategory = async (req, res) => {
-  const { name, description, image, type, slug_type } = req.body;
-  const categoryType = type || "KHÁC";
-  const categorySlugType = slug_type || createSlug(categoryType);
-  const categoryDescription = description?.trim() ? description : `Danh mục ${name}`;
-  const slug = createSlug(name); // Tạo slug từ tên danh mục
-
-  const category = new Category({
-    name,
-    description: categoryDescription,
-    image,
-    slug, // Thêm slug vào dữ liệu
-    type: categoryType,
-    slug_type: categorySlugType,
-  });
-
   try {
+    const payload = normalizeCategoryPayload(req.body);
+
+    if (!payload.name) {
+      return res.status(400).json({ message: 'Tên danh mục là bắt buộc' });
+    }
+    if (!payload.type) {
+      return res.status(400).json({ message: 'Loại danh mục là bắt buộc' });
+    }
+    if (!payload.slug) {
+      return res.status(400).json({ message: 'Slug là bắt buộc' });
+    }
+    if (!payload.slug_type) {
+      return res.status(400).json({ message: 'Slug type là bắt buộc' });
+    }
+
+    const uniqueError = await ensureUniqueCategory(payload);
+    if (uniqueError) {
+      return res.status(400).json({ message: uniqueError });
+    }
+
+    const category = new Category(payload);
     const newCategory = await category.save();
-    res.status(201).json(newCategory);
+    return res.status(201).json(newCategory);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -59,12 +146,27 @@ export const updateCategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    // Cập nhật slug nếu tên thay đổi
-    if (req.body.name) {
-      req.body.slug = createSlug(req.body.name);
+    const payload = normalizeCategoryPayload(req.body, category);
+
+    if (!payload.name) {
+      return res.status(400).json({ message: 'Tên danh mục là bắt buộc' });
+    }
+    if (!payload.type) {
+      return res.status(400).json({ message: 'Loại danh mục là bắt buộc' });
+    }
+    if (!payload.slug) {
+      return res.status(400).json({ message: 'Slug là bắt buộc' });
+    }
+    if (!payload.slug_type) {
+      return res.status(400).json({ message: 'Slug type là bắt buộc' });
     }
 
-    Object.assign(category, req.body);
+    const uniqueError = await ensureUniqueCategory(payload, category._id);
+    if (uniqueError) {
+      return res.status(400).json({ message: uniqueError });
+    }
+
+    Object.assign(category, payload);
     const updatedCategory = await category.save();
     res.json(updatedCategory);
   } catch (err) {
@@ -79,7 +181,7 @@ export const deleteCategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    await category.remove();
+    await Category.deleteOne({ _id: req.params.id });
     res.json({ message: "Category deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -88,26 +190,30 @@ export const deleteCategory = async (req, res) => {
 
 
 export const getProductByCatetoryType = async (req, res) => {
-  try{
+  try {
     const { slug_type } = req.params;
     const categorys = await Category.find({ slug_type: slug_type });
-    if (categorys===0) {
+    if (categorys.length === 0) {
       return res.status(404).json({ message: "Danh mục không tồn tại" });
     }
     const categoryIds = categorys.map(category => category._id);
     const products = await Product.find({ category_id: { $in: categoryIds } });
     res.status(200).json(products)
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 }
 
 export const searchCategories = async (req, res) => {
-  const { query } = req.query;
   try {
+    const search = String(req.query.search || req.query.query || '').trim();
+    if (!search) {
+      return res.status(400).json({ message: 'Query parameter is required' });
+    }
+
     const categories = await Category.find({
-      name: { $regex: query, $options: 'i' }, // Tìm kiếm theo tên danh mục (không phân biệt hoa thường)
-    });
+      name: { $regex: search, $options: 'i' },
+    }).sort({ name: 1 });
     res.json(categories);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -116,14 +222,14 @@ export const searchCategories = async (req, res) => {
 
 
 export const getCategoryByType = async (req, res) => {
-  try{
-    const { slug_type } = req.params;    
+  try {
+    const { slug_type } = req.params;
     const categorys = await Category.find({ slug_type: slug_type });
-    if (categorys===0) {
+    if (categorys.length === 0) {
       return res.status(404).json({ message: "Danh mục không tồn tại" });
     }
     res.status(200).json(categorys);
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 }
@@ -135,8 +241,8 @@ export const getProductByCatetoryName = async (req, res) => {
   const skip = (page - 1) * limit;
 
   console.log(req.query);
-  
-  
+
+
 
   if (page < 1 || limit < 1) {
     return res.status(400).json({ message: "Page và limit phải là số nguyên dương" });

@@ -16,6 +16,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Settings from "../pages/Setting/Settings";
 import OrderManagement from "../pages/Order/OrderManagement";
 import InventoryManagement from "../pages/Product/InventoryManagement";
+import CategoryManagement from "../pages/Category/CategoryManagement";
 import UsersPage from "../pages/Admin/UsersPage";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import ForgotPassword from "../pages/ForgotPassWord";
@@ -51,7 +52,7 @@ const AppRoutes = () => {
       <Route
         path="/admin/users"
         element={
-          <ProtectedRoute allowedRoles={["admin","superadmin"]}>
+          <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
             <UsersPage />
           </ProtectedRoute>
         }
@@ -85,6 +86,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <InventoryManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/categories"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <CategoryManagement />
           </ProtectedRoute>
         }
       />

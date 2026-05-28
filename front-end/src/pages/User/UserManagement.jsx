@@ -103,7 +103,7 @@ const UserManagement = () => {
       setIsLoading(true);
       const params = {};
       if (searchTerm) params.searchTerm = searchTerm;
-      if (statusFilter !== "all") params.status = statusFilter; 
+      if (statusFilter !== "all") params.status = statusFilter;
       if (roleFilter !== "all") params.role = roleFilter;
 
       const response = await searchUsersRequest(params);
@@ -112,7 +112,7 @@ const UserManagement = () => {
         : [];
       setUsers(usersData);
       setFilteredUsers(usersData);
-      setTotalPages(1); 
+      setTotalPages(1);
       setCurrentPage(1);
 
       setStats({
@@ -294,9 +294,20 @@ const UserManagement = () => {
           setMobileSidebarOpen={setMobileSidebarOpen}
           currentUser={currentUser}
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <h1 className="text-2xl font-bold text-gray-800">Quản lý người dùng</h1>
-          <div className="max-w-7xl mx-auto">
+        <main className="container mx-auto px-4 py-8 overflow-y-auto transition-opacity duration-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-3">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Quản lý người dùng</h1>
+              <p className="text-sm text-gray-500">Tổng số: {stats.total}</p>
+            </div>
+            <button
+              onClick={resetFilters}
+              className="text-sm text-blue-600 hover:text-blue-800 focus:outline-none cursor-pointer border border-blue-500 rounded-md px-4 py-2"
+            >
+              Đặt lại bộ lọc
+            </button>
+          </div>
+          <div>
             {currentView === "list" && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="p-4 rounded-lg shadow-sm card bg-white dark:bg-gray-800">
@@ -370,20 +381,21 @@ const UserManagement = () => {
                 resetFilters={resetFilters}
               />
             )}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-              {isLoading ? (
-                <div className="flex justify-center items-center p-12">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden min-h-[60vh] relative">
+              {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/70 dark:bg-gray-800/70 z-10">
                   <LoadingSpinner size="large" />
                 </div>
-              ) : error ? (
+              )}
+              {error ? (
                 <div className="p-6 text-center text-red-600 dark:text-red-400 flex flex-col items-center">
                   <AlertCircle size={24} className="mb-2" />
                   {error}
                   <button
                     onClick={() =>
                       searchTerm ||
-                      statusFilter !== "all" ||
-                      roleFilter !== "all"
+                        statusFilter !== "all" ||
+                        roleFilter !== "all"
                         ? searchUsers()
                         : fetchUsers()
                     }
@@ -397,11 +409,10 @@ const UserManagement = () => {
                   <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
                     <div className="text-lg font-medium text-gray-800 dark:text-gray-700">
                       {filteredUsers.length >= 0
-                        ? `${filteredUsers.length} ${
-                            filteredUsers.length === 1
-                              ? "người dùng"
-                              : "người dùng"
-                          } được tìm thấy`
+                        ? `${filteredUsers.length} ${filteredUsers.length === 1
+                          ? "người dùng"
+                          : "người dùng"
+                        } được tìm thấy`
                         : "Đang tải danh sách người dùng..."}
                     </div>
                     {!isSearching && (
@@ -464,11 +475,10 @@ const UserManagement = () => {
                               <button
                                 key={page}
                                 onClick={() => handlePageChange(page)}
-                                className={`px-3 py-1 rounded-lg ${
-                                  currentPage === page
+                                className={`px-3 py-1 rounded-lg ${currentPage === page
                                     ? "bg-blue-600 text-white dark:bg-blue-700"
                                     : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 cursor-pointer"
-                                }`}
+                                  }`}
                               >
                                 {page}
                               </button>

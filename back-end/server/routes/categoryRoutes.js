@@ -15,10 +15,11 @@ import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.get('/', getAllCategories);
-router.get("/:slug_type", getProductByCatetoryType);
-router.get("/catetory/:slug_type", getCategoryByType);
 router.get('/search', searchCategories);
-router.get("/name/:slug", getProductByCatetoryName)
+router.get("/catetory/:slug_type", getCategoryByType);
+router.get("/name/:slug", getProductByCatetoryName);
+router.get('/:id([0-9a-fA-F]{24})', getCategoryById);
+router.get("/:slug_type", getProductByCatetoryType);
 
 router.use(protectedRoute);
 router.use(requireAdmin);
