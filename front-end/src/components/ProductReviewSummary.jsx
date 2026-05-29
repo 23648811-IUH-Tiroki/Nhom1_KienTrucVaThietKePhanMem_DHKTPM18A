@@ -6,6 +6,7 @@ import {
   canReviewProduct,
   fetchMyReviews,
   fetchReviewsByProductId,
+  seedReviewsFromProduct,
 } from "../stores/reviewSlice";
 import ReviewButton from "./reviews/ReviewButton";
 
@@ -29,20 +30,38 @@ const RatingStars = ({ rating = 0 }) => (
   </div>
 );
 
+const formatReviewDate = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString("vi-VN");
+};
+
 const ProductReviewSummary = ({ product }) => {
   const dispatch = useDispatch();
-  const { reviews, summary, canReview, myReviews, loadReviews, checkingCanReview } = useSelector(
+  const { productId, reviews, summary, canReview, myReviews, loadReviews, checkingCanReview } = useSelector(
     (state) => state.reviews,
   );
 
   useEffect(() => {
     if (!product?._id) return;
-    dispatch(fetchReviewsByProductId(product._id));
+
+    const hasSeedData = Array.isArray(product?.reviews) && Boolean(product?.reviewSummary);
+    const isSameProduct = String(productId || "") === String(product._id);
+
+    if (!isSameProduct) {
+      if (hasSeedData) {
+        dispatch(seedReviewsFromProduct(product));
+      } else {
+        dispatch(fetchReviewsByProductId(product._id));
+      }
+    }
+
     if (localStorage.getItem("accessToken")) {
       dispatch(canReviewProduct(product._id));
       dispatch(fetchMyReviews());
     }
-  }, [dispatch, product?._id]);
+  }, [dispatch, product?._id, productId]);
 
   const displayReviews = reviews.length ? reviews : product?.reviews || [];
   const displaySummary = summary.totalReviews ? summary : product?.reviewSummary || summary;
@@ -148,7 +167,7 @@ const ProductReviewSummary = ({ product }) => {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500">{new Date(review.createdAt).toLocaleString("vi-VN")}</p>
+                        <p className="text-xs text-slate-500">{formatReviewDate(review.createdAt) || " "}</p>
                       </div>
                     </div>
 

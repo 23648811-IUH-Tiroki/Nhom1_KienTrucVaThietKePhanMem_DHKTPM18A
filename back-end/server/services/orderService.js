@@ -2,6 +2,8 @@ import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import { createServiceError } from "../utils/serviceError.js";
 
+const REVENUE_STATUSES = ["delivered"];
+
 export const normalizeStatus = (value) => {
   if (!value) return value;
   const normalized = String(value).trim();
@@ -106,6 +108,8 @@ export const updateOrder = async (orderId, updateData = {}, currentUser = null) 
     throw createServiceError("Order not found", 404);
   }
 
+  const previousStatus = normalizeStatus(currentOrder.status);
+
   const isAdmin = currentUser?.role === "admin";
   if (!isAdmin) {
     const currentStatus = normalizeStatus(currentOrder.status);
@@ -123,12 +127,24 @@ export const updateOrder = async (orderId, updateData = {}, currentUser = null) 
     }
   }
 
-  if (normalizedStatus === "cancelled" && normalizeStatus(currentOrder.status) !== "cancelled") {
+  if (normalizedStatus === "delivered" && previousStatus !== "delivered") {
     for (const item of currentOrder.items) {
       const product = await Product.findById(item.product_id);
       if (product) {
-        product.stock += item.quantity;
-        product.sold -= item.quantity;
+        product.sold = Math.max(0, Number(product.sold || 0) + Number(item.quantity || 0));
+        await product.save();
+      }
+    }
+  }
+
+  if (normalizedStatus === "cancelled" && previousStatus !== "cancelled") {
+    for (const item of currentOrder.items) {
+      const product = await Product.findById(item.product_id);
+      if (product) {
+        product.stock = Math.max(0, Number(product.stock || 0) + Number(item.quantity || 0));
+        if (previousStatus === "delivered") {
+          product.sold = Math.max(0, Number(product.sold || 0) - Number(item.quantity || 0));
+        }
         await product.save();
       }
     }
@@ -181,21 +197,36 @@ export const getOrderStats = async (timeFilter = "7days") => {
       startDate.setDate(startDate.getDate() - 7);
   }
 
-  const orders = await Order.find({ order_date: { $gte: startDate } });
+  const orders = await Order.find({
+    order_date: { $gte: startDate },
+    status: { $in: REVENUE_STATUSES },
+  }).select("total_price");
 
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total_price, 0);
+  const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_price || 0), 0);
 
   const monthlyStartDate = new Date();
   monthlyStartDate.setDate(monthlyStartDate.getDate() - 30);
-  const monthlyRevenue = orders
-    .filter((order) => new Date(order.order_date) >= monthlyStartDate)
-    .reduce((sum, order) => sum + order.total_price, 0);
+  const monthlyRevenue = await Order.aggregate([
+    {
+      $match: {
+        order_date: { $gte: monthlyStartDate },
+        status: { $in: REVENUE_STATUSES },
+      },
+    },
+    { $group: { _id: null, total: { $sum: { $ifNull: ["$total_price", 0] } } } },
+  ]).then((rows) => Number(rows?.[0]?.total || 0));
 
   const weeklyStartDate = new Date();
   weeklyStartDate.setDate(weeklyStartDate.getDate() - 7);
-  const weeklyRevenue = orders
-    .filter((order) => new Date(order.order_date) >= weeklyStartDate)
-    .reduce((sum, order) => sum + order.total_price, 0);
+  const weeklyRevenue = await Order.aggregate([
+    {
+      $match: {
+        order_date: { $gte: weeklyStartDate },
+        status: { $in: REVENUE_STATUSES },
+      },
+    },
+    { $group: { _id: null, total: { $sum: { $ifNull: ["$total_price", 0] } } } },
+  ]).then((rows) => Number(rows?.[0]?.total || 0));
 
   const averageOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
 

@@ -1,6 +1,7 @@
 import Category from "../models/Category.js";
 import slugify from "slugify";
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 import { createServiceError } from "../utils/serviceError.js";
 
 // ============ Helper Functions ============
@@ -37,6 +38,66 @@ const normalizeCategoryPayload = (payload = {}, existingCategory = null) => {
     slug_type,
   };
 };
+
+const buildProductRatingLookupPipeline = () => [
+  {
+    $lookup: {
+      from: "reviews",
+      let: { productId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$product", "$$productId"] },
+                { $eq: ["$isHidden", false] },
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: "$rating" },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ],
+      as: "reviewSummaryAgg",
+    },
+  },
+  {
+    $addFields: {
+      rating: {
+        $round: [
+          { $ifNull: [{ $arrayElemAt: ["$reviewSummaryAgg.averageRating", 0] }, 0] },
+          1,
+        ],
+      },
+      numReviews: {
+        $ifNull: [{ $arrayElemAt: ["$reviewSummaryAgg.totalReviews", 0] }, 0],
+      },
+    },
+  },
+  { $unset: "reviewSummaryAgg" },
+];
+
+const buildCategoryLookupPipeline = () => [
+  {
+    $lookup: {
+      from: "categories",
+      localField: "category_id",
+      foreignField: "_id",
+      as: "category_id",
+    },
+  },
+  {
+    $unwind: {
+      path: "$category_id",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+];
 
 /**
  * Ensure category uniqueness
@@ -229,7 +290,11 @@ export const getProductByCatetoryType = async (slugType) => {
   }
 
   const categoryIds = categorys.map((category) => category._id);
-  return Product.find({ category_id: { $in: categoryIds } });
+  return Product.aggregate([
+    { $match: { category_id: { $in: categoryIds } } },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
+  ]);
 };
 
 export const searchCategories = async (searchTerm) => {
@@ -271,16 +336,28 @@ export const getProductByCatetoryName = async (slug, page = 1, limit = 8) => {
 
   const skip = (page - 1) * limit;
   const categoryIds = categorys.map((category) => category._id);
-  const [products, totalProducts] = await Promise.all([
-    Product.find({ category_id: { $in: categoryIds } })
-      .populate("category_id")
-      .skip(skip)
-      .limit(limit),
-    Product.countDocuments({ category_id: { $in: categoryIds } }),
+  const result = await Product.aggregate([
+    { $match: { category_id: { $in: categoryIds } } },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
+    {
+      $facet: {
+        products: [{ $skip: skip }, { $limit: limit }],
+        total: [{ $count: "count" }],
+      },
+    },
+    {
+      $addFields: {
+        totalCount: { $ifNull: [{ $arrayElemAt: ["$total.count", 0] }, 0] },
+      },
+    },
   ]);
+
+  const products = result?.[0]?.products || [];
+  const totalCount = Number(result?.[0]?.totalCount || 0);
 
   return {
     products,
-    totalPages: Math.ceil(totalProducts / limit),
+    totalPages: Math.ceil(totalCount / limit),
   };
 };

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import DialogProduct from "../../components/DialogProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { fetachProductByName, fetchProducts } from "../../stores/productSlice";
+import { seedReviewsFromProduct } from "../../stores/reviewSlice";
 import Breadcrumb2 from "../../components/Breadcrumb2";
 import { Image } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -63,6 +64,7 @@ const ProductDetail = () => {
     const { productDetail, items: products, load, error } = useSelector(
         (state) => state.products
     );
+    const { productId: reviewsProductId, summary: reviewsSummary } = useSelector((state) => state.reviews);
 
     useEffect(() => {
         dispatch(fetchProducts());
@@ -72,6 +74,11 @@ const ProductDetail = () => {
         if (!slug) return;
         dispatch(fetachProductByName(slug));
     }, [slug, dispatch]);
+
+    useEffect(() => {
+        if (!productDetail?._id) return;
+        dispatch(seedReviewsFromProduct(productDetail));
+    }, [dispatch, productDetail?._id]);
 
     useEffect(() => {
         if (productDetail?.images?.length) {
@@ -155,6 +162,14 @@ const ProductDetail = () => {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user?._id || user?.id;
+
+    const effectiveReviewSummary =
+        String(reviewsProductId || "") === String(productDetail?._id || "")
+            ? reviewsSummary
+            : productDetail?.reviewSummary;
+
+    const effectiveRating = Number(effectiveReviewSummary?.averageRating ?? productDetail?.rating ?? 0);
+    const effectiveNumReviews = Number(effectiveReviewSummary?.totalReviews ?? productDetail?.numReviews ?? 0);
 
     const handleBuyNow = async () => {
         if (!userId) {
@@ -346,7 +361,7 @@ const ProductDetail = () => {
                             <div className="flex items-center gap-3">
                                 <div className="flex items-center text-amber-500 gap-0.5">
                                     {Array.from({ length: 5 }, (_, i) => i + 1).map((star) =>
-                                        star <= Math.round(Number(productDetail?.rating || 0)) ? (
+                                        star <= Math.round(effectiveRating) ? (
                                             <FaStar key={star} />
                                         ) : (
                                             <FaRegStar key={star} className="text-slate-300" />
@@ -354,7 +369,7 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                                 <span className="text-sm text-slate-600 font-medium">
-                                    {Number(productDetail?.rating || 0).toFixed(1)} • {productDetail?.numReviews || 0} đánh giá
+                                    {effectiveRating.toFixed(1)} • {effectiveNumReviews} đánh giá
                                 </span>
                             </div>
 

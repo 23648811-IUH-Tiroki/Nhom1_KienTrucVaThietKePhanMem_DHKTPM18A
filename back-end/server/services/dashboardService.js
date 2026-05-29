@@ -2,6 +2,8 @@ import Order from "../models/Order.js";
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 
+const REVENUE_STATUSES = ["delivered"];
+
 const buildStartDate = (timeFilter) => {
   let startDate = new Date();
 
@@ -30,21 +32,36 @@ const buildStartDate = (timeFilter) => {
 
 export const getDashboardStats = async (timeFilter = "7days") => {
   const startDate = buildStartDate(timeFilter);
-  const orders = await Order.find({ order_date: { $gte: startDate } });
+  const orders = await Order.find({
+    order_date: { $gte: startDate },
+    status: { $in: REVENUE_STATUSES },
+  }).select("total_price");
 
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total_price, 0);
+  const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_price || 0), 0);
 
   const monthlyStartDate = new Date();
   monthlyStartDate.setDate(monthlyStartDate.getDate() - 30);
-  const monthlyRevenue = orders
-    .filter((order) => new Date(order.order_date) >= monthlyStartDate)
-    .reduce((sum, order) => sum + order.total_price, 0);
+  const monthlyRevenue = await Order.aggregate([
+    {
+      $match: {
+        order_date: { $gte: monthlyStartDate },
+        status: { $in: REVENUE_STATUSES },
+      },
+    },
+    { $group: { _id: null, total: { $sum: { $ifNull: ["$total_price", 0] } } } },
+  ]).then((rows) => Number(rows?.[0]?.total || 0));
 
   const weeklyStartDate = new Date();
   weeklyStartDate.setDate(weeklyStartDate.getDate() - 7);
-  const weeklyRevenue = orders
-    .filter((order) => new Date(order.order_date) >= weeklyStartDate)
-    .reduce((sum, order) => sum + order.total_price, 0);
+  const weeklyRevenue = await Order.aggregate([
+    {
+      $match: {
+        order_date: { $gte: weeklyStartDate },
+        status: { $in: REVENUE_STATUSES },
+      },
+    },
+    { $group: { _id: null, total: { $sum: { $ifNull: ["$total_price", 0] } } } },
+  ]).then((rows) => Number(rows?.[0]?.total || 0));
 
   const averageOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
 
@@ -124,7 +141,8 @@ export const getRevenueByDay = async (timeFilter = "7days") => {
 
   const orders = await Order.find({
     order_date: { $gte: startDate, $lte: today },
-  });
+    status: { $in: REVENUE_STATUSES },
+  }).select("order_date total_price");
 
   orders.forEach((order) => {
     const orderDate = new Date(order.order_date);
@@ -142,7 +160,7 @@ export const getRevenueByDay = async (timeFilter = "7days") => {
     }
 
     if (index >= 0 && index < revenueByDay.length) {
-      revenueByDay[index] += order.total_price;
+      revenueByDay[index] += Number(order.total_price || 0);
     }
   });
 
@@ -150,7 +168,7 @@ export const getRevenueByDay = async (timeFilter = "7days") => {
 };
 
 export const getRevenueByCategory = async () => {
-  const orders = await Order.find().populate({
+  const orders = await Order.find({ status: { $in: REVENUE_STATUSES } }).populate({
     path: "items.product_id",
     populate: { path: "category_id" },
   });
@@ -162,7 +180,7 @@ export const getRevenueByCategory = async () => {
     order.items.forEach((item) => {
       if (item.product_id && item.product_id.category_id) {
         const categoryName = item.product_id.category_id.name;
-        const itemRevenue = item.quantity * item.product_id.price;
+        const itemRevenue = Number(item.quantity || 0) * Number(item.product_id.price || 0);
 
         categoryRevenue.set(
           categoryName,

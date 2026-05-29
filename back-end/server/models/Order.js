@@ -72,5 +72,8 @@ const orderSchema = new mongoose.Schema({
 
 }, { collection: "orders" });
 
+orderSchema.index({ status: 1, order_date: -1 });
+orderSchema.index({ user_id: 1, order_date: -1 });
+
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

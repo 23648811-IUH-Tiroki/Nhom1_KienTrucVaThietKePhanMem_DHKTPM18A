@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Product from "../models/Product.js";
 import { getReviewSummaryByProductId } from "./reviewService.js";
 
@@ -90,20 +91,94 @@ const validateProduct = (productData) => {
   }
 };
 
+const buildProductRatingLookupPipeline = () => [
+  {
+    $lookup: {
+      from: "reviews",
+      let: { productId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$product", "$$productId"] },
+                { $eq: ["$isHidden", false] },
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: "$rating" },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ],
+      as: "reviewSummaryAgg",
+    },
+  },
+  {
+    $addFields: {
+      rating: {
+        $round: [
+          {
+            $ifNull: [{ $arrayElemAt: ["$reviewSummaryAgg.averageRating", 0] }, 0],
+          },
+          1,
+        ],
+      },
+      numReviews: {
+        $ifNull: [{ $arrayElemAt: ["$reviewSummaryAgg.totalReviews", 0] }, 0],
+      },
+    },
+  },
+  { $unset: "reviewSummaryAgg" },
+];
+
+const buildCategoryLookupPipeline = () => [
+  {
+    $lookup: {
+      from: "categories",
+      localField: "category_id",
+      foreignField: "_id",
+      as: "category_id",
+    },
+  },
+  {
+    $unwind: {
+      path: "$category_id",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+];
+
+const buildProductMatchQuery = (params = {}) => {
+  const query = {};
+
+  if (params.category) {
+    const categoryId = String(params.category).trim();
+    query.category_id = mongoose.isValidObjectId(categoryId)
+      ? new mongoose.Types.ObjectId(categoryId)
+      : categoryId;
+  }
+
+  return query;
+};
+
 // ============ Service Functions ============
 
 /**
  * Get all products with optional category filter
  */
 export const getAllProducts = async (params) => {
-  let query = {};
+  const match = buildProductMatchQuery(params);
 
-  if (params.category) {
-    query.category_id = params.category;
-  }
-
-  const products = await Product.find(query).populate("category_id");
-  return products;
+  return Product.aggregate([
+    { $match: match },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
+  ]);
 };
 
 /**
@@ -132,6 +207,8 @@ export const getProductBySlug = async (slug) => {
 
   return {
     ...productData,
+    rating: reviewSummary.averageRating || 0,
+    numReviews: reviewSummary.totalReviews || 0,
     reviewSummary,
   };
 };
@@ -190,16 +267,12 @@ export const deleteProduct = async (productId) => {
  * Get top 20 products by sales
  */
 export const getProductsSale = async () => {
-  const products = await Product.aggregate([
-    {
-      $sort: { sold: -1 },
-    },
-    {
-      $limit: 20,
-    },
+  return Product.aggregate([
+    { $sort: { sold: -1 } },
+    { $limit: 20 },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
   ]);
-
-  return products;
 };
 
 /**
@@ -212,11 +285,15 @@ export const searchProducts = async (params) => {
     throw new Error("Query parameter is required");
   }
 
-  const products = await Product.find({
-    name: { $regex: searchQuery, $options: "i" },
-  }).populate("category_id");
-
-  return products;
+  return Product.aggregate([
+    {
+      $match: {
+        name: { $regex: String(searchQuery), $options: "i" },
+      },
+    },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
+  ]);
 };
 
 /**
@@ -244,6 +321,9 @@ export const filterProductsByPrice = async (params) => {
     $or: priceQueries,
   };
 
-  const products = await Product.find(finalQuery);
-  return products;
+  return Product.aggregate([
+    { $match: finalQuery },
+    ...buildCategoryLookupPipeline(),
+    ...buildProductRatingLookupPipeline(),
+  ]);
 };

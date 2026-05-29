@@ -141,6 +141,7 @@ export const hideReview = createAsyncThunk(
 const reviewSlice = createSlice({
   name: "reviews",
   initialState: {
+    productId: null,
     reviews: [],
     myReviews: [],
     purchasedProducts: [],
@@ -166,8 +167,10 @@ const reviewSlice = createSlice({
       state.error = null;
     },
     seedReviewsFromProduct: (state, action) => {
-      const reviews = action.payload?.reviews || [];
-      const summary = action.payload?.reviewSummary || emptySummary;
+      const product = action.payload || null;
+      const reviews = product?.reviews || [];
+      const summary = product?.reviewSummary || emptySummary;
+      state.productId = product?._id || null;
       state.reviews = reviews;
       state.summary = normalizeSummary(summary);
     },
@@ -218,6 +221,7 @@ const reviewSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchReviewsByProductId.fulfilled, (state, action) => {
+        state.productId = action.meta.arg || state.productId;
         state.reviews = action.payload?.reviews || [];
         state.summary = normalizeSummary(action.payload);
         state.loadReviews = false;
