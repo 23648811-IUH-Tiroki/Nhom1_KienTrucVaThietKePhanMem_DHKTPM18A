@@ -1,5 +1,6 @@
 import Redis from "ioredis";
 import { getPolicy } from "../utils/getPolicy.js";
+import { logger } from "../logger/logger.js";
 const redis = new Redis(); // Kết nối đến Redis
 
 const buildLoginKeys = (email, ip) => ({
@@ -87,7 +88,7 @@ export const loginLimiter = async (req, res, next) => {
     req.loginLimiterData = { shortKey, longKey, data, email, ip }; // Lưu key và data để controller có thể ghi nhận thất bại
     next();
   } catch (error) {
-    console.error("Lỗi khi xử lý giới hạn đăng nhập:", error);
+    logger.error("Lỗi khi xử lý giới hạn đăng nhập", { message: error.message, stack: error.stack });
     next(); // Trong trường hợp có lỗi, vẫn cho phép tiếp tục xử lý đăng nhập để tránh gây ảnh hưởng đến trải nghiệm người dùng. Tuy nhiên, bạn có thể tùy chỉnh để trả về lỗi nếu muốn.
   }
 };

@@ -2,6 +2,7 @@ import Notification from "../models/Notification.js";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import { createServiceError } from "../utils/serviceError.js";
+import { enqueueNotificationEmail } from "../queues/notificationQueue.js";
 
 export const getNotifications = async (params = {}) => {
   const { user_id, limit = 10, isRead } = params;
@@ -25,7 +26,21 @@ export const createNotification = async (data = {}) => {
     user_id: data.user_id,
   });
 
-  return notification.save();
+  const savedNotification = await notification.save();
+
+  if (data.sendEmail && data.to) {
+    await enqueueNotificationEmail({
+      to: data.to,
+      from: data.from,
+      subject: data.subject || "Notification",
+      text: data.text || data.message,
+      html: data.html || `<p>${data.message || ""}</p>`,
+      channel: "email",
+      notificationId: savedNotification._id.toString(),
+    });
+  }
+
+  return savedNotification;
 };
 
 export const markAsRead = async (notificationId) => {

@@ -6,16 +6,24 @@ import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import bcrypt from "bcryptjs";
+import { logger } from "./logger/logger.js";
+import {
+  errorHandler,
+  httpLogger,
+  notFoundHandler,
+  requestContextMiddleware,
+} from "./logger/middleware.js";
+import { initializeWorkers } from "./workers/index.js";
 
 // Load environment variables from .env file
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const envPath = path.resolve(__dirname, "../.env");
-console.log("📂 Loading .env from:", envPath);
+logger.info("Loading .env", { envPath });
 const result = dotenv.config({ path: envPath });
 if (result.error) {
-  console.error("❌ Failed to load .env file:", result.error);
+  logger.error("Failed to load .env file", { message: result.error.message });
 } else {
-  console.log("✅ .env file loaded successfully");
+  logger.info(".env file loaded successfully");
 }
 
 import authRoutes from "./routes/authRoutes.js";
@@ -71,6 +79,8 @@ app.use(
   }),
 );
 app.use(express.json());
+app.use(requestContextMiddleware);
+app.use(httpLogger);
 
 // Connect to MongoDB
 const ensureUserPhoneIndex = async () => {
@@ -87,7 +97,7 @@ const ensureUserPhoneIndex = async () => {
       { unique: true, sparse: true, name: "phone_1" },
     );
   } catch (error) {
-    console.warn("⚠️ Unable to ensure phone index:", error.message);
+    logger.warn("Unable to ensure phone index", { message: error.message });
   }
 };
 
@@ -108,7 +118,7 @@ const ensureBootstrapAdmin = async () => {
       if (existingAdmin.role !== "admin") {
         existingAdmin.role = "admin";
         await existingAdmin.save();
-        console.log("✅ Bootstrap admin role updated for:", adminEmail);
+        logger.info("Bootstrap admin role updated", { adminEmail });
       }
       return;
     }
@@ -123,22 +133,23 @@ const ensureBootstrapAdmin = async () => {
       status: "Active",
     });
 
-    console.log("✅ Bootstrap admin created:", adminEmail);
+    logger.info("Bootstrap admin created", { adminEmail });
   } catch (error) {
-    console.warn("⚠️ Unable to bootstrap admin:", error.message);
+    logger.warn("Unable to bootstrap admin", { message: error.message });
   }
 };
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(async () => {
-    console.log("Connected to MongoDB");
+    logger.info("Connected to MongoDB");
     await ensureUserPhoneIndex();
     await ensureBootstrapAdmin();
   })
   .catch((err) => {
-    console.warn("⚠️ MongoDB connection failed. Server continuing without DB.");
-    console.warn("Error:", err.message);
+    logger.warn("MongoDB connection failed. Server continuing without DB.", {
+      message: err.message,
+    });
   });
 
 // Routes
@@ -154,7 +165,7 @@ app.get("/redis-test", async (req, res) => {
 
     const value = await redisClient.get("shop");
 
-    console.log(value);
+    logger.info("Redis test executed", { value });
 
     res.json({
       redis: value,
@@ -205,7 +216,12 @@ app.use("/api/settings", settingRoutes);
 app.use("/api/dashboard", dashboadRoutes);
 app.use("/api/admin", adminRoutes);
 
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+initializeWorkers();
+
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running: http://localhost:${PORT}`);
+  logger.info(`Server is running: http://localhost:${PORT}`);
 });

@@ -3,6 +3,7 @@ import Review from "../models/Review.js";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import { createServiceError } from "../utils/serviceError.js";
+import { logger } from "../logger/logger.js";
 
 const normalizeImages = (images) => {
   if (!Array.isArray(images)) {
@@ -196,7 +197,7 @@ const updateProductReviewStats = async (productId) => {
 
     return summary;
   } catch (error) {
-    console.error("updateProductReviewStats error:", error);
+    logger.error("updateProductReviewStats error", { message: error.message, stack: error.stack });
     return null;
   }
 };

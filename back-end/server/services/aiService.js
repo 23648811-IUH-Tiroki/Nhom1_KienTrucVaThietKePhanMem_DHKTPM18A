@@ -1,6 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import { createServiceError } from "../utils/serviceError.js";
+import { logger } from "../logger/logger.js";
 
 dotenv.config();
 
@@ -51,7 +52,7 @@ export const createChatAI = async (message) => {
       break;
     } catch (error) {
       attempt += 1;
-      console.warn(`AI request attempt ${attempt} failed:`, error.message || error);
+      logger.warn(`AI request attempt ${attempt} failed`, { message: error.message || error });
 
       if (attempt >= MAX_RETRIES) {
         const reply = error.response?.data?.error?.message || "AI hiện không khả dụng.";

@@ -2,14 +2,20 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import nodemailer from "nodemailer";
 import { recordLoginFailure, resetLoginFailures } from "../middleware/loginLimiter.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import redisClient from "../configs/redisClient.js";
+import { enqueueOtpEmail } from "../queues/otpQueue.js";
+import { logger } from "../logger/logger.js";
 
 const ACCESS_TOKEN_TTL = "30m";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
 const RESET_TOKEN_TTL = 60 * 60 * 1000;
+const FORGOT_PASSWORD_TTL_SECONDS = 5 * 60;
+const FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS = 60;
+const FORGOT_PASSWORD_MAX_RESENDS = 5;
+const FORGOT_PASSWORD_MAX_ATTEMPTS = 5;
+const FORGOT_PASSWORD_KEY_PREFIX = "forgot_password";
 
 // ============ Helper Functions ============
 
@@ -50,28 +56,70 @@ const verifyPassword = (password, storedHash) => {
   return hash === hashedPassword;
 };
 
-/**
- * Create nodemailer transporter
- */
-const createMailer = () => {
-  const host = process.env.SMTP_HOST || process.env.EMAIL_HOST;
-  const port = Number(process.env.SMTP_PORT || process.env.EMAIL_PORT || 587);
-  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+const getForgotPasswordKey = (email) => `${FORGOT_PASSWORD_KEY_PREFIX}:${String(email).trim().toLowerCase()}`;
 
-  if (!host || !user || !pass) {
+const getForgotPasswordCooldownKey = (email) => `${FORGOT_PASSWORD_KEY_PREFIX}:cooldown:${String(email).trim().toLowerCase()}`;
+
+const readForgotPasswordState = async (email) => {
+  const rawState = await redisClient.get(getForgotPasswordKey(email));
+
+  if (!rawState) {
     return null;
   }
 
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: (process.env.SMTP_SECURE || process.env.EMAIL_SECURE) === "true",
-    auth: {
-      user,
-      pass,
-    },
+  try {
+    return JSON.parse(rawState);
+  } catch (error) {
+    logger.warn("Invalid forgot-password Redis payload", {
+      email,
+      message: error.message,
+    });
+    return null;
+  }
+};
+
+const persistForgotPasswordState = async (email, state) => {
+  await redisClient.set(getForgotPasswordKey(email), JSON.stringify(state), {
+    EX: FORGOT_PASSWORD_TTL_SECONDS,
   });
+};
+
+const createForgotPasswordState = (email, otpHash, otpPlain) => {
+  const now = new Date().toISOString();
+
+  return {
+    email: String(email).trim().toLowerCase(),
+    otpHash,
+    verified: false,
+    used: false,
+    verifyAttempts: 0,
+    resendCount: 0,
+    expiresAt: new Date(Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000).toISOString(),
+    createdAt: now,
+    updatedAt: now,
+    verifiedAt: null,
+    usedAt: null,
+  };
+};
+
+const buildForgotPasswordEmail = (otp) => ({
+  subject: "Mã xác thực đặt lại mật khẩu",
+  text: `Mã xác thực đặt lại mật khẩu của bạn là: ${otp}. Mã có hiệu lực trong 1 phút.`,
+  html: `<p>Bạn đã yêu cầu đặt lại mật khẩu.</p><p><strong>Mã xác thực của bạn là: ${otp}</strong></p><p>Mã có hiệu lực trong 1 phút.</p>`,
+});
+
+const queueForgotPasswordOtp = async ({ email, otp, purpose }) => {
+  await enqueueOtpEmail({
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    email,
+    purpose,
+    otp,
+    ...buildForgotPasswordEmail(otp),
+  });
+};
+
+const normalizeForgotPasswordError = (message) => {
+  return message || "Không thể xử lý yêu cầu đặt lại mật khẩu.";
 };
 
 // ============ Service Functions ============
@@ -152,7 +200,7 @@ export const signIn = async (userData, req) => {
       { EX: Math.floor(REFRESH_TOKEN_TTL / 1000) }
     );
   } catch (err) {
-    console.warn("Không thể lưu refreshToken vào Redis:", err.message);
+    logger.warn("Không thể lưu refreshToken vào Redis", { message: err.message });
   }
 
   if (req && req.session) {
@@ -191,12 +239,12 @@ export const signOut = async (token, req) => {
     try {
       await redisClient.del(`refresh:${token}`);
     } catch (err) {
-      console.warn("Không thể xóa refreshToken trên Redis:", err.message);
+      logger.warn("Không thể xóa refreshToken trên Redis", { message: err.message });
     }
 
     if (req.session) {
       req.session.destroy((err) => {
-        if (err) console.warn("Lỗi khi destroy session:", err.message);
+        if (err) logger.warn("Lỗi khi destroy session", { message: err.message });
       });
     }
   }
@@ -222,38 +270,158 @@ export const requestPasswordReset = async (userData) => {
   }
 
   const resetCode = String(crypto.randomInt(100000, 1000000));
-  await User.updateOne(
-    { email },
-    {
-      $set: {
-        resetPasswordToken: bcrypt.hashSync(resetCode, 10),
-        resetPasswordExpires: new Date(Date.now() + RESET_TOKEN_TTL),
-      },
-    }
-  );
+  const otpHash = bcrypt.hashSync(resetCode, 10);
+  const forgotPasswordState = createForgotPasswordState(email, otpHash);
 
-  const mailer = createMailer();
-  if (!mailer) {
-    if (process.env.NODE_ENV !== "production") {
-      return {
-        message: "SMTP chưa được cấu hình. Mã đặt lại mật khẩu được trả về cho môi trường dev.",
-        devCode: resetCode,
-      };
-    }
+  await persistForgotPasswordState(email, forgotPasswordState);
+  await redisClient.set(getForgotPasswordCooldownKey(email), "1", {
+    EX: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+  });
+  await queueForgotPasswordOtp({ email, otp: resetCode, purpose: "password-reset" });
 
-    throw new Error("Thiếu cấu hình SMTP để gửi email đặt lại mật khẩu.");
-  }
-
-  await mailer.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to: email,
-    subject: "Mã xác thực đặt lại mật khẩu",
-    text: `Mã xác thực đặt lại mật khẩu của bạn là: ${resetCode}. Mã có hiệu lực trong 60 phút.`,
-    html: `<p>Bạn đã yêu cầu đặt lại mật khẩu.</p><p><strong>Mã xác thực của bạn là: ${resetCode}</strong></p><p>Mã có hiệu lực trong 60 phút.</p>`,
+  logger.info("Forgot-password OTP requested", {
+    email,
+    resendCooldownSeconds: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+    otpExpiresInSeconds: FORGOT_PASSWORD_TTL_SECONDS,
   });
 
   return {
-    message: "Đã gửi email xác thực đặt lại mật khẩu!",
+    message: "Đã gửi mã xác thực đặt lại mật khẩu!",
+    nextResendInSeconds: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+    otpExpiresInSeconds: FORGOT_PASSWORD_TTL_SECONDS,
+  };
+};
+
+/**
+ * Verify forgot-password OTP
+ */
+export const verifyPasswordResetOtp = async (userData) => {
+  const { email, code, otp } = userData;
+  const inputOtp = String(code ?? otp ?? "").trim();
+
+  if (!email || !inputOtp) {
+    throw new Error("Thiếu email hoặc mã OTP!");
+  }
+
+  const state = await readForgotPasswordState(email);
+  if (!state) {
+    throw new Error("OTP không tồn tại hoặc đã hết hạn!");
+  }
+
+  const isExpired = !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
+  if (isExpired) {
+    await redisClient.del(getForgotPasswordKey(email));
+    await redisClient.del(getForgotPasswordCooldownKey(email));
+    throw new Error("OTP đã hết hạn!");
+  }
+
+  if (state.used) {
+    throw new Error("OTP đã được sử dụng!");
+  }
+
+  if (state.verifyAttempts >= FORGOT_PASSWORD_MAX_ATTEMPTS) {
+    throw new Error("Bạn đã nhập sai OTP quá nhiều lần!");
+  }
+
+  const isOtpValid = bcrypt.compareSync(inputOtp, state.otpHash);
+  if (!isOtpValid) {
+    const updatedState = {
+      ...state,
+      verifyAttempts: state.verifyAttempts + 1,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await persistForgotPasswordState(email, updatedState);
+
+    if (updatedState.verifyAttempts >= FORGOT_PASSWORD_MAX_ATTEMPTS) {
+      throw new Error("Bạn đã nhập sai OTP quá nhiều lần!");
+    }
+
+    throw new Error("OTP không đúng!");
+  }
+
+  const verifiedState = {
+    ...state,
+    verified: true,
+    verifiedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    verifyAttempts: 0,
+  };
+
+  await persistForgotPasswordState(email, verifiedState);
+
+  logger.info("Forgot-password OTP verified", {
+    email,
+    verifyAttempts: verifiedState.verifyAttempts,
+  });
+
+  return {
+    message: "Xác thực OTP thành công!",
+    verified: true,
+    otpExpiresInSeconds: Math.max(0, Math.floor((new Date(verifiedState.expiresAt).getTime() - Date.now()) / 1000)),
+  };
+};
+
+/**
+ * Resend forgot-password OTP
+ */
+export const resendPasswordResetOtp = async (userData) => {
+  const { email } = userData;
+
+  if (!email) {
+    throw new Error("Thiếu email!");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error("Không tìm thấy tài khoản với email này!");
+  }
+
+  const cooldown = await redisClient.get(getForgotPasswordCooldownKey(email));
+  if (cooldown) {
+    throw new Error(`Vui lòng chờ ${FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS}s trước khi gửi lại mã OTP.`);
+  }
+
+  const state = await readForgotPasswordState(email);
+  if (!state) {
+    throw new Error("OTP không tồn tại hoặc đã hết hạn!");
+  }
+
+  if (state.resendCount >= FORGOT_PASSWORD_MAX_RESENDS) {
+    throw new Error("Bạn đã vượt quá số lần gửi lại OTP!");
+  }
+
+  const newOtp = String(crypto.randomInt(100000, 1000000));
+  const newOtpHash = bcrypt.hashSync(newOtp, 10);
+  const nextState = {
+    ...state,
+    otpHash: newOtpHash,
+    otpPlain: newOtp,
+    verified: false,
+    used: false,
+    verifyAttempts: 0,
+    resendCount: state.resendCount + 1,
+    expiresAt: new Date(Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000).toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  await persistForgotPasswordState(email, nextState);
+  await redisClient.set(getForgotPasswordCooldownKey(email), "1", {
+    EX: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+  });
+  await queueForgotPasswordOtp({ email, otp: newOtp, purpose: "password-reset-resend" });
+
+  logger.info("Forgot-password OTP resent", {
+    email,
+    resendCount: nextState.resendCount,
+    resendCooldownSeconds: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+    otpExpiresInSeconds: FORGOT_PASSWORD_TTL_SECONDS,
+  });
+
+  return {
+    message: "Đã gửi lại mã OTP!",
+    nextResendInSeconds: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
+    otpExpiresInSeconds: FORGOT_PASSWORD_TTL_SECONDS,
   };
 };
 
@@ -261,26 +429,36 @@ export const requestPasswordReset = async (userData) => {
  * Reset password with code
  */
 export const resetPassword = async (userData) => {
-  const { email, code, token, newPassword, passWord } = userData;
+  const { email, newPassword, passWord } = userData;
   const password = newPassword ?? passWord;
-  const resetCode = code ?? token;
 
-  if (!email || !resetCode || !password) {
-    throw new Error("Thiếu email, mã xác thực hoặc mật khẩu mới!");
+  if (!email || !password) {
+    throw new Error("Thiếu email hoặc mật khẩu mới!");
+  }
+
+  const state = await readForgotPasswordState(email);
+  if (!state) {
+    throw new Error("OTP không tồn tại hoặc đã hết hạn!");
+  }
+
+  const isExpired = !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
+  if (isExpired) {
+    await redisClient.del(getForgotPasswordKey(email));
+    await redisClient.del(getForgotPasswordCooldownKey(email));
+    throw new Error("OTP đã hết hạn!");
+  }
+
+  if (!state.verified) {
+    throw new Error("Vui lòng xác thực OTP trước khi đặt lại mật khẩu!");
+  }
+
+  if (state.used) {
+    throw new Error("OTP đã được sử dụng!");
   }
 
   const user = await User.findOne({ email });
-  if (!user || !user.resetPasswordToken || !user.resetPasswordExpires) {
-    throw new Error("Token không hợp lệ hoặc đã hết hạn!");
-  }
-
-  if (user.resetPasswordExpires < new Date()) {
-    throw new Error("Token không hợp lệ hoặc đã hết hạn!");
-  }
-
-  const codeMatches = bcrypt.compareSync(resetCode, user.resetPasswordToken);
-  if (!codeMatches) {
-    throw new Error("Token không hợp lệ hoặc đã hết hạn!");
+  if (!user) {
+    throw new Error("Không tìm thấy tài khoản với email này!");
   }
 
   await User.updateOne(
@@ -288,11 +466,18 @@ export const resetPassword = async (userData) => {
     {
       $set: {
         password: hashPassword(password),
-        resetPasswordToken: null,
-        resetPasswordExpires: null,
       },
     }
   );
+
+  await redisClient.del(getForgotPasswordKey(email));
+  await redisClient.del(getForgotPasswordCooldownKey(email));
+  await redisClient.del(`${FORGOT_PASSWORD_KEY_PREFIX}:resendcount:${String(email).trim().toLowerCase()}`);
+
+  logger.info("Forgot-password reset succeeded", {
+    email,
+    userId: user._id.toString(),
+  });
 
   return {
     message: "Đặt lại mật khẩu thành công!",
@@ -338,8 +523,7 @@ export const sendSignupCode = async (userData) => {
     { EX: 60 }
   );
 
-  const mailer = createMailer();
-  if (!mailer) {
+  if (!hasMailerConfig()) {
     if (process.env.NODE_ENV !== "production") {
       return {
         message: "SMTP chưa được cấu hình. Mã đăng ký được trả về cho môi trường dev.",
@@ -350,12 +534,14 @@ export const sendSignupCode = async (userData) => {
     throw new Error("Thiếu cấu hình SMTP để gửi email.");
   }
 
-  await mailer.sendMail({
+  await enqueueOtpEmail({
     from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to: email,
+    email,
+    purpose: "signup-verification",
     subject: "Mã xác thực đăng ký tài khoản",
     text: `Mã xác thực đăng ký của bạn là: ${signupCode}. Mã có hiệu lực trong 1 phút.`,
     html: `<p>Mã xác thực đăng ký của bạn là: <strong>${signupCode}</strong></p><p>Mã có hiệu lực trong 1 phút.</p>`,
+    code: signupCode,
   });
 
   await redisClient.set(resendKey, "1", { EX: 60 });

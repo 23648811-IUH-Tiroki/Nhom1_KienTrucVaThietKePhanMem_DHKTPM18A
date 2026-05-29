@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { logger } from "../logger/logger.js";
 
 // Protected route: prefer JWT from Authorization header, fallback to session
 export const protectedRoute = async (req, res, next) => {
@@ -38,7 +39,7 @@ export const protectedRoute = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error("Lỗi khi xác minh auth trong authMiddleware", error);
+        logger.error("Lỗi khi xác minh auth trong authMiddleware", { message: error.message, stack: error.stack });
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 }

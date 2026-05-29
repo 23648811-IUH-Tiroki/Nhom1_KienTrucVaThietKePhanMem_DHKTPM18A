@@ -1,4 +1,5 @@
 import * as authService from "../services/authService.js";
+import { logger } from "../logger/logger.js";
 
 //Đăng ký
 export const signUp = async (req, res) => {
@@ -6,7 +7,7 @@ export const signUp = async (req, res) => {
     const result = await authService.signUp(req.body);
     return res.status(201).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi signup:", error.message);
+    logger.warn("Lỗi khi gọi signup", { message: error.message, email: req.body?.email });
     return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
@@ -29,7 +30,7 @@ export const signIn = async (req, res) => {
       user: result.user,
     });
   } catch (error) {
-    console.error("Lỗi khi gọi signIn:", error.message);
+    logger.warn("Lỗi khi gọi signIn", { message: error.message, email: req.body?.email });
     return res.status(401).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
@@ -48,7 +49,7 @@ export const signOut = async (req, res) => {
 
     return res.status(200).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi signout:", error.message);
+    logger.warn("Lỗi khi gọi signout", { message: error.message, email: req.body?.email });
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
@@ -59,7 +60,29 @@ export const requestPasswordReset = async (req, res) => {
     const result = await authService.requestPasswordReset(req.body);
     return res.status(200).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi requestPasswordReset:", error.message);
+    logger.warn("Lỗi khi gọi requestPasswordReset", { message: error.message, email: req.body?.email });
+    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+  }
+};
+
+//Xác thực OTP quên mật khẩu
+export const verifyPasswordResetOtp = async (req, res) => {
+  try {
+    const result = await authService.verifyPasswordResetOtp(req.body);
+    return res.status(200).json(result);
+  } catch (error) {
+    logger.warn("Lỗi khi gọi verifyPasswordResetOtp", { message: error.message, email: req.body?.email });
+    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+  }
+};
+
+//Gửi lại OTP quên mật khẩu
+export const resendPasswordResetOtp = async (req, res) => {
+  try {
+    const result = await authService.resendPasswordResetOtp(req.body);
+    return res.status(200).json(result);
+  } catch (error) {
+    logger.warn("Lỗi khi gọi resendPasswordResetOtp", { message: error.message, email: req.body?.email });
     return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
@@ -70,7 +93,7 @@ export const resetPassword = async (req, res) => {
     const result = await authService.resetPassword(req.body);
     return res.status(200).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi resetPassword:", error.message);
+    logger.warn("Lỗi khi gọi resetPassword", { message: error.message, email: req.body?.email });
     return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
@@ -81,7 +104,7 @@ export const sendSignupCode = async (req, res) => {
     const result = await authService.sendSignupCode(req.body);
     return res.status(200).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi sendSignupCode:", error.message);
+    logger.warn("Lỗi khi gọi sendSignupCode", { message: error.message, email: req.body?.email });
     return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
@@ -92,7 +115,7 @@ export const verifySignup = async (req, res) => {
     const result = await authService.verifySignup(req.body);
     return res.status(201).json(result);
   } catch (error) {
-    console.error("Lỗi khi gọi verifySignup:", error.message);
+    logger.warn("Lỗi khi gọi verifySignup", { message: error.message, email: req.body?.email });
     return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
   }
 };
