@@ -1,7 +1,8 @@
 import Redis from "ioredis";
 import { getPolicy } from "../utils/getPolicy.js";
 import { logger } from "../logger/logger.js";
-const redis = new Redis(); // Kết nối đến Redis
+// Kết nối đến Redis, nếu có REDIS_URL thì vào, không thì cổng mặc định
+const redis = process.env.REDIS_URL ? new Redis(process.env.REDIS_URL) : new Redis(); 
 
 const buildLoginKeys = (email, ip) => ({
   shortKey: `login_fail:${email}:${ip}`,
