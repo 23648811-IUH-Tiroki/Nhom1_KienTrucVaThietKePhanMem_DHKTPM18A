@@ -123,7 +123,7 @@ function Product({ product }) {
         </div>
         <div className="py-3 px-4 flex flex-col gap-1 justify-between h-42.5">
           <Link
-            to={"/product/2"}
+            to={`/product/${product.slug}`}
             className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
           >
             {product.name}
