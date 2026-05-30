@@ -7,6 +7,15 @@ import { generateOTP } from "../utils/generateOTP.js";
 import redisClient from "../configs/redisClient.js";
 import { enqueueOtpEmail } from "../queues/otpQueue.js";
 import { logger } from "../logger/logger.js";
+import { createServiceError } from "../utils/serviceError.js";
+import {
+  EMAIL_RULE_MESSAGE,
+  PASSWORD_RULE_MESSAGE,
+  isValidEmail,
+  isValidPassword,
+  normalizeEmail,
+} from "../utils/validation.js";
+import { hashPassword, verifyPassword } from "../utils/passwordUtils.js";
 
 const ACCESS_TOKEN_TTL = "30m";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
@@ -19,41 +28,31 @@ const FORGOT_PASSWORD_KEY_PREFIX = "forgot_password";
 
 // ============ Helper Functions ============
 
-/**
- * Hash password with salt
- */
-const hashPassword = (password) => {
-  const salt = crypto.randomBytes(16).toString("hex");
-  const hash = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-    .toString("hex");
-  return `${salt}:${hash}`;
+const validateEmailOrThrow = (emailRaw) => {
+  const email = normalizeEmail(emailRaw);
+  if (!email || !isValidEmail(email)) {
+    throw createServiceError(EMAIL_RULE_MESSAGE, 400, {
+      message: EMAIL_RULE_MESSAGE,
+      errors: { email: EMAIL_RULE_MESSAGE },
+    });
+  }
+  return email;
 };
 
-/**
- * Verify password against stored hash
- */
-const verifyPassword = (password, storedHash) => {
-  if (!storedHash || typeof storedHash !== "string") {
-    return false;
+const validatePasswordOrThrow = (password) => {
+  if (!password) {
+    throw createServiceError("Mật khẩu không được để trống.", 400, {
+      message: "Mật khẩu không được để trống.",
+      errors: { password: "Mật khẩu không được để trống." },
+    });
   }
 
-  if (
-    storedHash.startsWith("$2a$") ||
-    storedHash.startsWith("$2b$") ||
-    storedHash.startsWith("$2y$")
-  ) {
-    return bcrypt.compareSync(password, storedHash);
+  if (!isValidPassword(password)) {
+    throw createServiceError(PASSWORD_RULE_MESSAGE, 400, {
+      message: PASSWORD_RULE_MESSAGE,
+      errors: { password: PASSWORD_RULE_MESSAGE },
+    });
   }
-
-  const [salt, hash] = storedHash.split(":");
-  if (!salt || !hash) {
-    return false;
-  }
-  const hashedPassword = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-    .toString("hex");
-  return hash === hashedPassword;
 };
 
 const getForgotPasswordKey = (email) => `${FORGOT_PASSWORD_KEY_PREFIX}:${String(email).trim().toLowerCase()}`;
@@ -128,15 +127,23 @@ const normalizeForgotPasswordError = (message) => {
  * Sign up new user
  */
 export const signUp = async (userData) => {
-  const { email, password, lastName, firstName, birthDate } = userData;
+  const { password, lastName, firstName, birthDate } = userData;
+  const email = validateEmailOrThrow(userData?.email);
 
-  if (!password || !lastName || !firstName || !email || !birthDate) {
-    throw new Error("Không thể thiếu email, password, lastName, firstName, birthDate!");
+  if (!password || !lastName || !firstName || !birthDate) {
+    throw createServiceError("Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.", 400, {
+      message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+    });
   }
+
+  validatePasswordOrThrow(password);
 
   const duplicate = await User.findOne({ $or: [{ email }] });
   if (duplicate) {
-    throw new Error("Email đã tồn tại!");
+    throw createServiceError("Email đã tồn tại.", 400, {
+      message: "Email đã tồn tại.",
+      errors: { email: "Email đã tồn tại." },
+    });
   }
 
   const hashedPass = hashPassword(password);
@@ -157,32 +164,32 @@ export const signUp = async (userData) => {
  * Sign in user
  */
 export const signIn = async (userData, req) => {
-  const { email } = userData;
+  const email = validateEmailOrThrow(userData?.email);
   const password = userData.password ?? userData.passWord;
-
-  if (!email) {
-    throw new Error("Thiếu email!");
-  }
-  if (!password) {
-    throw new Error("Thiếu password!");
-  }
+  validatePasswordOrThrow(password);
 
   const user = await User.findOne({ email });
   if (!user) {
     await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw new Error("Email hoặc password không đúng");
+    throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
+      message: "Email hoặc mật khẩu không đúng.",
+    });
   }
 
   if (user.isBlocked) {
     await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw new Error("Tài khoản đã bị khóa.");
+    throw createServiceError("Tài khoản đã bị khóa.", 403, {
+      message: "Tài khoản đã bị khóa.",
+    });
   }
 
   const storedPassword = user.password ?? user.passWord;
   const passWordCorrect = verifyPassword(password, storedPassword);
   if (!passWordCorrect) {
     await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw new Error("Email hoặc password không đúng");
+    throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
+      message: "Email hoặc mật khẩu không đúng.",
+    });
   }
 
   const accessToken = jwt.sign(
@@ -258,15 +265,14 @@ export const signOut = async (token, req) => {
  * Request password reset
  */
 export const requestPasswordReset = async (userData) => {
-  const { email } = userData;
-
-  if (!email) {
-    throw new Error("Thiếu email!");
-  }
+  const email = validateEmailOrThrow(userData?.email);
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error("Không tìm thấy tài khoản với email này!");
+    throw createServiceError("Không tìm thấy tài khoản với email này!", 404, {
+      message: "Không tìm thấy tài khoản với email này!",
+      errors: { email: "Không tìm thấy tài khoản với email này!" },
+    });
   }
 
   const resetCode = String(crypto.randomInt(100000, 1000000));
@@ -300,18 +306,25 @@ export const verifyPasswordResetOtp = async (userData) => {
   const inputOtp = String(code ?? otp ?? "").trim();
 
   if (!email || !inputOtp) {
-    throw new Error("Thiếu email hoặc mã OTP!");
+    throw createServiceError("Thiếu email hoặc mã OTP!", 400, {
+      message: "Thiếu email hoặc mã OTP!",
+      errors: {
+        ...(email ? {} : { email: EMAIL_RULE_MESSAGE }),
+        ...(inputOtp ? {} : { code: "Vui lòng nhập mã OTP." }),
+      },
+    });
   }
 
-  const state = await readForgotPasswordState(email);
+  const normalizedEmail = validateEmailOrThrow(email);
+  const state = await readForgotPasswordState(normalizedEmail);
   if (!state) {
     throw new Error("OTP không tồn tại hoặc đã hết hạn!");
   }
 
   const isExpired = !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
   if (isExpired) {
-    await redisClient.del(getForgotPasswordKey(email));
-    await redisClient.del(getForgotPasswordCooldownKey(email));
+    await redisClient.del(getForgotPasswordKey(normalizedEmail));
+    await redisClient.del(getForgotPasswordCooldownKey(normalizedEmail));
     throw new Error("OTP đã hết hạn!");
   }
 
@@ -331,7 +344,7 @@ export const verifyPasswordResetOtp = async (userData) => {
       updatedAt: new Date().toISOString(),
     };
 
-    await persistForgotPasswordState(email, updatedState);
+    await persistForgotPasswordState(normalizedEmail, updatedState);
 
     if (updatedState.verifyAttempts >= FORGOT_PASSWORD_MAX_ATTEMPTS) {
       throw new Error("Bạn đã nhập sai OTP quá nhiều lần!");
@@ -348,7 +361,7 @@ export const verifyPasswordResetOtp = async (userData) => {
     verifyAttempts: 0,
   };
 
-  await persistForgotPasswordState(email, verifiedState);
+  await persistForgotPasswordState(normalizedEmail, verifiedState);
 
   logger.info("Forgot-password OTP verified", {
     email,
@@ -366,15 +379,14 @@ export const verifyPasswordResetOtp = async (userData) => {
  * Resend forgot-password OTP
  */
 export const resendPasswordResetOtp = async (userData) => {
-  const { email } = userData;
-
-  if (!email) {
-    throw new Error("Thiếu email!");
-  }
+  const email = validateEmailOrThrow(userData?.email);
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error("Không tìm thấy tài khoản với email này!");
+    throw createServiceError("Không tìm thấy tài khoản với email này!", 404, {
+      message: "Không tìm thấy tài khoản với email này!",
+      errors: { email: "Không tìm thấy tài khoản với email này!" },
+    });
   }
 
   const cooldown = await redisClient.get(getForgotPasswordCooldownKey(email));
@@ -432,11 +444,10 @@ export const resetPassword = async (userData) => {
   const { email, newPassword, passWord } = userData;
   const password = newPassword ?? passWord;
 
-  if (!email || !password) {
-    throw new Error("Thiếu email hoặc mật khẩu mới!");
-  }
+  const normalizedEmail = validateEmailOrThrow(email);
+  validatePasswordOrThrow(password);
 
-  const state = await readForgotPasswordState(email);
+  const state = await readForgotPasswordState(normalizedEmail);
   if (!state) {
     throw new Error("OTP không tồn tại hoặc đã hết hạn!");
   }
@@ -456,13 +467,16 @@ export const resetPassword = async (userData) => {
     throw new Error("OTP đã được sử dụng!");
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: normalizedEmail });
   if (!user) {
-    throw new Error("Không tìm thấy tài khoản với email này!");
+    throw createServiceError("Không tìm thấy tài khoản với email này!", 404, {
+      message: "Không tìm thấy tài khoản với email này!",
+      errors: { email: "Không tìm thấy tài khoản với email này!" },
+    });
   }
 
   await User.updateOne(
-    { email },
+    { email: normalizedEmail },
     {
       $set: {
         password: hashPassword(password),
@@ -470,9 +484,9 @@ export const resetPassword = async (userData) => {
     }
   );
 
-  await redisClient.del(getForgotPasswordKey(email));
-  await redisClient.del(getForgotPasswordCooldownKey(email));
-  await redisClient.del(`${FORGOT_PASSWORD_KEY_PREFIX}:resendcount:${String(email).trim().toLowerCase()}`);
+  await redisClient.del(getForgotPasswordKey(normalizedEmail));
+  await redisClient.del(getForgotPasswordCooldownKey(normalizedEmail));
+  await redisClient.del(`${FORGOT_PASSWORD_KEY_PREFIX}:resendcount:${String(normalizedEmail).trim().toLowerCase()}`);
 
   logger.info("Forgot-password reset succeeded", {
     email,
@@ -488,15 +502,23 @@ export const resetPassword = async (userData) => {
  * Send signup verification code
  */
 export const sendSignupCode = async (userData) => {
-  const { email, password, lastName, firstName, birthDate } = userData;
+  const { password, lastName, firstName, birthDate } = userData;
+  const email = validateEmailOrThrow(userData?.email);
 
   if (!email || !password || !lastName || !firstName || !birthDate) {
-    throw new Error("Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.");
+    throw createServiceError("Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.", 400, {
+      message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+    });
   }
+
+  validatePasswordOrThrow(password);
 
   const existing = await User.findOne({ $or: [{ email }] });
   if (existing) {
-    throw new Error("Email đã được sử dụng.");
+    throw createServiceError("Email đã được sử dụng.", 400, {
+      message: "Email đã được sử dụng.",
+      errors: { email: "Email đã được sử dụng." },
+    });
   }
 
   const resendKey = `signup_cooldown:${email}`;
@@ -555,10 +577,17 @@ export const sendSignupCode = async (userData) => {
  * Verify signup code and create user
  */
 export const verifySignup = async (userData) => {
-  const { email, code } = userData;
+  const email = validateEmailOrThrow(userData?.email);
+  const { code } = userData;
 
   if (!email || !code) {
-    throw new Error("Thiếu email hoặc mã xác thực.");
+    throw createServiceError("Thiếu email hoặc mã xác thực.", 400, {
+      message: "Thiếu email hoặc mã xác thực.",
+      errors: {
+        ...(email ? {} : { email: EMAIL_RULE_MESSAGE }),
+        ...(code ? {} : { code: "Vui lòng nhập mã xác thực." }),
+      },
+    });
   }
 
   const redisData = await redisClient.get(`signup:${email}`);

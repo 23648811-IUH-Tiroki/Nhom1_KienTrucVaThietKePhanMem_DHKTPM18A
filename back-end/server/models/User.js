@@ -1,9 +1,28 @@
 import mongoose from "mongoose";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_REGEX = /^\d{10,11}$/;
+
 const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
-  phone: { type: String, unique: true, sparse: true },
-  email: { type: String, required: true, unique: true },
+  phone: {
+    type: String,
+    unique: true,
+    sparse: true,
+    trim: true,
+    validate: {
+      validator: (value) => !value || PHONE_REGEX.test(String(value).trim()),
+      message: "Số điện thoại chỉ được chứa chữ số và có độ dài từ 10 đến 11 số.",
+    },
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+    match: [EMAIL_REGEX, "Vui lòng nhập địa chỉ email hợp lệ."],
+  },
   birthDate: { type: Date, required: true },
   password: { type: String, required: true },
   resetPasswordToken: { type: String, default: null },

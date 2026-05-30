@@ -645,3 +645,126 @@
 2026-05-29T17:36:28.330Z [error] Redis client error {"service":"back-end"}
 2026-05-29T17:36:29.014Z [error] Queue Redis error {"service":"back-end"}
 2026-05-29T17:36:29.777Z [error] Queue Redis error {"service":"back-end"}
+2026-05-30T12:23:23.188Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-05-30T12:23:23.196Z [info] Kết nối Redis thành công! {"service":"back-end"}
+2026-05-30T12:23:23.213Z [info] Queue Redis ready {"service":"back-end"}
+2026-05-30T12:23:23.218Z [info] Loading .env {"service":"back-end","envPath":"D:\\KTTKPM_main\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A\\back-end\\.env"}
+2026-05-30T12:23:23.220Z [info] .env file loaded successfully {"service":"back-end"}
+2026-05-30T12:23:23.311Z [info] Background workers initialized {"service":"back-end"}
+2026-05-30T12:23:23.321Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-05-30T12:23:24.022Z [info] Connected to MongoDB {"service":"back-end"}
+2026-05-30T12:30:00.698Z [info] GET /api/users/profile 401 21.198 ms - 62 req=142e6b94-cb89-495f-baeb-b694b1881a7e {"service":"back-end"}
+2026-05-30T12:30:00.791Z [info] GET /api/categories 304 308.841 ms - - req=894de20d-dc38-4e78-962e-dc612f82099a {"service":"back-end"}
+2026-05-30T12:30:00.820Z [info] GET /api/carts/me 401 9.709 ms - 62 req=defb7a09-de79-4271-ba06-dd4fe32c5dad {"service":"back-end"}
+2026-05-30T12:30:00.850Z [info] GET /api/categories/catetory/shop-cho-cun 304 147.412 ms - - req=d78c5b9f-1bff-47e8-a65a-8f72b8b2b8e3 {"service":"back-end"}
+2026-05-30T12:30:00.891Z [info] GET /api/carts/me 401 5.873 ms - 62 req=a59cd988-0c4a-4645-bd29-45bd21040db6 {"service":"back-end"}
+2026-05-30T12:30:00.907Z [info] GET /api/carts/me 401 6.775 ms - 62 req=9db0e158-f6f7-4141-b007-d8525cfd7ff5 {"service":"back-end"}
+2026-05-30T12:30:00.924Z [info] GET /api/products 200 209.593 ms - 86294 req=f67af31a-cf9c-4c38-83a5-5aa7cd9dc648 {"service":"back-end"}
+2026-05-30T12:30:00.936Z [info] GET /api/categories 304 110.301 ms - - req=1e2aee41-29a4-4c2b-b2b5-26421575bf1f {"service":"back-end"}
+2026-05-30T12:30:00.965Z [info] GET /api/categories/shop-cho-cun 200 296.883 ms - 15571 req=24ca51d9-0e06-4f3e-b4e5-912406b113ac {"service":"back-end"}
+2026-05-30T12:30:00.999Z [info] GET /api/products/product/sales 200 127.017 ms - 29956 req=4329b493-0604-439f-87e7-9f0f8ab588aa {"service":"back-end"}
+2026-05-30T12:30:01.056Z [info] GET /api/categories/shop-cho-meo 200 324.773 ms - 59084 req=26226bb2-439e-4558-9c4d-dfa65d683565 {"service":"back-end"}
+2026-05-30T12:30:01.067Z [info] GET /api/categories 304 93.611 ms - - req=fc9d2c9a-a512-4474-90f4-ab00ae8a3920 {"service":"back-end"}
+2026-05-30T12:30:03.778Z [info] GET /api/categories 304 52.199 ms - - req=f34084e7-3ee6-497f-931d-e79e6701b128 {"service":"back-end"}
+2026-05-30T12:30:03.964Z [info] GET /api/products/product/sales 304 209.928 ms - - req=19df22a9-e2fc-40cf-97e4-0c807bc696ad {"service":"back-end"}
+2026-05-30T12:30:04.010Z [info] GET /api/categories/shop-cho-cun 304 275.911 ms - - req=2b9fb256-b05d-46bd-ab19-561ed29ba966 {"service":"back-end"}
+2026-05-30T12:30:04.031Z [info] GET /api/products 304 297.342 ms - - req=afeb0d8e-8c89-4623-85bc-fb10502b7c7e {"service":"back-end"}
+2026-05-30T12:30:04.077Z [info] GET /api/categories/shop-cho-meo 304 334.770 ms - - req=5724725a-26fd-43ec-9d90-bcefd4f3b932 {"service":"back-end"}
+2026-05-30T12:41:13.562Z [info] GET /api/categories 304 94.836 ms - - req=a614a1cb-d379-4d55-9518-2e8efb03916b {"service":"back-end"}
+2026-05-30T12:41:13.735Z [info] GET /api/products/product/sales 304 213.537 ms - - req=19af892c-fcd4-4bce-a4dd-13227a673aaa {"service":"back-end"}
+2026-05-30T12:41:13.783Z [info] GET /api/products 304 303.331 ms - - req=d4b67cfd-1825-40aa-b62b-415e665c2d5b {"service":"back-end"}
+2026-05-30T12:41:13.805Z [info] GET /api/categories/shop-cho-cun 304 313.719 ms - - req=e58da6dc-3258-4ed7-87b4-4095c9bdb10c {"service":"back-end"}
+2026-05-30T12:41:13.934Z [info] GET /api/categories/shop-cho-meo 304 421.447 ms - - req=e8a84760-17b9-4dd9-9df8-d336706229d6 {"service":"back-end"}
+2026-05-30T12:41:20.592Z [info] GET /api/categories 304 53.848 ms - - req=6019f940-8292-4cbd-b34d-d5d223888a7d {"service":"back-end"}
+2026-05-30T12:41:20.633Z [info] GET /api/categories/catetory/shop-cho-cun 304 84.254 ms - - req=1550a8c4-5fc5-46b9-ac8b-34d585d58185 {"service":"back-end"}
+2026-05-30T12:41:20.646Z [info] GET /api/categories 304 51.823 ms - - req=1154b408-95e8-48fd-9823-621df7a875b1 {"service":"back-end"}
+2026-05-30T12:41:20.770Z [info] GET /api/categories 304 108.533 ms - - req=56108c7f-657a-4e71-b37b-0bb484ff0816 {"service":"back-end"}
+2026-05-30T12:41:23.938Z [info] GET /api/categories 304 52.087 ms - - req=319ea986-715e-426f-8254-d1de4c9fc2c9 {"service":"back-end"}
+2026-05-30T12:41:24.161Z [info] GET /api/products 304 270.498 ms - - req=debdf07f-28aa-4e70-9b3a-a8cad2cb2ea3 {"service":"back-end"}
+2026-05-30T12:41:24.371Z [info] GET /api/products/sua-bot-predogen-cho-cho-con-110g 200 475.520 ms - 32161 req=71349737-5c15-4dc7-816c-723c7f08d0d5 {"service":"back-end"}
+2026-05-30T12:41:28.023Z [info] GET /api/categories 304 53.896 ms - - req=237d5486-0c74-4f07-9c8a-3840055b538e {"service":"back-end"}
+2026-05-30T12:41:28.027Z [info] GET /api/categories/catetory/shop-cho-cun 304 52.837 ms - - req=577f5151-6689-408d-aeca-a077109dc7e0 {"service":"back-end"}
+2026-05-30T12:41:28.166Z [info] GET /api/categories 304 114.602 ms - - req=cbce5738-690a-419f-ab95-4b3737a14a8e {"service":"back-end"}
+2026-05-30T12:41:28.250Z [info] GET /api/categories 304 66.394 ms - - req=077b0511-3131-4319-8862-b52e6a77434b {"service":"back-end"}
+2026-05-30T12:41:29.776Z [info] GET /api/categories 304 51.463 ms - - req=f89690e9-c614-4f30-8bbd-4286ba8ee29d {"service":"back-end"}
+2026-05-30T12:41:30.006Z [info] GET /api/products 304 278.451 ms - - req=0beec577-4918-4d57-b247-0a08554959a5 {"service":"back-end"}
+2026-05-30T12:41:30.021Z [info] GET /api/products/sua-bot-predogen-cho-cho-con-110g 304 290.799 ms - - req=3142d044-0b93-497a-bdc0-d5fe4bfc25a7 {"service":"back-end"}
+2026-05-30T12:41:35.647Z [info] GET /api/categories 304 79.161 ms - - req=7931654e-5c8e-417f-bffe-070699d76035 {"service":"back-end"}
+2026-05-30T12:41:35.656Z [info] GET /api/categories/catetory/shop-cho-cun 304 83.794 ms - - req=7ad0b166-c2e6-4a0c-8e6d-0f14ac9a49fe {"service":"back-end"}
+2026-05-30T12:41:35.720Z [info] GET /api/categories 304 62.510 ms - - req=6f31a2bf-74a8-4ffe-907c-bd407673e995 {"service":"back-end"}
+2026-05-30T12:41:35.773Z [info] GET /api/categories 304 49.136 ms - - req=12b02300-76fc-4496-a8e7-1e502bb47849 {"service":"back-end"}
+2026-05-30T12:41:36.574Z [info] GET /api/categories 304 48.588 ms - - req=ff53619b-d311-467e-bce4-97e955f76aac {"service":"back-end"}
+2026-05-30T12:41:44.151Z [info] GET /api/categories 304 47.104 ms - - req=a9305cab-12de-4019-9849-664ed516b62b {"service":"back-end"}
+2026-05-30T12:41:52.023Z [info] Forgot-password OTP requested {"service":"back-end","email":"ruouvan1104@gmail.com","resendCooldownSeconds":60,"otpExpiresInSeconds":300}
+2026-05-30T12:41:52.024Z [info] POST /api/auth/request-password-reset 200 217.431 ms - 118 req=50f25144-7932-4db2-bcbe-80ef898bae8f {"service":"back-end"}
+2026-05-30T12:41:52.029Z [info] Processing OTP job {"service":"back-end","jobId":"1","email":"ruouvan1104@gmail.com","purpose":"password-reset"}
+2026-05-30T12:41:55.858Z [info] OTP job completed {"service":"back-end","jobId":"1","email":"ruouvan1104@gmail.com"}
+2026-05-30T12:42:25.238Z [info] Forgot-password OTP verified {"service":"back-end","email":"ruouvan1104@gmail.com","verifyAttempts":0}
+2026-05-30T12:42:25.239Z [info] POST /api/auth/verify-password-reset-otp 200 107.130 ms - 85 req=c67b1e80-94dc-4ea2-a696-969a2031ea28 {"service":"back-end"}
+2026-05-30T12:42:49.010Z [info] Forgot-password reset succeeded {"service":"back-end","email":"ruouvan1104@gmail.com","userId":"6a16777be214e1169c53e5e4"}
+2026-05-30T12:42:49.011Z [info] POST /api/auth/reset-password 200 166.812 ms - 53 req=a6b6f7b7-c88d-448b-a2a2-f31a171712ea {"service":"back-end"}
+2026-05-30T12:42:49.087Z [info] GET /api/categories 304 47.434 ms - - req=7a11b327-7045-44dd-b8f5-0a3deffea0ac {"service":"back-end"}
+2026-05-30T12:42:53.787Z [info] POST /api/auth/signin 200 63.057 ms - 360 req=618e6853-292f-467a-b0a0-8aef7269590a {"service":"back-end"}
+2026-05-30T12:42:53.910Z [info] GET /api/users/profile 200 115.323 ms - 445 req=ed7f4eb3-a4ad-4330-8e60-0c3f019708bd {"service":"back-end"}
+2026-05-30T12:42:54.708Z [info] GET /api/categories/catetory/shop-cho-cun 304 60.954 ms - - req=9b191aa1-b85b-4fd2-b1b8-18aca4c768cd {"service":"back-end"}
+2026-05-30T12:42:54.709Z [info] GET /api/categories 304 65.380 ms - - req=ba6f75ac-e299-49fe-bb94-7a7a03b342ac {"service":"back-end"}
+2026-05-30T12:42:54.726Z [info] GET /api/users/profile 200 105.685 ms - 445 req=70f1b450-5621-4b0e-8c14-ac60642e167c {"service":"back-end"}
+2026-05-30T12:42:54.775Z [info] GET /api/carts/me 200 132.130 ms - 60 req=eba18b64-150b-4a65-95e5-9bee7329e48e {"service":"back-end"}
+2026-05-30T12:42:54.792Z [info] GET /api/categories 304 69.960 ms - - req=d87afdab-5105-4063-935e-02d46b2a5ef4 {"service":"back-end"}
+2026-05-30T12:42:54.847Z [info] GET /api/categories 304 50.095 ms - - req=48ea5847-92fb-489b-b426-aae6d83b5629 {"service":"back-end"}
+2026-05-30T12:42:54.887Z [info] GET /api/carts/me 304 113.844 ms - - req=be6ac30d-1a97-49e5-a9f6-4aa169194d28 {"service":"back-end"}
+2026-05-30T12:42:55.036Z [info] GET /api/carts/me 304 142.972 ms - - req=829518ba-705b-4c3f-b886-aa36739770e8 {"service":"back-end"}
+2026-05-30T12:42:59.531Z [info] GET /api/users/profile 200 95.883 ms - 445 req=0be13731-2cc2-42ca-8cd7-0c4ccfbc45fd {"service":"back-end"}
+2026-05-30T12:42:59.708Z [info] GET /api/orders?user_id=6a16777be214e1169c53e5e4 200 167.262 ms - 2115 req=55648ef1-8eaf-4b91-a32e-ebcd4ec2fdcc {"service":"back-end"}
+2026-05-30T12:42:59.821Z [info] GET /api/categories 304 54.148 ms - - req=cee8efc6-4109-416a-8061-4d0a51c3666d {"service":"back-end"}
+2026-05-30T12:42:59.864Z [info] GET /api/carts/me 304 97.917 ms - - req=40aaacf6-6266-4fc2-8633-5827a5853dde {"service":"back-end"}
+2026-05-30T12:42:59.865Z [info] GET /api/users/profile 200 100.863 ms - 445 req=d6c4deee-57fb-4f19-bbce-1cb7c65deba1 {"service":"back-end"}
+2026-05-30T12:42:59.995Z [info] GET /api/carts/me 304 126.965 ms - - req=3e796bac-c04a-4312-9aa9-ffc95f7de843 {"service":"back-end"}
+2026-05-30T12:43:00.097Z [info] GET /api/carts/me 304 98.128 ms - - req=a230c6a0-07ff-4b6c-bc64-221d37317f43 {"service":"back-end"}
+2026-05-30T12:43:02.528Z [info] GET /api/reviews/my-reviews 200 110.502 ms - 2 req=25704ede-ba1a-48f1-8ff4-03b8697dde67 {"service":"back-end"}
+2026-05-30T12:43:06.735Z [info] GET /api/categories 304 53.916 ms - - req=d09fdb19-cb41-4203-a051-eb781a0e1fd5 {"service":"back-end"}
+2026-05-30T12:43:06.760Z [info] GET /api/categories/catetory/shop-cho-cun 304 61.323 ms - - req=40bae685-7e01-48bb-b2ca-0546f6ef983e {"service":"back-end"}
+2026-05-30T12:43:06.815Z [info] GET /api/categories 304 69.832 ms - - req=5088539c-f8c4-43ea-9430-5f027782b942 {"service":"back-end"}
+2026-05-30T12:43:06.817Z [info] GET /api/categories/name/quan-ao-cho-cho?page=1&limit=8 200 120.492 ms - 30 req=715c1670-c786-4743-ae79-f9a506260ce1 {"service":"back-end"}
+2026-05-30T12:43:06.819Z [info] GET /api/carts/me 304 118.652 ms - - req=cb5fc286-ca0f-48a6-a306-4d25f1583dab {"service":"back-end"}
+2026-05-30T12:43:06.820Z [info] GET /api/users/profile 200 123.255 ms - 445 req=11913aff-0c2a-468e-bffe-6e79ae625126 {"service":"back-end"}
+2026-05-30T12:43:06.931Z [info] GET /api/carts/me 304 108.589 ms - - req=768425fb-4eea-4192-a7eb-c2cb35c2ed6f {"service":"back-end"}
+2026-05-30T12:43:07.036Z [info] GET /api/carts/me 304 99.306 ms - - req=e4ac137e-297a-4010-85f8-a57d79cccdda {"service":"back-end"}
+2026-05-30T12:43:08.560Z [info] GET /api/categories/name/cat-ve-sinh-cho-meo?page=1&limit=8 200 136.206 ms - 30 req=53ce4913-630e-40dd-9059-b424b029b3c7 {"service":"back-end"}
+2026-05-30T12:43:09.719Z [info] GET /api/categories/name/thuc-an-cho-cho?page=1&limit=8 200 129.132 ms - 12065 req=27f97ecf-029e-4975-bc12-8f253c2daa92 {"service":"back-end"}
+2026-05-30T12:43:14.201Z [info] GET /api/categories 304 50.106 ms - - req=5c635f13-7338-4c76-b291-ad30b095466b {"service":"back-end"}
+2026-05-30T12:43:14.279Z [info] GET /api/users/profile 200 121.645 ms - 445 req=066ca354-7b2d-48a9-ba1b-9b823f159a4d {"service":"back-end"}
+2026-05-30T12:43:14.288Z [info] GET /api/reviews/my-reviews 304 129.335 ms - - req=acf15f90-9504-46d2-bf00-d06306db088e {"service":"back-end"}
+2026-05-30T12:43:14.312Z [info] GET /api/carts/me 304 107.522 ms - - req=43c024da-740a-4f25-81c1-b74725368851 {"service":"back-end"}
+2026-05-30T12:43:14.333Z [info] GET /api/reviews/can-review/67d7a574829c3db098dca6fa 200 175.650 ms - 179 req=cba6deb1-2113-40d7-9dd0-98fb59488c64 {"service":"back-end"}
+2026-05-30T12:43:14.371Z [info] GET /api/products 304 179.396 ms - - req=7e5ef637-ca2c-4b1a-b9e3-50b371cb8fbb {"service":"back-end"}
+2026-05-30T12:43:14.427Z [info] GET /api/carts/me 304 105.227 ms - - req=9d3603c9-85f8-4b57-a32e-1de36e233680 {"service":"back-end"}
+2026-05-30T12:43:14.538Z [info] GET /api/carts/me 304 103.742 ms - - req=76c0931f-c6b0-49f0-9dee-a1e3a9697e09 {"service":"back-end"}
+2026-05-30T12:43:14.857Z [info] GET /api/products/banh-thuong-cho-cho-vegebrand-orgo-freshening-biscuit 200 667.499 ms - 1801 req=83132a46-efcb-4b73-972b-e689ce938c52 {"service":"back-end"}
+2026-05-30T12:43:15.058Z [info] GET /api/reviews/my-reviews 304 105.299 ms - - req=2c63c5cd-76dc-459b-aeae-9e561d9d4f9c {"service":"back-end"}
+2026-05-30T12:43:15.151Z [info] GET /api/reviews/can-review/67d79db3829c3db098dca6d7 200 197.620 ms - 1261 req=ff473728-3ce5-4181-a73a-240a5e7d1dfa {"service":"back-end"}
+2026-05-30T12:43:15.166Z [info] GET /api/reviews/my-reviews 304 102.913 ms - - req=931c48d6-86f7-4bef-84d0-b5cd13056b01 {"service":"back-end"}
+2026-05-30T12:43:15.353Z [info] GET /api/reviews/can-review/67d79db3829c3db098dca6d7 304 198.581 ms - - req=e3f2c2fe-dcc7-40da-be5a-f275b3a900f8 {"service":"back-end"}
+2026-05-30T12:43:20.168Z [info] GET /api/products/bat-an-doi-hinh-con-ech-cho-cho-meo 200 255.200 ms - 32017 req=b1f9715f-8355-4cb1-a3ea-6ccd3f06704b {"service":"back-end"}
+2026-05-30T12:43:20.372Z [info] GET /api/reviews/my-reviews 304 106.885 ms - - req=062e3726-6ac7-4432-98c6-8e2eb917aac2 {"service":"back-end"}
+2026-05-30T12:43:20.419Z [info] GET /api/reviews/can-review/67d7a256829c3db098dca6ed 200 152.450 ms - 179 req=ab42f20d-1f43-4eb8-8de3-584c8a84175b {"service":"back-end"}
+2026-05-30T12:43:20.486Z [info] GET /api/reviews/my-reviews 304 107.642 ms - - req=7d0a8dd8-19ce-4354-a88a-035f8389fa9e {"service":"back-end"}
+2026-05-30T12:43:20.574Z [info] GET /api/reviews/can-review/67d7a256829c3db098dca6ed 304 153.986 ms - - req=b1590686-f797-4570-880b-be3c9536957a {"service":"back-end"}
+2026-05-30T12:43:47.833Z [info] POST /api/auth/signout 200 4.865 ms - 41 req=24ccbc18-fce3-4f4d-8671-972c2c75fc43 {"service":"back-end"}
+2026-05-30T12:43:49.170Z [info] GET /api/categories/catetory/shop-cho-cun 304 65.563 ms - - req=2cd9d449-18a4-41cc-abcf-9e9cb66b629a {"service":"back-end"}
+2026-05-30T12:43:49.177Z [info] GET /api/categories 304 76.961 ms - - req=81746f54-dba8-43eb-8e5d-0847105c79c0 {"service":"back-end"}
+2026-05-30T12:43:49.234Z [info] GET /api/categories 304 50.810 ms - - req=b3515dfa-6953-4ea7-a1eb-6a8b91d63034 {"service":"back-end"}
+2026-05-30T12:43:49.299Z [info] GET /api/categories 304 60.789 ms - - req=023fd1e4-9754-4ac9-91e1-376c4796306a {"service":"back-end"}
+2026-05-30T12:43:50.739Z [info] GET /api/categories 304 53.139 ms - - req=c281ff98-23fc-49e9-9359-eaa0d237e00f {"service":"back-end"}
+2026-05-30T12:43:53.451Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-05-30T12:43:53.460Z [info] POST /api/auth/signin 401 71.898 ms - 54 req=a285e90f-10c7-46ab-834b-e7463efa8ab2 {"service":"back-end"}
+2026-05-30T12:44:00.422Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"ruouvan1104@gmail.com"}
+2026-05-30T12:44:00.424Z [info] POST /api/auth/signin 401 99.136 ms - 54 req=0967c189-7261-4432-be2c-e9dda9d06f49 {"service":"back-end"}
+2026-05-30T12:44:41.850Z [info] GET /api/categories 304 56.011 ms - - req=ef5dcd99-03f2-4ab2-9621-427464bf3a31 {"service":"back-end"}
+2026-05-30T12:44:41.863Z [info] GET /api/categories/catetory/shop-cho-cun 304 58.611 ms - - req=bce3ef08-ad0a-48b4-8791-a5bb160c0b26 {"service":"back-end"}
+2026-05-30T12:44:41.950Z [info] GET /api/categories 304 65.571 ms - - req=7e261369-eb7b-476d-89a5-d0f76ae1c38b {"service":"back-end"}
+2026-05-30T12:44:42.058Z [info] GET /api/categories 304 93.147 ms - - req=74ae6f43-9808-4917-9c27-403da2489f1e {"service":"back-end"}
+2026-05-30T12:45:00.545Z [info] POST /api/ai/chat 200 8447.984 ms - 531 req=fa32c51e-899d-4573-a460-25646204f784 {"service":"back-end"}
+2026-05-30T12:45:35.398Z [info] GET /api/categories 304 47.421 ms - - req=13b6f71b-ef6e-4b43-939f-0d6bb8eff24c {"service":"back-end"}
+2026-05-30T12:45:37.541Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-05-30T12:45:37.543Z [info] POST /api/auth/signin 401 69.272 ms - 54 req=8fe4ad03-4eef-44dc-b267-8e8dbf09b2f1 {"service":"back-end"}

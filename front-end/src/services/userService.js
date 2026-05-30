@@ -11,6 +11,9 @@ export const fetchShippingAddress = () =>
 export const updateShippingAddress = (payload) =>
   axiosInstance.put("/api/users/shipping-address", payload);
 
+export const changePassword = (payload) =>
+  axiosInstance.put("/api/users/change-password", payload);
+
 export const fetchUserById = (userId) => axiosInstance.get(`/api/users/${userId}`);
 
 export const fetchUsersPaginated = (params) =>

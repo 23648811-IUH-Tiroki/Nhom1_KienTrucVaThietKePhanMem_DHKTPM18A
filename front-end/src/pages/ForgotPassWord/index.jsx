@@ -7,6 +7,7 @@ import {
   verifyPasswordResetOtp,
 } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
+import { PASSWORD_RULE_MESSAGE, isValidPassword, normalizeEmail } from "../../utils/validation";
 
 const PAW_SVG = (
   <svg viewBox="0 0 64 64" fill="currentColor" className="w-full h-full">
@@ -94,7 +95,7 @@ const ForgotPassword = () => {
     setLoading(true); setError(""); setMessage("");
     setOtpVerified(false); setCode(""); setStep(1);
     try {
-      const response = await requestPasswordReset({ email });
+      const response = await requestPasswordReset({ email: normalizeEmail(email) });
       setMessage(response.data?.message || "Đã gửi mã xác thực đến email của bạn.");
       setCountdown(response.data?.nextResendInSeconds || 60);
       setStep(2);
@@ -107,7 +108,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true); setError(""); setMessage("");
     try {
-      const response = await verifyPasswordResetOtp({ email, code });
+      const response = await verifyPasswordResetOtp({ email: normalizeEmail(email), code });
       setOtpVerified(true); setStep(3);
       setMessage(response.data?.message || "Xác thực OTP thành công!");
       setCountdown(response.data?.otpExpiresInSeconds || countdown);
@@ -120,7 +121,7 @@ const ForgotPassword = () => {
   const handleResendOtp = async () => {
     setResendLoading(true); setError(""); setMessage("");
     try {
-      const response = await resendPasswordResetOtp({ email });
+      const response = await resendPasswordResetOtp({ email: normalizeEmail(email) });
       setCode(""); setOtpVerified(false);
       setCountdown(response.data?.nextResendInSeconds || 60);
       setMessage(response.data?.message || "Đã gửi lại mã OTP mới.");
@@ -131,11 +132,14 @@ const ForgotPassword = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    if (!newPassword) { setError(PASSWORD_RULE_MESSAGE); return; }
+    if (!isValidPassword(newPassword)) { setError(PASSWORD_RULE_MESSAGE); return; }
+    if (!confirmPassword) { setError("Mật khẩu xác nhận không được để trống."); return; }
     if (!otpVerified) { setError("Vui lòng xác thực OTP trước khi đặt lại mật khẩu."); return; }
     if (newPassword !== confirmPassword) { setError("Mật khẩu xác nhận không khớp!"); return; }
     setLoading(true); setError(""); setMessage("");
     try {
-      const response = await resetPassword({ email, newPassword });
+      const response = await resetPassword({ email: normalizeEmail(email), newPassword });
       setMessage(response.data?.message || "Đặt lại mật khẩu thành công!");
       navigate("/login");
       setEmail(""); setCode(""); setNewPassword(""); setConfirmPassword("");

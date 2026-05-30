@@ -1,4 +1,5 @@
 import * as authService from "../services/authService.js";
+import { sendControllerError } from "../utils/controllerError.js";
 import { logger } from "../logger/logger.js";
 
 //Đăng ký
@@ -8,7 +9,7 @@ export const signUp = async (req, res) => {
     return res.status(201).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi signup", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -31,7 +32,7 @@ export const signIn = async (req, res) => {
     });
   } catch (error) {
     logger.warn("Lỗi khi gọi signIn", { message: error.message, email: req.body?.email });
-    return res.status(401).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 401);
   }
 };
 
@@ -61,7 +62,7 @@ export const requestPasswordReset = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi requestPasswordReset", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -72,7 +73,7 @@ export const verifyPasswordResetOtp = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi verifyPasswordResetOtp", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -83,7 +84,7 @@ export const resendPasswordResetOtp = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi resendPasswordResetOtp", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -94,7 +95,7 @@ export const resetPassword = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi resetPassword", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -105,7 +106,7 @@ export const sendSignupCode = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi sendSignupCode", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };
 
@@ -116,6 +117,6 @@ export const verifySignup = async (req, res) => {
     return res.status(201).json(result);
   } catch (error) {
     logger.warn("Lỗi khi gọi verifySignup", { message: error.message, email: req.body?.email });
-    return res.status(400).json({ message: error.message || "Lỗi hệ thống" });
+    return sendControllerError(res, error, 400);
   }
 };

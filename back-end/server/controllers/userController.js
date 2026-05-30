@@ -140,3 +140,13 @@ export const updateShippingAddress = async (req, res) => {
     return sendControllerError(res, error, 400);
   }
 };
+
+export const changePassword = async (req, res) => {
+  try {
+    const result = await userService.changePassword(req.user, req.body);
+    return res.json(result);
+  } catch (error) {
+    logger.warn("Error changing password", { message: error.message, stack: error.stack });
+    return sendControllerError(res, error, 400);
+  }
+};

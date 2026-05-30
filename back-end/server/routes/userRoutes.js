@@ -11,6 +11,7 @@ import {
   updateProfile,
   getShippingAddress,
   updateShippingAddress,
+  changePassword,
 } from '../controllers/userController.js';
 import { protectedRoute, requireAdmin } from '../middleware/authMiddleware.js';
 
@@ -20,6 +21,7 @@ router.use(protectedRoute);
 
 router.get('/profile', getProfile);
 router.put('/profile', updateProfile);
+router.put('/change-password', changePassword);
 router.get('/shipping-address', getShippingAddress);
 router.put('/shipping-address', updateShippingAddress);
 

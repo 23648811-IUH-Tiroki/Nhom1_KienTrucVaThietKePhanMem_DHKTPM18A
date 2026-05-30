@@ -41,6 +41,8 @@ const UserManagement = () => {
   const [roleFilter, setRoleFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formApiErrors, setFormApiErrors] = useState({});
 
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -203,6 +205,8 @@ const UserManagement = () => {
 
   const handleFormSubmit = async (formData) => {
     try {
+      setIsSubmitting(true);
+      setFormApiErrors({});
       if (!formData.fullName || !formData.email || !formData.phone) {
         throw new Error("Please fill in all required fields");
       }
@@ -224,7 +228,12 @@ const UserManagement = () => {
       }
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
+      if (err.response?.data?.errors && typeof err.response.data.errors === "object") {
+        setFormApiErrors(err.response.data.errors);
+      }
       toast.error(err.response?.data?.message || err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -526,6 +535,8 @@ const UserManagement = () => {
           userData={selectedUser}
           onSubmit={handleFormSubmit}
           onCancel={() => setIsModalOpen(false)}
+          submitting={isSubmitting}
+          apiErrors={formApiErrors}
         />
       </Modal>
       <DeleteConfirmationModal

@@ -9,6 +9,13 @@ import { Link, useNavigate } from "react-router-dom";
 import "../page.scss";
 import { ToastContainer, toast } from "react-toastify";
 import { checkDuplicate, sendSignupCode, verifySignup } from "../../services/authService";
+import {
+  EMAIL_RULE_MESSAGE,
+  PASSWORD_RULE_MESSAGE,
+  isValidEmail,
+  isValidPassword,
+  normalizeEmail,
+} from "../../utils/validation";
 
 const Register = () => {
   const links = [{ label: "Trang chủ", link: "/" }, { label: "Đăng ký" }];
@@ -58,21 +65,28 @@ const Register = () => {
       formData;
 
     const newErrors = {};
+    const emailNormalized = normalizeEmail(email);
 
     if (!fullName.trim()) newErrors.fullName = "Họ và tên không được để trống.";
     // if (!phone.match(/^\d{10}$/))
     //   newErrors.phone = "Số điện thoại không hợp lệ.";
     if (
-      email &&
+      false && email &&
       !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
     )
       newErrors.email = "Email không hợp lệ.";
+    if (!emailNormalized) newErrors.email = EMAIL_RULE_MESSAGE;
+    else if (!isValidEmail(emailNormalized)) newErrors.email = EMAIL_RULE_MESSAGE;
+
     if (!birthDate) newErrors.birthDate = "Ngày sinh không được để trống.";
-    if (!password.match(/^(?=.*[a-zA-Z])(?=.*\d).{6,}$/))
-      newErrors.password =
+    if (!isValidPassword(password)) {
+      newErrors.password = PASSWORD_RULE_MESSAGE;
+    }
+      // newErrors.password =
         "Mật khẩu phải tối thiểu 6 ký tự, có ít nhất 1 chữ và 1 số.";
-    if (password !== confirmPassword)
-      newErrors.confirmPassword = "Mật khẩu không khớp.";
+    if (!confirmPassword) newErrors.confirmPassword = "Vui lòng nhập lại mật khẩu.";
+    else if (password !== confirmPassword)
+      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp.";
     return newErrors;
   };
 
@@ -81,7 +95,7 @@ const Register = () => {
     setErrors({});
     setSuccess(false);
     setMessage("");
-    setLoading(false);
+    setLoading(true);
 
     const validationError = validateForm();
     if (Object.keys(validationError).length > 0) {
@@ -92,7 +106,8 @@ const Register = () => {
     try {
       // Kiểm tra trùng lặp email và số điện thoại
       const { phone, email } = formData;
-      const checkDuplicateResponse = await checkDuplicate({ phone, email });
+      const emailNormalized = normalizeEmail(email);
+      const checkDuplicateResponse = await checkDuplicate({ phone, email: emailNormalized });
 
       if (checkDuplicateResponse.data.duplicateEmail) {
         setErrors({ email: "Email đã tồn tại." });
@@ -134,7 +149,7 @@ const Register = () => {
         firstName: firstName,
         lastName: lastName,
         // phone: formData.phone,
-        email: formData.email,
+        email: emailNormalized,
         birthDate: formData.birthDate,
         password: formData.password,
         role: "user",
@@ -165,7 +180,7 @@ const Register = () => {
     setErrors({});
     setLoading(true);
     try {
-      const res = await verifySignup({ email: formData.email, code });
+      const res = await verifySignup({ email: normalizeEmail(formData.email), code });
       if (res.status === 201) {
         toast.success("Đăng ký thành công. Đến trang đăng nhập.");
         setFormData({
@@ -371,7 +386,7 @@ const Register = () => {
                         firstName,
                         lastName,
                         // phone: formData.phone,
-                        email: formData.email,
+                        email: normalizeEmail(formData.email),
                         birthDate: formData.birthDate,
                         password: formData.password,
                         role: 'user',

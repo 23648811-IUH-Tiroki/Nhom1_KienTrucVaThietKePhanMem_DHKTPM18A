@@ -10,6 +10,13 @@ import "../page.scss";
 import { ToastContainer, toast } from "react-toastify";
 import { signIn } from "../../services/authService";
 import { fetchProfile } from "../../services/userService";
+import {
+  EMAIL_RULE_MESSAGE,
+  PASSWORD_RULE_MESSAGE,
+  isValidEmail,
+  isValidPassword,
+  normalizeEmail,
+} from "../../utils/validation";
 
 const Login = () => {
   const links = [{ label: "Trang chủ", link: "/" }, { label: "Đăng nhập" }];
@@ -76,19 +83,17 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.email) {
+    const email = normalizeEmail(formData.email);
+    if (!email) {
       newErrors.email = "Email không được để trống.";
-    } else if (
-      !formData.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-    ) {
-      newErrors.email = "Email không hợp lệ.";
+    } else if (!isValidEmail(email)) {
+      newErrors.email = EMAIL_RULE_MESSAGE;
     }
 
     if (!formData.password) {
       newErrors.password = "Mật khẩu không được để trống.";
-    } else if (!formData.password.match(/^(?=.*[a-zA-Z])(?=.*\d).{6,}$/)) {
-      newErrors.password =
-        "Mật khẩu phải tối thiểu 6 ký tự, có ít nhất 1 chữ và 1 số.";
+    } else if (!isValidPassword(formData.password)) {
+      newErrors.password = PASSWORD_RULE_MESSAGE;
     }
 
     return newErrors;
@@ -107,11 +112,11 @@ const Login = () => {
 
     try {
       const res = await signIn({
-        email: formData.email,
+        email: normalizeEmail(formData.email),
         password: formData.password,
       });
 
-      const { accessToken, message } = res.data;
+      const { accessToken } = res.data;
 
       if (!accessToken) {
         setErrors({
@@ -120,7 +125,6 @@ const Login = () => {
         return;
       }
 
-      // Lưu token JWT
       localStorage.setItem("accessToken", accessToken);
       const profileRes = await fetchProfile();
       if (profileRes?.data) {
@@ -234,7 +238,7 @@ const Login = () => {
                 </small>
               )}
               <small className="text-gray-500 italic mx-2">
-                Quên mât khẩu?{" "}
+                Quên mật khẩu?{" "}
                 <Link
                   to="/forgot-password"
                   className="text-brown font-semibold"

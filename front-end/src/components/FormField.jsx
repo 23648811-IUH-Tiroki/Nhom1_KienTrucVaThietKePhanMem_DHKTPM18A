@@ -8,6 +8,8 @@ const FormField = ({
   onChange,
   options,
   required = true,
+  error,
+  disabled = false,
 }) => {
   if (type === "select") {
     return (
@@ -21,6 +23,7 @@ const FormField = ({
             value={value}
             onChange={onChange}
             required={required}
+            disabled={disabled}
             className="w-full p-2.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
           >
             {options.map((option) => (
@@ -34,6 +37,7 @@ const FormField = ({
             size={16}
           />
         </div>
+        {error && <p className="text-xs text-rose-600">{error}</p>}
       </div>
     );
   }
@@ -47,8 +51,11 @@ const FormField = ({
         value={value}
         onChange={onChange}
         required={required}
+        disabled={disabled}
+        aria-invalid={Boolean(error)}
         className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       />
+      {error && <p className="text-xs text-rose-600">{error}</p>}
     </div>
   );
 };

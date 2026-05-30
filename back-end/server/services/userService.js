@@ -1,6 +1,44 @@
 import User from "../models/User.js";
 import mongoose from "mongoose";
 import { createServiceError } from "../utils/serviceError.js";
+import {
+  EMAIL_RULE_MESSAGE,
+  PASSWORD_RULE_MESSAGE,
+  PHONE_RULE_MESSAGE,
+  isValidEmail,
+  isValidPassword,
+  isValidPhone,
+  normalizeEmail,
+} from "../utils/validation.js";
+import { hashPassword, verifyPassword } from "../utils/passwordUtils.js";
+
+const normalizeMongoValidationError = (error) => {
+  if (!error) return null;
+
+  if (error.code === 11000) {
+    const duplicateKeys = Object.keys(error.keyPattern || error.keyValue || {});
+    const field = duplicateKeys[0];
+    if (field === "email") {
+      return { message: "Email đã tồn tại.", errors: { email: "Email đã tồn tại." } };
+    }
+    if (field === "phone") {
+      return { message: "Số điện thoại đã tồn tại.", errors: { phone: "Số điện thoại đã tồn tại." } };
+    }
+    return { message: "Dữ liệu bị trùng.", errors: {} };
+  }
+
+  if (error.name === "ValidationError") {
+    const errors = {};
+    Object.values(error.errors || {}).forEach((e) => {
+      if (e?.path && e?.message) {
+        errors[e.path] = e.message;
+      }
+    });
+    return { message: "Dữ liệu không hợp lệ.", errors };
+  }
+
+  return null;
+};
 
 // ============ Helper Functions ============
 
@@ -58,6 +96,8 @@ const validateShippingAddressPayload = (payload) => {
 
   if (!phone) {
     errors.phone = "Số điện thoại không được để trống.";
+  } else if (!isValidPhone(phone)) {
+    errors.phone = PHONE_RULE_MESSAGE;
   }
 
   if (!province) {
@@ -100,6 +140,7 @@ export const getAllUsers = async (params) => {
   const skip = (page - 1) * limit;
 
   const users = await User.find()
+    .select("-password")
     .skip(skip)
     .limit(parseInt(limit));
 
@@ -119,7 +160,7 @@ export const getAllUsers = async (params) => {
  * Get user by ID
  */
 export const getUserById = async (userId) => {
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).select("-password");
   if (!user) {
     throw createServiceError("User not found", 404);
   }
@@ -130,9 +171,69 @@ export const getUserById = async (userId) => {
  * Create new user
  */
 export const createUser = async (userData) => {
-  const user = new User(userData);
-  const newUser = await user.save();
-  return newUser;
+  const payload = userData || {};
+
+  const fullName = String(payload.fullName || "").trim();
+  const email = normalizeEmail(payload.email);
+  const phone = String(payload.phone || "").trim();
+  const address = String(payload.address || "").trim();
+  const avatar = payload.avatar;
+  const role = payload.role;
+  const status = payload.status;
+  const gender = payload.gender;
+
+  const errors = {};
+  if (!fullName) errors.fullName = "Họ và tên không được để trống.";
+
+  if (!email || !isValidEmail(email)) errors.email = EMAIL_RULE_MESSAGE;
+
+  if (!phone || !isValidPhone(phone)) errors.phone = PHONE_RULE_MESSAGE;
+
+  if (!payload.birthDate) errors.birthDate = "Ngày sinh không được để trống.";
+  const parsedBirthDate = payload.birthDate ? new Date(payload.birthDate) : null;
+  if (payload.birthDate && Number.isNaN(parsedBirthDate.getTime())) {
+    errors.birthDate = "Ngày sinh không hợp lệ.";
+  }
+
+  const rawPassword = payload.password ?? payload.passWord;
+  if (!rawPassword) {
+    errors.password = "Mật khẩu không được để trống.";
+  } else if (!isValidPassword(rawPassword)) {
+    errors.password = PASSWORD_RULE_MESSAGE;
+  }
+
+  if (Object.keys(errors).length > 0) {
+    throw createServiceError("Dữ liệu không hợp lệ.", 400, {
+      message: "Dữ liệu không hợp lệ.",
+      errors,
+    });
+  }
+
+  try {
+    const user = new User({
+      fullName,
+      email,
+      phone,
+      birthDate: parsedBirthDate,
+      password: hashPassword(rawPassword),
+      address,
+      avatar,
+      ...(typeof gender !== "undefined" ? { gender: Boolean(gender) } : {}),
+      ...(role ? { role } : {}),
+      ...(status ? { status } : {}),
+    });
+
+    const newUser = await user.save();
+    const result = newUser.toObject();
+    delete result.password;
+    return result;
+  } catch (error) {
+    const normalized = normalizeMongoValidationError(error);
+    if (normalized) {
+      throw createServiceError(normalized.message, 400, normalized);
+    }
+    throw error;
+  }
 };
 
 /**
@@ -196,6 +297,30 @@ export const updateUser = async (userId, updateData, currentUser) => {
     }
   }
 
+  if (Object.prototype.hasOwnProperty.call(updates, "fullName")) {
+    updates.fullName = String(updates.fullName || "").trim();
+    if (!updates.fullName) {
+      throw createServiceError("Họ và tên không được để trống.", 400, {
+        message: "Họ và tên không được để trống.",
+        errors: { fullName: "Họ và tên không được để trống." },
+      });
+    }
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updates, "phone")) {
+    const normalizedPhone = String(updates.phone || "").trim();
+    if (!normalizedPhone) {
+      updates.phone = undefined;
+    } else if (!isValidPhone(normalizedPhone)) {
+      throw createServiceError(PHONE_RULE_MESSAGE, 400, {
+        message: PHONE_RULE_MESSAGE,
+        errors: { phone: PHONE_RULE_MESSAGE },
+      });
+    } else {
+      updates.phone = normalizedPhone;
+    }
+  }
+
   if (Object.keys(updates).length === 0) {
     throw createServiceError("Không có trường hợp lệ để cập nhật hoặc bạn không có quyền.", 400);
   }
@@ -204,7 +329,7 @@ export const updateUser = async (userId, updateData, currentUser) => {
     userId,
     { $set: updates },
     { new: true, runValidators: true, context: "query" }
-  );
+  ).select("-password");
 
   if (!updatedUser) {
     throw createServiceError("User not found", 404);
@@ -251,6 +376,7 @@ export const getUsersWithPagination = async (params) => {
   const skip = (page - 1) * limit;
 
   const users = await User.find()
+    .select("-password")
     .skip(skip)
     .limit(parseInt(limit));
 
@@ -290,7 +416,7 @@ export const searchUsers = async (params) => {
     query.role = role;
   }
 
-  const users = await User.find(query);
+  const users = await User.find(query).select("-password");
   const total = await User.countDocuments(query);
   const stats = await buildUserStats();
 
@@ -327,7 +453,16 @@ export const updateProfile = async (user, updateData) => {
 
   if (Object.prototype.hasOwnProperty.call(updateData, "phone")) {
     const normalizedPhone = String(updateData.phone || "").trim();
-    updates.phone = normalizedPhone || undefined;
+    if (!normalizedPhone) {
+      updates.phone = undefined;
+    } else if (!isValidPhone(normalizedPhone)) {
+      throw createServiceError(PHONE_RULE_MESSAGE, 400, {
+        message: PHONE_RULE_MESSAGE,
+        errors: { phone: PHONE_RULE_MESSAGE },
+      });
+    } else {
+      updates.phone = normalizedPhone;
+    }
   }
 
   if (Object.prototype.hasOwnProperty.call(updateData, "address")) {
@@ -358,6 +493,45 @@ export const updateProfile = async (user, updateData) => {
   Object.assign(user, updates);
   const updatedUser = await user.save();
   return updatedUser;
+};
+
+/**
+ * Change password (requires current password)
+ */
+export const changePassword = async (user, payload = {}) => {
+  if (!user?._id) {
+    throw createServiceError("User not found", 404);
+  }
+
+  const currentPassword = payload.currentPassword ?? payload.oldPassword;
+  const newPassword = payload.newPassword ?? payload.password;
+
+  const errors = {};
+  if (!currentPassword) errors.currentPassword = "Vui lòng nhập mật khẩu hiện tại.";
+  if (!newPassword) errors.newPassword = "Vui lòng nhập mật khẩu mới.";
+  else if (!isValidPassword(newPassword)) errors.newPassword = PASSWORD_RULE_MESSAGE;
+
+  if (Object.keys(errors).length > 0) {
+    throw createServiceError("Dữ liệu không hợp lệ.", 400, { message: "Dữ liệu không hợp lệ.", errors });
+  }
+
+  const dbUser = await User.findById(user._id).select("+password");
+  if (!dbUser) {
+    throw createServiceError("User not found", 404);
+  }
+
+  const ok = verifyPassword(currentPassword, dbUser.password);
+  if (!ok) {
+    throw createServiceError("Mật khẩu hiện tại không đúng.", 400, {
+      message: "Mật khẩu hiện tại không đúng.",
+      errors: { currentPassword: "Mật khẩu hiện tại không đúng." },
+    });
+  }
+
+  dbUser.password = hashPassword(newPassword);
+  await dbUser.save();
+
+  return { message: "Đổi mật khẩu thành công." };
 };
 
 /**
