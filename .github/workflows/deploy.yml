@@ -8,6 +8,10 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    # Ép toàn bộ các bước chạy ngầm lên Node.js 24 để tắt cảnh báo vàng
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
