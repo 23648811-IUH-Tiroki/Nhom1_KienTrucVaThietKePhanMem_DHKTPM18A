@@ -1,0 +1,18 @@
+2026-05-29T17:36:20.204Z [error] Redis client error Socket closed unexpectedly {"service":"back-end"}
+2026-05-29T17:36:20.226Z [error] Redis client error Socket closed unexpectedly {"service":"back-end"}
+2026-05-29T17:36:20.390Z [error] Queue Redis error write ECONNABORTED {"service":"back-end"}
+2026-05-29T17:36:20.491Z [error] Redis client error Socket closed unexpectedly {"service":"back-end"}
+2026-05-29T17:36:20.724Z [error] Redis client error Socket closed unexpectedly {"service":"back-end"}
+2026-05-29T17:36:25.080Z [error] Redis client error Socket closed unexpectedly {"service":"back-end"}
+2026-05-29T17:36:25.082Z [error] Queue Redis error read ECONNRESET {"service":"back-end"}
+2026-05-29T17:36:25.493Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:25.589Z [error] Redis client error {"service":"back-end"}
+2026-05-29T17:36:25.962Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:26.475Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:26.553Z [error] Redis client error {"service":"back-end"}
+2026-05-29T17:36:27.038Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:27.644Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:28.301Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:28.330Z [error] Redis client error {"service":"back-end"}
+2026-05-29T17:36:29.014Z [error] Queue Redis error {"service":"back-end"}
+2026-05-29T17:36:29.777Z [error] Queue Redis error {"service":"back-end"}

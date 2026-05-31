@@ -1,0 +1,10 @@
+# Use this workspace to collaborate
+workspace:
+  id: d929691f-7fed-40ac-816b-20ec15c4bc45
+
+localResources:
+  collections:
+    - ..\back-end\Auth_API_Postman.json
+  docs:
+    - ..\front-end\SCSS_MIGRATION.md
+    - ..\back-end\POSTMAN_GUIDE.md

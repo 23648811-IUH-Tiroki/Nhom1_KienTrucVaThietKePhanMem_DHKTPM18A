@@ -1,0 +1,36 @@
+// ===================================
+// Cart Dialog Styles
+// ===================================
+
+// Dialog arrow/pointer
+.cart-dialog::before {
+  content: "";
+  border-width: 30px 40px;
+  border-style: solid;
+  border-image: initial;
+  border-color: red;
+  position: absolute;
+  right: -26px;
+  top: 20px;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent transparent;
+}
+
+// Growth animation
+@keyframes growth {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Apply animation to dialog
+.cart-dialog-animation {
+  transform-origin: 90% top;
+  animation: growth ease-in 0.3s;
+  will-change: opacity, transform;
+}

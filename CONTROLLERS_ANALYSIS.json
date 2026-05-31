@@ -1,0 +1,677 @@
+[
+  {
+    "controller": "adminController",
+    "functions": [
+      {
+        "name": "getUsers",
+        "logic": [
+          "Filter users by search term (fullName, email, phone) and role",
+          "Pagination with skip/limit",
+          "Query MongoDB User collection",
+          "Count total documents for pagination",
+          "Select specific fields (fullName, email, phone, role, status, isBlocked, avatar, createdAt)",
+          "Sort by createdAt descending"
+        ],
+        "helpers": ["buildQuery"],
+        "dependencies": ["User model", "mongoose"]
+      },
+      {
+        "name": "blockUser",
+        "logic": [
+          "Validate MongoDB ObjectId",
+          "Check if not blocking self",
+          "Query User by id",
+          "Set isBlocked = true",
+          "Save to database"
+        ],
+        "helpers": [],
+        "dependencies": ["User model", "mongoose"]
+      },
+      {
+        "name": "unblockUser",
+        "logic": [
+          "Validate MongoDB ObjectId",
+          "Query User by id",
+          "Set isBlocked = false",
+          "Save to database"
+        ],
+        "helpers": [],
+        "dependencies": ["User model", "mongoose"]
+      },
+      {
+        "name": "updateUserRole",
+        "logic": [
+          "Validate MongoDB ObjectId",
+          "Validate role against allowed roles list",
+          "Authorization check: only superadmin can assign admin/superadmin roles",
+          "Authorization check: admin cannot assign admin role",
+          "Query User by id",
+          "Update role field",
+          "Save to database"
+        ],
+        "helpers": [],
+        "dependencies": ["User model", "mongoose"]
+      }
+    ]
+  },
+  {
+    "controller": "AIController",
+    "functions": [
+      {
+        "name": "createChatAI",
+        "logic": [
+          "Validate message input",
+          "Check API key configuration",
+          "Retry logic: up to 3 attempts with 3-5s delay and jitter",
+          "External API call to OpenRouter AI",
+          "Extract message content from response",
+          "Error handling with detailed error messages"
+        ],
+        "helpers": ["makeRequest (internal axios call)"],
+        "dependencies": ["axios", "dotenv"]
+      }
+    ]
+  },
+  {
+    "controller": "cartController",
+    "functions": [
+      {
+        "name": "addToCart",
+        "logic": [
+          "Extract authenticated user ID",
+          "Query Cart by user_id",
+          "Check if product already exists in cart",
+          "If exists: increment quantity",
+          "If not exists: add new item to cart.items array",
+          "Create new Cart if user doesn't have one",
+          "Save cart to database",
+          "Populate and return response"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "getCartByUserId",
+        "logic": [
+          "Extract authenticated user ID",
+          "Query Cart by user_id",
+          "Populate product_id references",
+          "Return with status indicator for empty cart"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "updateCart",
+        "logic": [
+          "Extract authenticated user ID",
+          "Update entire items array in cart",
+          "Populate product_id references",
+          "Return updated cart"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "updateCartItemQuantity",
+        "logic": [
+          "Extract authenticated user ID",
+          "Query cart by user_id",
+          "Find item by _id in cart.items",
+          "Update quantity for specific item",
+          "Save cart to database"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "deleteCart",
+        "logic": [
+          "Extract authenticated user ID",
+          "Delete entire cart document"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "deleteProductFromCart",
+        "logic": [
+          "Extract authenticated user ID",
+          "Query cart by user_id",
+          "Find item by _id in cart.items",
+          "Remove item from items array using splice",
+          "Populate product_id references",
+          "Save cart to database"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "deleteAllProductsFromCart",
+        "logic": [
+          "Extract authenticated user ID",
+          "Set items array to empty",
+          "Populate product_id references",
+          "Return updated cart"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      },
+      {
+        "name": "countCartItems",
+        "logic": [
+          "Extract authenticated user ID",
+          "Query cart by user_id",
+          "Calculate total quantity by reducing items array",
+          "Return count as number"
+        ],
+        "helpers": ["getAuthenticatedUserId"],
+        "dependencies": ["Cart model"]
+      }
+    ]
+  },
+  {
+    "controller": "categoryController",
+    "functions": [
+      {
+        "name": "getAllCategories",
+        "logic": [
+          "Parse query parameters: page, limit, search, type",
+          "Build filter object with $regex for name search",
+          "Optional pagination or return all",
+          "Query Category collection with sorting by name",
+          "Count total documents",
+          "Calculate totalPages from count"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model"]
+      },
+      {
+        "name": "getCategoryById",
+        "logic": [
+          "Query Category by id",
+          "Return 404 if not found"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model"]
+      },
+      {
+        "name": "createCategory",
+        "logic": [
+          "Normalize payload: name, type, image, description, slug, slug_type",
+          "Validation: name, type, slug, slug_type required",
+          "Check for unique slug and name+type combination",
+          "Create new Category document",
+          "Save to database"
+        ],
+        "helpers": ["normalizeCategoryPayload", "createSlug", "ensureUniqueCategory"],
+        "dependencies": ["Category model", "slugify"]
+      },
+      {
+        "name": "updateCategory",
+        "logic": [
+          "Query Category by id",
+          "Normalize payload with existing category data",
+          "Validation: name, type, slug, slug_type required",
+          "Check for unique slug and name+type (exclude current id)",
+          "Update category fields",
+          "Save to database"
+        ],
+        "helpers": ["normalizeCategoryPayload", "createSlug", "ensureUniqueCategory"],
+        "dependencies": ["Category model", "slugify"]
+      },
+      {
+        "name": "deleteCategory",
+        "logic": [
+          "Query Category by id",
+          "Delete category document",
+          "Return success message"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model"]
+      },
+      {
+        "name": "getProductByCatetoryType",
+        "logic": [
+          "Extract slug_type from params",
+          "Query Category by slug_type",
+          "Get all category _ids",
+          "Query Product where category_id in category ids",
+          "Return product list"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model", "Product model"]
+      },
+      {
+        "name": "searchCategories",
+        "logic": [
+          "Extract search query parameter",
+          "Validate search is not empty",
+          "Query Category with $regex on name",
+          "Sort by name ascending"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model"]
+      },
+      {
+        "name": "getCategoryByType",
+        "logic": [
+          "Extract slug_type from params",
+          "Query Category by slug_type",
+          "Return 404 if no categories found"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model"]
+      },
+      {
+        "name": "getProductByCatetoryName",
+        "logic": [
+          "Parse query parameters: page, limit",
+          "Extract slug from params",
+          "Query Category by slug with $regex",
+          "Get all category _ids",
+          "Query Product with pagination and population",
+          "Count total products for pagination",
+          "Return products with totalPages"
+        ],
+        "helpers": [],
+        "dependencies": ["Category model", "Product model"]
+      }
+    ]
+  },
+  {
+    "controller": "dashboardController",
+    "functions": [
+      {
+        "name": "getDashboardStats",
+        "logic": [
+          "Parse timeFilter query parameter",
+          "Calculate startDate based on timeFilter (7days, 30days, 90days, year, all)",
+          "Query Order collection with date range",
+          "Calculate totalRevenue by summing total_price",
+          "Calculate monthlyRevenue for last 30 days",
+          "Calculate weeklyRevenue for last 7 days",
+          "Calculate averageOrderValue (totalRevenue / orderCount)"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getRecentOrders",
+        "logic": [
+          "Parse limit query parameter (default 5)",
+          "Query Order collection sorted by order_date desc",
+          "Populate user_id (fullName) and items.product_id",
+          "Format order data: id, customer, total, status, date",
+          "Return formatted orders"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getRevenueByDay",
+        "logic": [
+          "Parse timeFilter query parameter",
+          "Calculate date categories and revenue arrays based on filter",
+          "For 7days: show by day of week (T2-CN)",
+          "For 30days/90days: show by date",
+          "For year: show by month",
+          "For all: show by year",
+          "Query orders in time range",
+          "Aggregate revenue by time period",
+          "Return categories and revenue data arrays"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getRevenueByCategory",
+        "logic": [
+          "Query all orders",
+          "Populate items.product_id with category_id",
+          "Aggregate revenue by category name",
+          "Calculate percentage of total revenue per category",
+          "If more than 5 categories: combine as 'Other'",
+          "Return labels and percentage data"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model", "Product model"]
+      },
+      {
+        "name": "getDashboardNotifications",
+        "logic": [
+          "Query low stock products (stock <= 10)",
+          "Query pending orders",
+          "Query recent users",
+          "Format notifications with type and message",
+          "Sort by date descending",
+          "Return top 5 notifications"
+        ],
+        "helpers": [],
+        "dependencies": ["Product model", "Order model", "User model"]
+      },
+      {
+        "name": "importOrdersFromCSV",
+        "logic": [
+          "Stub function - returns success message"
+        ],
+        "helpers": [],
+        "dependencies": []
+      }
+    ]
+  },
+  {
+    "controller": "notificationController",
+    "functions": [
+      {
+        "name": "getNotifications",
+        "logic": [
+          "Parse query parameters: user_id, limit, isRead",
+          "Build query object with optional filters",
+          "Query Notification collection",
+          "Sort by created_at descending",
+          "Limit results"
+        ],
+        "helpers": [],
+        "dependencies": ["Notification model"]
+      },
+      {
+        "name": "createNotification",
+        "logic": [
+          "Extract message, type, user_id from request body",
+          "Create new Notification document",
+          "Save to database"
+        ],
+        "helpers": [],
+        "dependencies": ["Notification model"]
+      },
+      {
+        "name": "markAsRead",
+        "logic": [
+          "Find notification by id",
+          "Update isRead = true",
+          "Return updated notification"
+        ],
+        "helpers": [],
+        "dependencies": ["Notification model"]
+      },
+      {
+        "name": "deleteNotification",
+        "logic": [
+          "Find notification by id",
+          "Delete notification document"
+        ],
+        "helpers": [],
+        "dependencies": ["Notification model"]
+      },
+      {
+        "name": "generateSystemNotifications",
+        "logic": [
+          "Query low stock products (stock <= 10)",
+          "Create notifications for low stock items",
+          "Query pending orders",
+          "Create notifications for pending orders",
+          "Sort notifications by date",
+          "Return top 5 notifications"
+        ],
+        "helpers": [],
+        "dependencies": ["Product model", "Order model"]
+      }
+    ]
+  },
+  {
+    "controller": "orderController",
+    "functions": [
+      {
+        "name": "createOrder",
+        "logic": [
+          "Normalize status parameter",
+          "Validate all items exist in Product collection",
+          "Validate stock availability for each item",
+          "Decrease product stock for each item",
+          "Create new Order document",
+          "Save to database",
+          "Update product.sold count"
+        ],
+        "helpers": ["normalizeStatus"],
+        "dependencies": ["Order model", "Product model"]
+      },
+      {
+        "name": "getOrders",
+        "logic": [
+          "Role-based filtering: non-admin users can only see their own orders",
+          "Optional user_id filter for admin",
+          "Query Order collection",
+          "Populate user_id and items.product_id references"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getOrderById",
+        "logic": [
+          "Query Order by id",
+          "Authorization check: non-admin can only view their own orders",
+          "Populate user_id and items.product_id references",
+          "Return 403 if unauthorized"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "updateOrder",
+        "logic": [
+          "Normalize status parameter",
+          "Query Order by id",
+          "Authorization logic: non-admin can only cancel pending/confirmed orders",
+          "If cancelling: restore product stock and decrease sold count",
+          "Update status and updatedAt timestamp",
+          "Populate references",
+          "Return updated order"
+        ],
+        "helpers": ["normalizeStatus"],
+        "dependencies": ["Order model", "Product model"]
+      },
+      {
+        "name": "deleteOrder",
+        "logic": [
+          "Find order by id",
+          "Delete order document"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getOrderStats",
+        "logic": [
+          "Parse timeFilter query parameter",
+          "Calculate startDate based on filter",
+          "Query orders in date range",
+          "Calculate totalRevenue",
+          "Calculate monthlyRevenue (last 30 days)",
+          "Calculate weeklyRevenue (last 7 days)",
+          "Calculate averageOrderValue"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      },
+      {
+        "name": "getRecentOrders",
+        "logic": [
+          "Parse limit query parameter (default 5)",
+          "Query orders sorted by order_date desc",
+          "Populate user_id (fullName)",
+          "Format as id, customer, total, status, date"
+        ],
+        "helpers": [],
+        "dependencies": ["Order model"]
+      }
+    ]
+  },
+  {
+    "controller": "reviewController",
+    "functions": [
+      {
+        "name": "getReviewSummaryByProductId",
+        "logic": [
+          "Validate product id is valid ObjectId",
+          "MongoDB aggregation pipeline",
+          "Match product and non-hidden reviews",
+          "Calculate average rating",
+          "Count total reviews",
+          "Group by rating breakdown (1-5 stars)",
+          "Return summary or empty summary"
+        ],
+        "helpers": ["buildEmptySummary"],
+        "dependencies": ["Review model", "mongoose"]
+      },
+      {
+        "name": "canReviewProduct",
+        "logic": [
+          "Parse and validate user ID and product ID",
+          "Find eligible order for product (must be delivered/completed)",
+          "Check if user already reviewed product",
+          "Build response with canReview flag and eligibility reason"
+        ],
+        "helpers": ["parseUserAndProduct", "findEligibleOrderForProduct", "buildCanReviewResponse"],
+        "dependencies": ["Order model", "Review model", "mongoose"]
+      },
+      {
+        "name": "checkOrderReview",
+        "logic": [
+          "Validate product ID and order ID",
+          "Find specific order and verify user ownership",
+          "Check if order status is reviewable",
+          "Check if user already reviewed this product",
+          "Build eligibility response"
+        ],
+        "helpers": ["normalizeObjectId", "findEligibleOrderForProduct", "buildCanReviewResponse"],
+        "dependencies": ["Order model", "Review model", "mongoose"]
+      },
+      {
+        "name": "getMyPurchasedProducts",
+        "logic": [
+          "Query orders for user where status is reviewable",
+          "Populate user and product references",
+          "Get user's review map",
+          "Create product map deduplicating by latest order",
+          "Return array with review status and eligibility"
+        ],
+        "helpers": ["getUserReviewMap", "normalizeStatus", "isReviewableStatus"],
+        "dependencies": ["Order model", "Review model"]
+      },
+      {
+        "name": "getMyReviews",
+        "logic": [
+          "Get all user's reviews with populated references",
+          "Get review summary for each product",
+          "Return reviews with attached summary data"
+        ],
+        "helpers": ["getUserReviewMap", "getReviewSummaryByProductId"],
+        "dependencies": ["Review model"]
+      },
+      {
+        "name": "createReview",
+        "logic": [
+          "Validate product ID",
+          "Validate rating is 1-5 integer",
+          "Validate comment is not empty",
+          "Verify product exists",
+          "Find eligible order for product purchase",
+          "Check if user already reviewed this product",
+          "Normalize images array (filter, limit to 5)",
+          "Create Review document",
+          "Update product review stats (rating, numReviews)",
+          "Populate and return review with summary"
+        ],
+        "helpers": ["normalizeObjectId", "normalizeImages", "findEligibleOrderForProduct", "populateReview", "updateProductReviewStats", "getReviewSummaryByProductId"],
+        "dependencies": ["Review model", "Product model", "Order model", "mongoose"]
+      },
+      {
+        "name": "getReviewsByProduct",
+        "logic": [
+          "Validate product ID",
+          "Check product exists",
+          "Query all non-hidden reviews for product",
+          "Populate user, product, order references",
+          "Sort by createdAt desc",
+          "Get and return summary with reviews"
+        ],
+        "helpers": ["getReviewSummaryByProductId", "buildReviewPopulation"],
+        "dependencies": ["Review model", "Product model", "mongoose"]
+      },
+      {
+        "name": "deleteReview",
+        "logic": [
+          "Validate review ID",
+          "Check review exists",
+          "Authorization: only owner or admin can delete",
+          "Delete review",
+          "Update product review stats",
+          "Return success with new summary"
+        ],
+        "helpers": ["updateProductReviewStats", "getReviewSummaryByProductId"],
+        "dependencies": ["Review model", "Product model", "mongoose"]
+      },
+      {
+        "name": "hideReview",
+        "logic": [
+          "Validate review ID",
+          "Check review exists",
+          "Set isHidden = true",
+          "Save review",
+          "Update product review stats",
+          "Return success with new summary"
+        ],
+        "helpers": ["updateProductReviewStats", "getReviewSummaryByProductId"],
+        "dependencies": ["Review model", "Product model", "mongoose"]
+      },
+      {
+        "name": "updateReview",
+        "logic": [
+          "Validate review ID",
+          "Check review exists",
+          "Authorization: only owner or admin can update",
+          "Validate rating is 1-5 integer",
+          "Validate comment is not empty",
+          "Normalize and validate ObjectIds",
+          "Find eligible order for new product",
+          "Update review fields",
+          "Normalize images",
+          "Save review",
+          "Update product review stats for old and new product",
+          "Return updated review with summary"
+        ],
+        "helpers": ["normalizeObjectId", "normalizeImages", "findEligibleOrderForProduct", "populateReview", "updateProductReviewStats", "getReviewSummaryByProductId"],
+        "dependencies": ["Review model", "Product model", "Order model", "mongoose"]
+      }
+    ]
+  },
+  {
+    "controller": "settingController",
+    "functions": [
+      {
+        "name": "getSettings",
+        "logic": [
+          "Query Setting collection (find one)",
+          "If no settings exist: create default settings with notificationsEnabled=true, emailNotifications=false, maintenanceMode=false, timezone=UTC",
+          "Save and return settings"
+        ],
+        "helpers": [],
+        "dependencies": ["Setting model"]
+      },
+      {
+        "name": "updateSettings",
+        "logic": [
+          "Extract updates from request body",
+          "Validate timezone if provided (only allow specific timezones)",
+          "Add updatedAt timestamp",
+          "Update Setting document (upsert if not exists)",
+          "Return updated settings"
+        ],
+        "helpers": [],
+        "dependencies": ["Setting model"]
+      }
+    ]
+  }
+]

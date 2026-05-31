@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap");
+@import "tailwindcss";
+
+.custom-scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+:root {
+  --bg-color: white;
+  --text-color: #1f2937;
+  --text-white: #ffffff;
+  --text-gray: #6b7280;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --active-bg: #eff6ff;
+  --active-text: #2563eb;
+  --brand: #e17100;
+  --brand-600: #d06a03;
+  --surface: #ffffff;
+  --surface-muted: #faf7f1;
+  --font-sans: "Manrope", "Segoe UI", Tahoma, sans-serif;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+}
+
+.dark-theme {
+  --bg-color: #111827;
+  --text-color: #f9fafb;
+  --border-color: #374151;
+  --hover-bg: #1f2937;
+  --active-bg: #1e3a8a;
+  --active-text: #93c5fd;
+  --surface: #0f172a;
+  --surface-muted: #111827;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--surface-muted);
+  color: var(--text-color);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.sidebar-container {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-right: 1px solid var(--border-color);
+}

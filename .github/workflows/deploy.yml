@@ -1,0 +1,36 @@
+name: CI/CD Deploy Pipeline
+
+on:
+  push:
+    branches: [ "main" ] # Hoặc branch chính của nhóm mày (ví dụ: master)
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # Ép toàn bộ các bước chạy ngầm lên Node.js 24 để tắt cảnh báo vàng
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        # Chỉ cache khi file package-lock.json nằm ở thư mục gốc, nếu nằm trong thư mục con thì comment dòng dưới lại
+        cache-dependency-path: 'back-end/package-lock.json' 
+
+    - name: Install Dependencies
+      run: |
+        cd back-end
+        npm ci
+
+    # Bước này kích hoạt Render tự động kéo bản build mới về mà không bị nghẽn deploy
+    - name: Trigger Render Deploy
+      if: success()
+      run: |
+        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
