@@ -22,18 +22,13 @@ import {
     fetchProfile as fetchProfileRequest,
     updateProfile as updateProfileRequest,
 } from "../../services/userService";
-<<<<<<< HEAD
+
 import {
     fetchOrdersByUser as fetchOrdersByUserRequest,
     updateOrder as updateOrderRequest
 } from "../../services/orderService";
 import { isValidPhone, isValidGmailAddress } from "../../utils/validation";
-=======
-import { 
-    fetchOrdersByUser as fetchOrdersByUserRequest, 
-    updateOrder as updateOrderRequest 
-} from "../../services/orderService";
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
+    
 import ShippingInfo from "./components/ShippingInfo";
 import OrderHistory from "./components/OrderHistory";
 
@@ -130,10 +125,8 @@ const UserProfile = () => {
         deliveredOrders: 0,
         totalSpent: 0,
     });
-<<<<<<< HEAD
+    
     const [errors, setErrors] = useState({});
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -154,7 +147,6 @@ const UserProfile = () => {
         });
     };
 
-<<<<<<< HEAD
     const handleProfileChange = (field) => (event) => {
         setUser((prev) => ({ ...prev, [field]: event.target.value }));
         setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -186,9 +178,7 @@ const UserProfile = () => {
         setErrors(nextErrors);
         return Object.keys(nextErrors).length === 0;
     };
-
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
+    
     const convertBase64ToImage = (value) => {
         if (!value) return "/avatar.png";
         if (typeof value !== "string") return "/avatar.png";
@@ -327,13 +317,10 @@ const UserProfile = () => {
     };
 
     const handleUpdateProfile = async () => {
-<<<<<<< HEAD
         if (!validateProfile()) {
             return;
         }
 
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
         try {
             const storedUser = JSON.parse(localStorage.getItem("user"));
             const res = await updateProfileRequest({
@@ -480,18 +467,10 @@ const UserProfile = () => {
                                         <li key={item.key}>
                                             <button
                                                 onClick={() => setActiveTab(item.key)}
-<<<<<<< HEAD
                                                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition ${isActive
                                                     ? "bg-amber-50 text-amber-700"
                                                     : "text-slate-600 hover:bg-amber-50"
                                                     }`}
-=======
-                                                className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition ${
-                                                    isActive
-                                                        ? "bg-amber-50 text-amber-700"
-                                                        : "text-slate-600 hover:bg-amber-50"
-                                                }`}
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                             >
                                                 <Icon />
                                                 {item.label}
@@ -524,7 +503,6 @@ const UserProfile = () => {
                                                 <input
                                                     type="text"
                                                     value={user.fullName}
-<<<<<<< HEAD
                                                     onChange={handleProfileChange("fullName")}
                                                     className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
                                                 />
@@ -533,18 +511,12 @@ const UserProfile = () => {
                                                         {errors.fullName}
                                                     </p>
                                                 )}
-=======
-                                                    onChange={(e) => setUser({ ...user, fullName: e.target.value })}
-                                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                                />
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                             </div>
                                             <div>
                                                 <label className="text-sm font-medium text-slate-600">Ngày sinh</label>
                                                 <input
                                                     type="date"
                                                     value={formatDate(user.birthDate)}
-<<<<<<< HEAD
                                                     onChange={handleProfileChange("birthDate")}
                                                     className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
                                                 />
@@ -553,11 +525,6 @@ const UserProfile = () => {
                                                         {errors.birthDate}
                                                     </p>
                                                 )}
-=======
-                                                    onChange={(e) => setUser({ ...user, birthDate: e.target.value })}
-                                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                                />
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                             </div>
                                             <div>
                                                 <label className="text-sm font-medium text-slate-600">Giới tính</label>
@@ -579,7 +546,6 @@ const UserProfile = () => {
                                                 <input
                                                     type="email"
                                                     value={user.email}
-<<<<<<< HEAD
                                                     onChange={handleProfileChange("email")}
                                                     className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
                                                 />
@@ -588,18 +554,12 @@ const UserProfile = () => {
                                                         {errors.email}
                                                     </p>
                                                 )}
-=======
-                                                    onChange={(e) => setUser({ ...user, email: e.target.value })}
-                                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                                />
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                             </div>
                                             <div>
                                                 <label className="text-sm font-medium text-slate-600">Số điện thoại</label>
                                                 <input
                                                     type="text"
                                                     value={user.phone}
-<<<<<<< HEAD
                                                     onChange={handleProfileChange("phone")}
                                                     className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
                                                 />
@@ -608,11 +568,6 @@ const UserProfile = () => {
                                                         {errors.phone}
                                                     </p>
                                                 )}
-=======
-                                                    onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                                                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
-                                                />
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                             </div>
                                             <div>
                                                 <label className="text-sm font-medium text-slate-600">Địa chỉ</label>
