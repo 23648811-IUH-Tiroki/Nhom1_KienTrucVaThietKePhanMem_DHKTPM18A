@@ -32,7 +32,7 @@
     "migrate-mongo": "^10.0.0",
     "mongoose": "^8.12.1",
     "morgan": "^1.10.1",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^8.0.10",
     "nodemon": "^3.0.1",
     "openai": "^6.37.0",
     "redis": "^5.12.1",
