@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { ChevronDown } from "lucide-react";
-=======
-import {ChevronDown} from "lucide-react";
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
 
 const FormField = ({
   label,
@@ -41,11 +37,7 @@ const FormField = ({
             size={16}
           />
         </div>
-<<<<<<< HEAD
         {error && <p className="text-sm font-semibold text-rose-600">{error}</p>}
-=======
-        {error && <p className="text-xs text-rose-600">{error}</p>}
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
       </div>
     );
   }
@@ -63,11 +55,7 @@ const FormField = ({
         aria-invalid={Boolean(error)}
         className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       />
-<<<<<<< HEAD
       {error && <p className="text-sm font-semibold text-rose-600">{error}</p>}
-=======
-      {error && <p className="text-xs text-rose-600">{error}</p>}
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
     </div>
   );
 };
