@@ -4,10 +4,7 @@ import {
     fetchShippingAddress,
     updateShippingAddress,
 } from "../../../services/userService";
-<<<<<<< HEAD
 import { isValidPhone } from "../../../utils/validation";
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
 
 const STORAGE_KEY = "savedShippingAddresses";
 const LOCATION_API_BASE = "https://provinces.open-api.vn/api";
@@ -48,7 +45,6 @@ const ShippingInfo = ({ onAddressUpdated }) => {
 
     const normalizeText = (value) => String(value || "").trim().toLowerCase();
 
-<<<<<<< HEAD
     const validateShippingForm = (formData) => {
         const nextErrors = {};
 
@@ -64,9 +60,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
 
         return nextErrors;
     };
-
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
+    
     const getAddressSignature = (address) =>
         [
             address.receiverName,
@@ -379,16 +373,12 @@ const ShippingInfo = ({ onAddressUpdated }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-<<<<<<< HEAD
 
         const nextErrors = validateShippingForm(form);
         if (Object.keys(nextErrors).length > 0) {
             setErrors(nextErrors);
             return;
         }
-
-=======
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
         setSaving(true);
 
         try {
@@ -448,11 +438,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             placeholder="Nguyen Van Nam"
                         />
                         {errors.receiverName && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">
-=======
-                            <p className="text-xs text-rose-500 mt-1">
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                 {errors.receiverName}
                             </p>
                         )}
@@ -469,11 +455,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             placeholder="0912345678"
                         />
                         {errors.phone && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">{errors.phone}</p>
-=======
-                            <p className="text-xs text-rose-500 mt-1">{errors.phone}</p>
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                         )}
                     </div>
                     <div>
@@ -503,11 +485,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             })}
                         </select>
                         {errors.province && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">{errors.province}</p>
-=======
-                            <p className="text-xs text-rose-500 mt-1">{errors.province}</p>
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                         )}
                     </div>
                     <div>
@@ -533,11 +511,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             })}
                         </select>
                         {errors.district && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">{errors.district}</p>
-=======
-                            <p className="text-xs text-rose-500 mt-1">{errors.district}</p>
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                         )}
                     </div>
                     <div>
@@ -567,11 +541,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             })}
                         </select>
                         {errors.ward && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">{errors.ward}</p>
-=======
-                            <p className="text-xs text-rose-500 mt-1">{errors.ward}</p>
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                         )}
                     </div>
                     <div>
@@ -586,11 +556,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
                             placeholder="So nha, ten duong"
                         />
                         {errors.detailAddress && (
-<<<<<<< HEAD
                             <p className="text-sm font-semibold text-rose-600 mt-1">
-=======
-                            <p className="text-xs text-rose-500 mt-1">
->>>>>>> 6a3aceecc8855e0a8448360e8da860a69c238487
                                 {errors.detailAddress}
                             </p>
                         )}
