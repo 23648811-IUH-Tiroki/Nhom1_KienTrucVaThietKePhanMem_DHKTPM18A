@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String },
   gender: { type: Boolean, default: false },
   isBlocked: { type: Boolean, default: false },
+  loginAttempts: { type: Number, default: 0 },  // Count failed login attempts
+  lockUntil: { type: Date, default: null },    // Lock account until this date (24h)
   createdAt: { type: Date, default: Date.now },
   address: { type: String },
   shippingAddress: {

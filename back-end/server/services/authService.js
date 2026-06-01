@@ -161,7 +161,7 @@ export const signUp = async (userData) => {
 };
 
 /**
- * Sign in user
+ * Sign in user with 24h account lock after 5 failed attempts
  */
 export const signIn = async (userData, req) => {
   const email = validateEmailOrThrow(userData?.email);
@@ -176,21 +176,77 @@ export const signIn = async (userData, req) => {
     });
   }
 
+  // ✅ Check permanent block
   if (user.isBlocked) {
     await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw createServiceError("Tài khoản đã bị khóa.", 403, {
-      message: "Tài khoản đã bị khóa.",
+    throw createServiceError("Tài khoản đã bị khóa bởi admin.", 403, {
+      message: "Tài khoản đã bị khóa bởi admin.",
     });
+  }
+
+  // ✅ Check temporary lock (24h account lock after 5 failed attempts)
+  const now = new Date();
+  if (user.lockUntil && user.lockUntil > now) {
+    const remainingTime = Math.ceil((user.lockUntil - now) / 1000 / 60); // minutes
+    const lockMessage = `Tài khoản bị khóa tạm thời do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau ${remainingTime} phút.`;
+    await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
+    throw createServiceError(lockMessage, 423, {
+      message: lockMessage,
+      lockUntil: user.lockUntil,
+      remainingMinutes: remainingTime,
+    });
+  }
+
+  // ✅ Auto-unlock if lockUntil has passed
+  if (user.lockUntil && user.lockUntil <= now) {
+    user.lockUntil = null;
+    user.loginAttempts = 0;
+    await user.save();
   }
 
   const storedPassword = user.password ?? user.passWord;
   const passWordCorrect = verifyPassword(password, storedPassword);
   if (!passWordCorrect) {
-    await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
-      message: "Email hoặc mật khẩu không đúng.",
-    });
+    // ✅ Increment login attempts on failed password
+    user.loginAttempts = (user.loginAttempts || 0) + 1;
+    
+    // ✅ Lock account for 24h after 5 failed attempts
+    if (user.loginAttempts >= 5) {
+      user.lockUntil = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h from now
+      await user.save();
+      logger.warn("Account locked due to 5 failed login attempts", { email, ip: req.ip });
+      
+      throw createServiceError(
+        "Tài khoản của bạn đã bị khóa tạm thời trong 24 giờ do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 24 giờ.",
+        423,
+        {
+          message: "Tài khoản bị khóa trong 24 giờ",
+          lockUntil: user.lockUntil,
+          remainingHours: 24,
+        }
+      );
+    } else {
+      // ✅ Update loginAttempts but not yet locked
+      await user.save();
+      const remainingAttempts = 5 - user.loginAttempts;
+      logger.warn("Failed login attempt", { email, attempts: user.loginAttempts, ip: req.ip });
+      
+      throw createServiceError(
+        `Email hoặc mật khẩu không đúng. Bạn còn ${remainingAttempts} lần thử trước khi tài khoản bị khóa trong 24 giờ.`,
+        401,
+        {
+          message: "Email hoặc mật khẩu không đúng.",
+          loginAttempts: user.loginAttempts,
+          remainingAttempts: remainingAttempts,
+        }
+      );
+    }
   }
+
+  // ✅ Password correct - Reset login attempts
+  user.loginAttempts = 0;
+  user.lockUntil = null;
+  await user.save();
 
   const accessToken = jwt.sign(
     { userId: user._id },
