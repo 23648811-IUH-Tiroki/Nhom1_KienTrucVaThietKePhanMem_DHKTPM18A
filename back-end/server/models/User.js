@@ -29,10 +29,13 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires: { type: Date, default: null },
   role: { type: String, default: 'user' },
   avatar: { type: String },
-  gender: { type: Boolean, default: false },
+  gender: {
+    type: String,
+    enum: ["male", "female"],
+    required: true,
+    default: "male",
+  },
   isBlocked: { type: Boolean, default: false },
-  loginAttempts: { type: Number, default: 0 },  // Count failed login attempts
-  lockUntil: { type: Date, default: null },    // Lock account until this date (24h)
   createdAt: { type: Date, default: Date.now },
   address: { type: String },
   shippingAddress: {

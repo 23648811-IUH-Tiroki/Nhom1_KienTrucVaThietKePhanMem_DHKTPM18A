@@ -16,6 +16,11 @@ export const signUp = async (req, res) => {
 //Đăng nhập
 export const signIn = async (req, res) => {
   try {
+    logger.debug("authController.signIn request", {
+      email: req.body?.email,
+      ip: req.ip || req.headers["x-forwarded-for"],
+    });
+
     const result = await authService.signIn(req.body, req);
     
     res.cookie("refreshToken", result.refreshToken, {

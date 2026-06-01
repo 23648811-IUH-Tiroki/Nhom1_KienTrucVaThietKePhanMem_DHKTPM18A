@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Breadcrumb from "../../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -26,18 +26,31 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
-  const [lockUntil, setLockUntil] = useState(() => {
-    const storedLockUntil = Number(localStorage.getItem("loginLockUntil") || 0);
-    return storedLockUntil > Date.now() ? storedLockUntil : 0;
-  });
+  const [lockUntil, setLockUntil] = useState(0);
   const [lockRemainingSeconds, setLockRemainingSeconds] = useState(0);
+  const errorTimeoutRef = useRef(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    setFormData({ email: "", password: "" });
+    setErrors({});
+    setSuccess(false);
+
+    toast.dismiss();
+
+    console.log("Login page mounted - form cleared and toast dismissed");
+
+    return () => {
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!lockUntil) {
       setLockRemainingSeconds(0);
-      localStorage.removeItem("loginLockUntil");
       return;
     }
 
@@ -47,7 +60,6 @@ const Login = () => {
 
       if (remaining === 0) {
         setLockUntil(0);
-        localStorage.removeItem("loginLockUntil");
       }
     };
 
@@ -99,10 +111,35 @@ const Login = () => {
     return newErrors;
   };
 
+  const showApiError = (message) => {
+    setErrors((prev) => ({ ...prev, general: message }));
+
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+
+    errorTimeoutRef.current = setTimeout(() => {
+      setErrors((prev) => ({ ...prev, general: undefined }));
+      errorTimeoutRef.current = null;
+    }, 5000);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrors({});
     setSuccess(false);
+
+    if (lockUntil && lockUntil > Date.now()) {
+      const remainingHours = Math.max(
+        1,
+        Math.ceil((lockUntil - Date.now()) / 3600000),
+      );
+
+      showApiError(
+        `Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau ${remainingHours} giờ.`,
+      );
+      return;
+    }
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -119,9 +156,7 @@ const Login = () => {
       const { accessToken } = res.data;
 
       if (!accessToken) {
-        setErrors({
-          general: "Email hoặc mật khẩu không chính xác.",
-        });
+        showApiError("Email hoặc mật khẩu không chính xác.");
         return;
       }
 
@@ -130,7 +165,6 @@ const Login = () => {
       if (profileRes?.data) {
         localStorage.setItem("user", JSON.stringify(profileRes.data));
       }
-      localStorage.removeItem("loginLockUntil");
       setLockUntil(0);
       setSuccess(true);
       toast.success("Đăng nhập thành công!");
@@ -139,27 +173,27 @@ const Login = () => {
       }, 500);
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
-      if (err.response && err.response.status === 429) {
-        const responseLockUntil = Number(err.response?.data?.lockUntil || 0);
-        if (responseLockUntil > Date.now()) {
-          setLockUntil(responseLockUntil);
-          localStorage.setItem("loginLockUntil", String(responseLockUntil));
-        }
-        setErrors({
-          general:
-            err.response?.data?.message ||
-            "Bạn đã thử quá nhiều lần. Vui lòng chờ rồi thử lại.",
-        });
-      } else if (err.response && err.response.status === 401) {
-        setErrors({
-          general: "Email hoặc mật khẩu không chính xác.",
-        });
+      const responseStatus = err.response?.status;
+      const responseLockUntil = Number(err.response?.data?.lockUntil || 0);
+      const errorMessage = err.response?.data?.message;
+
+      if (responseLockUntil > Date.now()) {
+        setLockUntil(responseLockUntil);
       } else {
-        setErrors({
-          general:
-            err.response?.data?.message ||
-            "Đã có lỗi xảy ra. Vui lòng thử lại.",
-        });
+        setLockUntil(0);
+      }
+
+      if (responseStatus === 429 || responseStatus === 423) {
+        showApiError(
+          errorMessage ||
+            "Tài khoản đang tạm thời bị khóa. Vui lòng thử lại sau.",
+        );
+      } else if (responseStatus === 401) {
+        showApiError("Email hoặc mật khẩu không chính xác.");
+      } else if (responseStatus === 403) {
+        showApiError(errorMessage || "Tài khoản đã bị khóa.");
+      } else {
+        showApiError(errorMessage || "Đã có lỗi xảy ra. Vui lòng thử lại.");
       }
     }
   };
@@ -209,7 +243,6 @@ const Login = () => {
                   className="w-full"
                   value={formData.email}
                   onChange={handleChange}
-                  disabled={lockRemainingSeconds > 0}
                 />
                 <label>Nhập email</label>
                 {errors.email && (
@@ -224,19 +257,19 @@ const Login = () => {
                   className="w-full"
                   value={formData.password}
                   onChange={handleChange}
-                  disabled={lockRemainingSeconds > 0}
                 />
                 <label>Nhập mật khẩu</label>
                 {errors.password && (
                   <span className="error-message">{errors.password}</span>
                 )}
               </div>
-              {lockRemainingSeconds > 0 && (
+              {/* {lockRemainingSeconds > 0 && (
                 <small className="text-red-600 italic mx-2">
                   Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau{" "}
                   {lockRemainingSeconds} giây.
                 </small>
               )}
+              <br /> */}
               <small className="text-gray-500 italic mx-2">
                 Quên mật khẩu?{" "}
                 <Link
@@ -249,8 +282,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-              disabled={lockRemainingSeconds > 0}
+              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer"
             >
               Đăng nhập
             </button>

@@ -2,10 +2,15 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import { recordLoginFailure, resetLoginFailures } from "../middleware/loginLimiter.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import redisClient from "../configs/redisClient.js";
 import { enqueueOtpEmail } from "../queues/otpQueue.js";
+import {
+  getLockStatus,
+  recordFailedLogin,
+  resetLoginState,
+  getAttemptCount,
+} from "../utils/redisLoginLock.js";
 import { logger } from "../logger/logger.js";
 import { createServiceError } from "../utils/serviceError.js";
 import {
@@ -25,8 +30,6 @@ const FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS = 60;
 const FORGOT_PASSWORD_MAX_RESENDS = 5;
 const FORGOT_PASSWORD_MAX_ATTEMPTS = 5;
 const FORGOT_PASSWORD_KEY_PREFIX = "forgot_password";
-
-// ============ Helper Functions ============
 
 const validateEmailOrThrow = (emailRaw) => {
   const email = normalizeEmail(emailRaw);
@@ -55,9 +58,44 @@ const validatePasswordOrThrow = (password) => {
   }
 };
 
-const getForgotPasswordKey = (email) => `${FORGOT_PASSWORD_KEY_PREFIX}:${String(email).trim().toLowerCase()}`;
+const getForgotPasswordKey = (email) =>
+  `${FORGOT_PASSWORD_KEY_PREFIX}:${String(email).trim().toLowerCase()}`;
 
-const getForgotPasswordCooldownKey = (email) => `${FORGOT_PASSWORD_KEY_PREFIX}:cooldown:${String(email).trim().toLowerCase()}`;
+const getForgotPasswordCooldownKey = (email) =>
+  `${FORGOT_PASSWORD_KEY_PREFIX}:cooldown:${String(email).trim().toLowerCase()}`;
+
+const normalizeLegacyLockUntil = (value) => {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+  const timestamp = value instanceof Date ? value.getTime() : Number(value);
+  return Number.isFinite(timestamp) ? timestamp : null;
+};
+
+const cleanupLegacyMongoLockFields = async (user) => {
+  if (!user) return;
+  const hasLegacyLockUntil = user.lockUntil !== undefined && user.lockUntil !== null;
+  const hasLegacyAttempts = user.loginAttempts !== undefined && user.loginAttempts !== null;
+  if (!hasLegacyLockUntil && !hasLegacyAttempts) return;
+
+  try {
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { loginAttempts: 0, lockUntil: null } },
+    );
+
+    logger.debug("Legacy MongoDB login lock fields cleaned", {
+      email: user.email,
+      userLoginAttempts: user.loginAttempts,
+      userLockUntil: user.lockUntil,
+    });
+  } catch (error) {
+    logger.warn("Failed to clean legacy MongoDB login lock fields", {
+      email: user.email,
+      message: error.message,
+    });
+  }
+};
 
 const readForgotPasswordState = async (email) => {
   const rawState = await redisClient.get(getForgotPasswordKey(email));
@@ -93,7 +131,9 @@ const createForgotPasswordState = (email, otpHash, otpPlain) => {
     used: false,
     verifyAttempts: 0,
     resendCount: 0,
-    expiresAt: new Date(Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000).toISOString(),
+    expiresAt: new Date(
+      Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000,
+    ).toISOString(),
     createdAt: now,
     updatedAt: now,
     verifiedAt: null,
@@ -127,13 +167,17 @@ const normalizeForgotPasswordError = (message) => {
  * Sign up new user
  */
 export const signUp = async (userData) => {
-  const { password, lastName, firstName, birthDate } = userData;
+  const { password, lastName, firstName, birthDate, gender } = userData;
   const email = validateEmailOrThrow(userData?.email);
 
-  if (!password || !lastName || !firstName || !birthDate) {
-    throw createServiceError("Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.", 400, {
-      message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
-    });
+  if (!password || !lastName || !firstName || !birthDate || !gender) {
+    throw createServiceError(
+      "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+      400,
+      {
+        message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+      },
+    );
   }
 
   validatePasswordOrThrow(password);
@@ -146,112 +190,139 @@ export const signUp = async (userData) => {
     });
   }
 
+  // normalize gender to 'male'|'female'
+  const normalizeGenderLocal = (val) => {
+    if (typeof val === 'boolean') return val ? 'male' : 'female';
+    if (typeof val === 'number') return val === 1 ? 'male' : val === 0 ? 'female' : undefined;
+    if (typeof val !== 'string') return undefined;
+    const n = val.trim().toLowerCase();
+    if (["nam","male","m","true","1"].includes(n)) return 'male';
+    if (["nu","nữ","female","f","false","0"].includes(n)) return 'female';
+    return undefined;
+  };
+
+  const normalizedGender = normalizeGenderLocal(gender);
+  if (typeof normalizedGender === 'undefined') {
+    throw createServiceError("Giới tính không hợp lệ.", 400, {
+      message: "Giới tính không hợp lệ.",
+      errors: { gender: "Giới tính không hợp lệ." },
+    });
+  }
+
   const hashedPass = hashPassword(password);
   await User.create({
     email,
     password: hashedPass,
     fullName: `${firstName} ${lastName}`,
     birthDate: new Date(birthDate),
+    gender: normalizedGender,
   });
 
   return {
     message: "Đăng ký thành công!",
-    user: { email, fullName: `${firstName} ${lastName}`, birthDate },
+    user: { email, fullName: `${firstName} ${lastName}`, birthDate, gender: normalizedGender },
   };
 };
 
 /**
- * Sign in user with 24h account lock after 5 failed attempts
+ * Sign in user with Redis-only login lock state
  */
 export const signIn = async (userData, req) => {
   const email = validateEmailOrThrow(userData?.email);
   const password = userData.password ?? userData.passWord;
   validatePasswordOrThrow(password);
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
-      message: "Email hoặc mật khẩu không đúng.",
+  logger.debug("Attempting signIn", {
+    email,
+    ip: req?.ip || req?.headers?.["x-forwarded-for"],
+  });
+
+  const redisAttempts = await getAttemptCount(email);
+  const lockStatus = await getLockStatus(email);
+  logger.debug("signIn lockStatus", {
+    email,
+    isLocked: lockStatus.isLocked,
+    lockUntil: lockStatus.lockUntil,
+    remainingMs: lockStatus.remainingMs,
+    ttl: lockStatus.ttl,
+    attempts: redisAttempts,
+  });
+
+  if (lockStatus.isLocked) {
+    throw createServiceError(lockStatus.message, 429, {
+      message: lockStatus.message,
+      lockUntil: lockStatus.lockUntil,
+      retryAfterSeconds: Math.max(0, Math.ceil(lockStatus.remainingMs / 1000)),
     });
   }
 
-  // ✅ Check permanent block
+  const user = await User.findOne({ email });
+  const mongoLoginAttempts = Number(user?.loginAttempts ?? 0);
+  const mongoLockUntil = normalizeLegacyLockUntil(user?.lockUntil);
+  const now = Date.now();
+  const mongoIsLocked = Boolean(mongoLockUntil && mongoLockUntil > now);
+
+  logger.debug("signIn legacy mongo lock state", {
+    email,
+    mongoLoginAttempts,
+    mongoLockUntil,
+    now,
+    mongoIsLocked,
+  });
+
+  logger.debug("signIn user lookup", {
+    email,
+    userFound: Boolean(user),
+    isBlocked: user?.isBlocked,
+    lockUntil: user?.lockUntil,
+    loginAttempts: mongoLoginAttempts,
+    mongoIsLocked,
+  });
+
+  if (user && (user.lockUntil !== undefined || user.loginAttempts !== undefined)) {
+    await cleanupLegacyMongoLockFields(user);
+  }
+
+  const passwordCorrect = user
+    ? verifyPassword(password, user.password ?? user.passWord)
+    : false;
+
+  if (!user || !passwordCorrect) {
+    const failure = await recordFailedLogin(email);
+
+    if (failure.isLocked) {
+      throw createServiceError(failure.message, 429, {
+        message: failure.message,
+        lockUntil: failure.lockUntil,
+        retryAfterSeconds: Math.max(0, Math.ceil(failure.remainingMs / 1000)),
+      });
+    }
+
+    logger.warn("Failed login attempt", {
+      email,
+      attempts: failure.attempts,
+      ip: req.ip,
+    });
+
+    throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
+      message: "Email hoặc mật khẩu không đúng.",
+      loginAttempts: failure.attempts,
+      remainingAttempts: Math.max(0, 5 - failure.attempts),
+    });
+  }
+
   if (user.isBlocked) {
-    await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
     throw createServiceError("Tài khoản đã bị khóa bởi admin.", 403, {
       message: "Tài khoản đã bị khóa bởi admin.",
     });
   }
 
-  // ✅ Check temporary lock (24h account lock after 5 failed attempts)
-  const now = new Date();
-  if (user.lockUntil && user.lockUntil > now) {
-    const remainingTime = Math.ceil((user.lockUntil - now) / 1000 / 60); // minutes
-    const lockMessage = `Tài khoản bị khóa tạm thời do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau ${remainingTime} phút.`;
-    await recordLoginFailure(email, req.ip || req.headers["x-forwarded-for"]);
-    throw createServiceError(lockMessage, 423, {
-      message: lockMessage,
-      lockUntil: user.lockUntil,
-      remainingMinutes: remainingTime,
-    });
-  }
-
-  // ✅ Auto-unlock if lockUntil has passed
-  if (user.lockUntil && user.lockUntil <= now) {
-    user.lockUntil = null;
-    user.loginAttempts = 0;
-    await user.save();
-  }
-
-  const storedPassword = user.password ?? user.passWord;
-  const passWordCorrect = verifyPassword(password, storedPassword);
-  if (!passWordCorrect) {
-    // ✅ Increment login attempts on failed password
-    user.loginAttempts = (user.loginAttempts || 0) + 1;
-    
-    // ✅ Lock account for 24h after 5 failed attempts
-    if (user.loginAttempts >= 5) {
-      user.lockUntil = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h from now
-      await user.save();
-      logger.warn("Account locked due to 5 failed login attempts", { email, ip: req.ip });
-      
-      throw createServiceError(
-        "Tài khoản của bạn đã bị khóa tạm thời trong 24 giờ do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 24 giờ.",
-        423,
-        {
-          message: "Tài khoản bị khóa trong 24 giờ",
-          lockUntil: user.lockUntil,
-          remainingHours: 24,
-        }
-      );
-    } else {
-      // ✅ Update loginAttempts but not yet locked
-      await user.save();
-      const remainingAttempts = 5 - user.loginAttempts;
-      logger.warn("Failed login attempt", { email, attempts: user.loginAttempts, ip: req.ip });
-      
-      throw createServiceError(
-        `Email hoặc mật khẩu không đúng. Bạn còn ${remainingAttempts} lần thử trước khi tài khoản bị khóa trong 24 giờ.`,
-        401,
-        {
-          message: "Email hoặc mật khẩu không đúng.",
-          loginAttempts: user.loginAttempts,
-          remainingAttempts: remainingAttempts,
-        }
-      );
-    }
-  }
-
-  // ✅ Password correct - Reset login attempts
-  user.loginAttempts = 0;
-  user.lockUntil = null;
-  await user.save();
+  await resetLoginState(email);
 
   const accessToken = jwt.sign(
     { userId: user._id },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: ACCESS_TOKEN_TTL }
+    { expiresIn: ACCESS_TOKEN_TTL },
   );
 
   const refreshToken = crypto.randomBytes(60).toString("hex");
@@ -260,10 +331,12 @@ export const signIn = async (userData, req) => {
     await redisClient.set(
       `refresh:${refreshToken}`,
       JSON.stringify({ userId: user._id.toString() }),
-      { EX: Math.floor(REFRESH_TOKEN_TTL / 1000) }
+      { EX: Math.floor(REFRESH_TOKEN_TTL / 1000) },
     );
   } catch (err) {
-    logger.warn("Không thể lưu refreshToken vào Redis", { message: err.message });
+    logger.warn("Không thể lưu refreshToken vào Redis", {
+      message: err.message,
+    });
   }
 
   if (req && req.session) {
@@ -277,8 +350,6 @@ export const signIn = async (userData, req) => {
       });
     });
   }
-
-  await resetLoginFailures(email, req.ip || req.headers["x-forwarded-for"]);
 
   return {
     message: `User ${user.fullName} đã login!`,
@@ -302,12 +373,15 @@ export const signOut = async (token, req) => {
     try {
       await redisClient.del(`refresh:${token}`);
     } catch (err) {
-      logger.warn("Không thể xóa refreshToken trên Redis", { message: err.message });
+      logger.warn("Không thể xóa refreshToken trên Redis", {
+        message: err.message,
+      });
     }
 
     if (req.session) {
       req.session.destroy((err) => {
-        if (err) logger.warn("Lỗi khi destroy session", { message: err.message });
+        if (err)
+          logger.warn("Lỗi khi destroy session", { message: err.message });
       });
     }
   }
@@ -339,7 +413,11 @@ export const requestPasswordReset = async (userData) => {
   await redisClient.set(getForgotPasswordCooldownKey(email), "1", {
     EX: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
   });
-  await queueForgotPasswordOtp({ email, otp: resetCode, purpose: "password-reset" });
+  await queueForgotPasswordOtp({
+    email,
+    otp: resetCode,
+    purpose: "password-reset",
+  });
 
   logger.info("Forgot-password OTP requested", {
     email,
@@ -377,7 +455,8 @@ export const verifyPasswordResetOtp = async (userData) => {
     throw new Error("OTP không tồn tại hoặc đã hết hạn!");
   }
 
-  const isExpired = !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
+  const isExpired =
+    !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
   if (isExpired) {
     await redisClient.del(getForgotPasswordKey(normalizedEmail));
     await redisClient.del(getForgotPasswordCooldownKey(normalizedEmail));
@@ -427,7 +506,12 @@ export const verifyPasswordResetOtp = async (userData) => {
   return {
     message: "Xác thực OTP thành công!",
     verified: true,
-    otpExpiresInSeconds: Math.max(0, Math.floor((new Date(verifiedState.expiresAt).getTime() - Date.now()) / 1000)),
+    otpExpiresInSeconds: Math.max(
+      0,
+      Math.floor(
+        (new Date(verifiedState.expiresAt).getTime() - Date.now()) / 1000,
+      ),
+    ),
   };
 };
 
@@ -447,7 +531,9 @@ export const resendPasswordResetOtp = async (userData) => {
 
   const cooldown = await redisClient.get(getForgotPasswordCooldownKey(email));
   if (cooldown) {
-    throw new Error(`Vui lòng chờ ${FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS}s trước khi gửi lại mã OTP.`);
+    throw new Error(
+      `Vui lòng chờ ${FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS}s trước khi gửi lại mã OTP.`,
+    );
   }
 
   const state = await readForgotPasswordState(email);
@@ -469,7 +555,9 @@ export const resendPasswordResetOtp = async (userData) => {
     used: false,
     verifyAttempts: 0,
     resendCount: state.resendCount + 1,
-    expiresAt: new Date(Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000).toISOString(),
+    expiresAt: new Date(
+      Date.now() + FORGOT_PASSWORD_TTL_SECONDS * 1000,
+    ).toISOString(),
     updatedAt: new Date().toISOString(),
   };
 
@@ -477,7 +565,11 @@ export const resendPasswordResetOtp = async (userData) => {
   await redisClient.set(getForgotPasswordCooldownKey(email), "1", {
     EX: FORGOT_PASSWORD_RESEND_COOLDOWN_SECONDS,
   });
-  await queueForgotPasswordOtp({ email, otp: newOtp, purpose: "password-reset-resend" });
+  await queueForgotPasswordOtp({
+    email,
+    otp: newOtp,
+    purpose: "password-reset-resend",
+  });
 
   logger.info("Forgot-password OTP resent", {
     email,
@@ -508,7 +600,8 @@ export const resetPassword = async (userData) => {
     throw new Error("OTP không tồn tại hoặc đã hết hạn!");
   }
 
-  const isExpired = !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
+  const isExpired =
+    !state.expiresAt || new Date(state.expiresAt).getTime() < Date.now();
   if (isExpired) {
     await redisClient.del(getForgotPasswordKey(email));
     await redisClient.del(getForgotPasswordCooldownKey(email));
@@ -537,12 +630,14 @@ export const resetPassword = async (userData) => {
       $set: {
         password: hashPassword(password),
       },
-    }
+    },
   );
 
   await redisClient.del(getForgotPasswordKey(normalizedEmail));
   await redisClient.del(getForgotPasswordCooldownKey(normalizedEmail));
-  await redisClient.del(`${FORGOT_PASSWORD_KEY_PREFIX}:resendcount:${String(normalizedEmail).trim().toLowerCase()}`);
+  await redisClient.del(
+    `${FORGOT_PASSWORD_KEY_PREFIX}:resendcount:${String(normalizedEmail).trim().toLowerCase()}`,
+  );
 
   logger.info("Forgot-password reset succeeded", {
     email,
@@ -558,13 +653,17 @@ export const resetPassword = async (userData) => {
  * Send signup verification code
  */
 export const sendSignupCode = async (userData) => {
-  const { password, lastName, firstName, birthDate } = userData;
+  const { password, lastName, firstName, birthDate, gender } = userData;
   const email = validateEmailOrThrow(userData?.email);
 
-  if (!email || !password || !lastName || !firstName || !birthDate) {
-    throw createServiceError("Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.", 400, {
-      message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
-    });
+  if (!email || !password || !lastName || !firstName || !birthDate || !gender) {
+    throw createServiceError(
+      "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+      400,
+      {
+        message: "Thiếu thông tin đăng ký. Vui lòng điền đầy đủ.",
+      },
+    );
   }
 
   validatePasswordOrThrow(password);
@@ -587,24 +686,45 @@ export const sendSignupCode = async (userData) => {
   const hashedOTP = bcrypt.hashSync(signupCode, 10);
   const storedPassword = hashPassword(password);
 
+  // normalize gender locally
+  const normalizeGenderLocal = (val) => {
+    if (typeof val === 'boolean') return val ? 'male' : 'female';
+    if (typeof val === 'number') return val === 1 ? 'male' : val === 0 ? 'female' : undefined;
+    if (typeof val !== 'string') return undefined;
+    const n = val.trim().toLowerCase();
+    if (["nam","male","m","true","1"].includes(n)) return 'male';
+    if (["nu","nữ","female","f","false","0"].includes(n)) return 'female';
+    return undefined;
+  };
+
+  const normalizedGender = normalizeGenderLocal(gender);
+  if (typeof normalizedGender === 'undefined') {
+    throw createServiceError("Giới tính không hợp lệ.", 400, {
+      message: "Giới tính không hợp lệ.",
+      errors: { gender: "Giới tính không hợp lệ." },
+    });
+  }
+
   const payload = {
     email,
     password: storedPassword,
     lastName,
     firstName,
     birthDate: new Date(birthDate),
+    gender: normalizedGender,
   };
 
   await redisClient.set(
     `signup:${email}`,
     JSON.stringify({ code: hashedOTP, payload }),
-    { EX: 60 }
+    { EX: 60 },
   );
 
   if (!hasMailerConfig()) {
     if (process.env.NODE_ENV !== "production") {
       return {
-        message: "SMTP chưa được cấu hình. Mã đăng ký được trả về cho môi trường dev.",
+        message:
+          "SMTP chưa được cấu hình. Mã đăng ký được trả về cho môi trường dev.",
         devCode: signupCode,
       };
     }
@@ -671,6 +791,7 @@ export const verifySignup = async (userData) => {
     password: payload.password,
     fullName: `${payload.firstName} ${payload.lastName}`,
     birthDate: payload.birthDate,
+    gender: payload.gender,
   });
 
   await redisClient.del(`signup:${email}`);

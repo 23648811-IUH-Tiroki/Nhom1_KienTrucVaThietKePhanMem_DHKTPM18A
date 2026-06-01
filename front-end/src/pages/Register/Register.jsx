@@ -28,6 +28,7 @@ const Register = () => {
     birthDate: "",
     password: "",
     confirmPassword: "",
+    gender: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -61,7 +62,7 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    const { fullName, email, birthDate, password, confirmPassword } =
+    const { fullName, email, birthDate, password, confirmPassword, gender } =
       formData;
 
     const newErrors = {};
@@ -87,6 +88,8 @@ const Register = () => {
     if (!confirmPassword) newErrors.confirmPassword = "Vui lòng nhập lại mật khẩu.";
     else if (password !== confirmPassword)
       newErrors.confirmPassword = "Mật khẩu xác nhận không khớp.";
+
+    if (!gender) newErrors.gender = "Vui lòng chọn giới tính.";
     return newErrors;
   };
 
@@ -154,6 +157,7 @@ const Register = () => {
         password: formData.password,
         role: "user",
         avatar: defaultAvatarBase64.split(",")[1],
+        gender: formData.gender,
       };
       // send signup code and store payload in backend temporarily
       try {
@@ -250,6 +254,35 @@ const Register = () => {
                   <label>Nhập họ và tên</label>
                   {errors.fullName && (
                     <span className="error-message">{errors.fullName}</span>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <label className="block mb-2">Giới tính</label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked={formData.gender === 'male'}
+                        onChange={handleChange}
+                      />
+                      Nam
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="female"
+                        checked={formData.gender === 'female'}
+                        onChange={handleChange}
+                      />
+                      Nữ
+                    </label>
+                  </div>
+                  {errors.gender && (
+                    <span className="error-message">{errors.gender}</span>
                   )}
                 </div>
 
@@ -391,6 +424,7 @@ const Register = () => {
                         password: formData.password,
                         role: 'user',
                         avatar: defaultAvatarBase64.split(',')[1],
+                        gender: formData.gender,
                       });
                       setMessage('Mã xác thực đã được gửi lại.');
                     } catch (err) {

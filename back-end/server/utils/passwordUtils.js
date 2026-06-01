@@ -1,10 +1,6 @@
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
-/**
- * Hash password with salt (PBKDF2) for new passwords.
- * Also supports verifying legacy bcrypt hashes.
- */
 export const hashPassword = (password) => {
   const salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto

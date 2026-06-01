@@ -8,8 +8,8 @@ export const otpQueue = new Queue(OTP_QUEUE_NAME, {
   defaultJobOptions: {
     attempts: 3,
     backoff: {
-      type: "exponential",
-      delay: 2000,
+      type: "fixed",
+      delay: 5000,
     },
     removeOnComplete: {
       age: 60 * 60,

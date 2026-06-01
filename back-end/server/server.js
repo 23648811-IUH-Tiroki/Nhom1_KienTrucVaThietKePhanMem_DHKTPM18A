@@ -140,7 +140,13 @@ const ensureBootstrapAdmin = async () => {
 };
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    retryWrites: true,
+    w: "majority",
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 10000,
+  })
   .then(async () => {
     logger.info("Connected to MongoDB");
     await ensureUserPhoneIndex();
@@ -150,6 +156,26 @@ mongoose
     logger.warn("MongoDB connection failed. Server continuing without DB.", {
       message: err.message,
     });
+  });
+
+  mongoose.connection.on("connecting", () => {
+    logger.info("MongoDB connecting");
+  });
+
+  mongoose.connection.on("connected", () => {
+    logger.info("MongoDB connected");
+  });
+
+  mongoose.connection.on("reconnected", () => {
+    logger.info("MongoDB reconnected");
+  });
+
+  mongoose.connection.on("disconnected", () => {
+    logger.warn("MongoDB disconnected");
+  });
+
+  mongoose.connection.on("error", (err) => {
+    logger.error("MongoDB connection error", { message: err.message });
   });
 
 // Routes

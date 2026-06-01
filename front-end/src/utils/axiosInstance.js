@@ -63,6 +63,12 @@ const createRateLimitError = (config, lockData) => {
   return error;
 };
 
+const isSignInScope = (config) => {
+  if (!config?.url) return false;
+  const requestUrl = new URL(config.url, config.baseURL || API_BASE_URL);
+  return requestUrl.pathname === '/api/auth/signin';
+};
+
 const readCounter = (scope) => {
   try {
     const raw = localStorage.getItem(`${RATE_LIMIT_COUNTER_PREFIX}${scope}`);
@@ -146,10 +152,17 @@ const shouldHandleAuthLogout = (error) => {
 axiosInstance.interceptors.request.use(
   (config) => {
     const scope = getRequestScope(config);
-    const lockData = readLock(scope);
-    if (lockData) {
-      toast.error(lockData.message || 'Bạn đang tạm thời bị giới hạn gửi yêu cầu.');
-      return Promise.reject(createRateLimitError(config, lockData));
+    const isSignInRequest = isSignInScope(config);
+
+    if (!isSignInRequest) {
+      const lockData = readLock(scope);
+      if (lockData) {
+        toast.error(lockData.message || 'Bạn đang tạm thời bị giới hạn gửi yêu cầu.');
+        return Promise.reject(createRateLimitError(config, lockData));
+      }
+    } else {
+      // Clear stale auth lock data for signin endpoint so backend state remains authoritative.
+      localStorage.removeItem(`${RATE_LIMIT_LOCK_PREFIX}${scope}`);
     }
 
     const method = (config.method || 'get').toLowerCase();
@@ -186,8 +199,9 @@ axiosInstance.interceptors.response.use(
     }
 
     if (error.response?.status === 429) {
+      const isSignInResponse = isSignInScope(error.config || {});
       const lockData = extractLockFromResponse(error);
-      if (lockData) {
+      if (lockData && !isSignInResponse) {
         const scope = getRequestScope(error.config || {});
         storeLock(scope, lockData.lockUntil, lockData.message);
       }

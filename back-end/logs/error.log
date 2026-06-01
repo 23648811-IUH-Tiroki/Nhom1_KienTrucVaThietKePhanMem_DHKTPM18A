@@ -16,3 +16,33 @@
 2026-05-29T17:36:28.330Z [error] Redis client error {"service":"back-end"}
 2026-05-29T17:36:29.014Z [error] Queue Redis error {"service":"back-end"}
 2026-05-29T17:36:29.777Z [error] Queue Redis error {"service":"back-end"}
+2026-06-01T15:43:00.636Z [error] Error fetching products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+2026-06-01T15:43:00.638Z [error] Error fetching sale products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+2026-06-01T15:43:01.368Z [error] Error fetching products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+2026-06-01T15:43:01.384Z [error] Error fetching sale products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+2026-06-01T15:51:55.205Z [error] Error fetching products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+2026-06-01T15:51:55.217Z [error] Error fetching sale products Operation `products.aggregate()` buffering timed out after 10000ms {"service":"back-end"}
+MongooseError: Operation `products.aggregate()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (D:\Project\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\back-end\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)

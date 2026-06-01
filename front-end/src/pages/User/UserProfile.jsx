@@ -458,7 +458,7 @@ const UserProfile = () => {
                                 {[
                                     { key: "profile", label: "Thông tin cá nhân", icon: FaUser },
                                     { key: "shipping", label: "Thông tin giao hàng", icon: FaMapMarkerAlt },
-                                    { key: "orders", label: "Đơn hàng của bạn", icon: FaShoppingBag },
+                                    // { key: "orders", label: "Đơn hàng của bạn", icon: FaShoppingBag },
                                     { key: "history", label: "Lịch sử mua hàng", icon: FaHistory },
                                 ].map((item) => {
                                     const Icon = item.icon;
@@ -620,7 +620,7 @@ const UserProfile = () => {
                             {activeTab === "shipping" && (
                                 <ShippingInfo onAddressUpdated={handleShippingUpdated} />
                             )}
-
+{/* 
                             {activeTab === "orders" && (
                                 <OrderHistory
                                     title="Đơn hàng của bạn"
@@ -633,7 +633,7 @@ const UserProfile = () => {
                                     onCancelOrder={handleCancelOrder}
                                     formatDate={formatDisplayDate}
                                 />
-                            )}
+                            )} */}
 
                             {activeTab === "history" && (
                                 <OrderHistory

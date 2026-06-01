@@ -56,16 +56,16 @@ const buildUserStats = async () => {
 };
 
 /**
- * Normalize gender value
+ * Normalize gender value to enum string 'male' or 'female'
  */
 const normalizeGender = (value) => {
-  if (typeof value === "boolean") return value;
-  if (typeof value === "number") return value === 1;
+  if (typeof value === "boolean") return value ? "male" : "female";
+  if (typeof value === "number") return value === 1 ? "male" : value === 0 ? "female" : undefined;
   if (typeof value !== "string") return undefined;
 
   const normalized = value.trim().toLowerCase();
-  if (["nam", "male", "m", "true", "1"].includes(normalized)) return true;
-  if (["nu", "nữ", "female", "f", "false", "0"].includes(normalized)) return false;
+  if (["nam", "male", "m", "true", "1"].includes(normalized)) return "male";
+  if (["nu", "nữ", "female", "f", "false", "0"].includes(normalized)) return "female";
   return undefined;
 };
 
@@ -210,6 +210,7 @@ export const createUser = async (userData) => {
   }
 
   try {
+    const normalizedGender = normalizeGender(gender);
     const user = new User({
       fullName,
       email,
@@ -218,7 +219,7 @@ export const createUser = async (userData) => {
       password: hashPassword(rawPassword),
       address,
       avatar,
-      ...(typeof gender !== "undefined" ? { gender: Boolean(gender) } : {}),
+      ...(typeof normalizedGender !== "undefined" ? { gender: normalizedGender } : {}),
       ...(role ? { role } : {}),
       ...(status ? { status } : {}),
     });
@@ -483,7 +484,14 @@ export const updateProfile = async (user, updateData) => {
   }
 
   if (Object.prototype.hasOwnProperty.call(updateData, "gender")) {
-    updates.gender = Boolean(updateData.gender);
+    const normalizedGender = normalizeGender(updateData.gender);
+    if (typeof normalizedGender === "undefined") {
+      throw createServiceError("Giới tính không hợp lệ.", 400, {
+        message: "Giới tính không hợp lệ.",
+        errors: { gender: "Giới tính không hợp lệ." },
+      });
+    }
+    updates.gender = normalizedGender;
   }
 
   if (Object.prototype.hasOwnProperty.call(updateData, "avatar")) {
