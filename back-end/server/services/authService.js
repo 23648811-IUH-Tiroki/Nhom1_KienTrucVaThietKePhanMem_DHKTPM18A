@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { generateOTP } from "../utils/generateOTP.js";
 import redisClient from "../configs/redisClient.js";
 import { enqueueOtpEmail } from "../queues/otpQueue.js";
+import { hasMailerConfig } from "../utils/mailer.js";
 import {
   getLockStatus,
   recordFailedLogin,
@@ -216,11 +217,12 @@ export const signUp = async (userData) => {
     fullName: `${firstName} ${lastName}`,
     birthDate: new Date(birthDate),
     gender: normalizedGender,
+    status: "Active",
   });
 
   return {
     message: "Đăng ký thành công!",
-    user: { email, fullName: `${firstName} ${lastName}`, birthDate, gender: normalizedGender },
+    user: { email, fullName: `${firstName} ${lastName}`, birthDate, gender: normalizedGender, status: "Active" },
   };
 };
 
@@ -257,6 +259,20 @@ export const signIn = async (userData, req) => {
   }
 
   const user = await User.findOne({ email });
+  
+  // Check if account is inactive - block immediately without recording attempts
+  if (user && user.status !== "Active") {
+    logger.warn("Blocked inactive account login attempt", {
+      userId: user._id,
+      email: user.email,
+      ip: req?.ip || req?.headers?.["x-forwarded-for"],
+    });
+
+    throw createServiceError("Tài khoản của bạn đã bị khóa bởi hệ thống.", 403, {
+      message: "Tài khoản của bạn đã bị khóa bởi hệ thống.",
+    });
+  }
+
   const mongoLoginAttempts = Number(user?.loginAttempts ?? 0);
   const mongoLockUntil = normalizeLegacyLockUntil(user?.lockUntil);
   const now = Date.now();
@@ -312,8 +328,8 @@ export const signIn = async (userData, req) => {
   }
 
   if (user.isBlocked) {
-    throw createServiceError("Tài khoản đã bị khóa bởi admin.", 403, {
-      message: "Tài khoản đã bị khóa bởi admin.",
+    throw createServiceError("Tài khoản của bạn đã bị khóa bởi hệ thống.", 403, {
+      message: "Tài khoản của bạn đã bị khóa bởi hệ thống.",
     });
   }
 

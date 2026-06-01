@@ -95,16 +95,21 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // Prevent double click
+    if (loading) return;
+
     setErrors({});
     setSuccess(false);
     setMessage("");
-    setLoading(true);
 
     const validationError = validateForm();
     if (Object.keys(validationError).length > 0) {
       setErrors(validationError);
       return;
     }
+
+    setLoading(true);
 
     try {
       // Kiểm tra trùng lặp email và số điện thoại
@@ -159,30 +164,30 @@ const Register = () => {
         avatar: defaultAvatarBase64.split(",")[1],
         gender: formData.gender,
       };
+
       // send signup code and store payload in backend temporarily
-      try {
-        setLoading(true);
-        const res = await sendSignupCode(userData);
-        setMessage(res.data?.message || "Đã gửi mã xác thực đến email.");
-        setStep(2);
-      } catch (err2) {
-        setErrors({ general: err2.response?.data?.message || err2.message });
-      } finally {
-        setLoading(false);
-      }
+      const res = await sendSignupCode(userData);
+      setMessage(res.data?.message || "Đã gửi mã xác thực đến email.");
+      setStep(2);
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
-      setErrors({
-        general:
-          err.response?.data?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.",
-      });
+      const errorMessage = err.response?.data?.message || err.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+      setErrors({ general: errorMessage });
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
+
+    // Prevent double click
+    if (loading) return;
+
     setErrors({});
     setLoading(true);
+
     try {
       const res = await verifySignup({ email: normalizeEmail(formData.email), code });
       if (res.status === 201) {
@@ -194,6 +199,7 @@ const Register = () => {
           birthDate: "",
           password: "",
           confirmPassword: "",
+          gender: "",
         });
         setStep(1);
         setCode("");
@@ -201,7 +207,9 @@ const Register = () => {
         setTimeout(() => navigate('/login'), 800);
       }
     } catch (err) {
-      setErrors({ general: err.response?.data?.message || err.message });
+      const errorMessage = err.response?.data?.message || err.message || "Xác thực thất bại. Vui lòng thử lại.";
+      setErrors({ general: errorMessage });
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -400,7 +408,11 @@ const Register = () => {
                 <button
                   type="button"
                   className="flex-1 border rounded py-2"
+                  disabled={loading}
                   onClick={async () => {
+                    // Prevent double click
+                    if (loading) return;
+
                     setLoading(true);
                     try {
                       const imagePath = '/avatar.png';
@@ -427,14 +439,17 @@ const Register = () => {
                         gender: formData.gender,
                       });
                       setMessage('Mã xác thực đã được gửi lại.');
+                      toast.success('Mã xác thực đã được gửi lại.');
                     } catch (err) {
-                      setErrors({ general: err.response?.data?.message || err.message });
+                      const errorMessage = err.response?.data?.message || err.message || "Gửi lại mã thất bại. Vui lòng thử lại.";
+                      setErrors({ general: errorMessage });
+                      toast.error(errorMessage);
                     } finally {
                       setLoading(false);
                     }
                   }}
                 >
-                  Gửi lại mã
+                  {loading ? 'Đang gửi...' : 'Gửi lại mã'}
                 </button>
               </div>
             </form>

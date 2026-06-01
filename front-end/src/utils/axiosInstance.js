@@ -131,7 +131,8 @@ const axiosInstance = axios.create({
 });
 
 const shouldHandleAuthLogout = (error) => {
-  if (error.response?.status !== 401) {
+  const status = error.response?.status;
+  if (![401, 403].includes(status)) {
     return false;
   }
 
@@ -145,7 +146,22 @@ const shouldHandleAuthLogout = (error) => {
     return false;
   }
 
-  return true;
+  if (status === 401) {
+    return true;
+  }
+
+  const message = String(error.response?.data?.message || '').toLowerCase();
+  return message.includes('khóa') || message.includes('bị khóa') || message.includes('blocked');
+};
+
+const logoutOnAuthFailure = (message) => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('user');
+  toast.error(message || 'Tài khoản của bạn đã bị khóa bởi quản trị viên');
+
+  if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+    window.location.href = '/login';
+  }
 };
 
 // Add JWT token to request headers
@@ -213,12 +229,8 @@ axiosInstance.interceptors.response.use(
     }
 
     if (shouldHandleAuthLogout(error)) {
-      // Token expired or invalid - only redirect if not already on login page
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-      }
+      const message = error.response?.data?.message || 'Tài khoản của bạn đã bị khóa bởi quản trị viên';
+      logoutOnAuthFailure(message);
     }
     return Promise.reject(error);
   }

@@ -33,9 +33,12 @@ export const protectedRoute = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại!" });
         }
-        if (user.isBlocked) {
-            return res.status(403).json({ message: "Tài khoản đã bị khóa." });
+
+        // Always validate the latest account status for JWT/session users.
+        if (user.isBlocked || user.status !== "Active") {
+            return res.status(403).json({ message: "Tài khoản của bạn đã bị khóa bởi hệ thống" });
         }
+
         req.user = user;
         next();
     } catch (error) {

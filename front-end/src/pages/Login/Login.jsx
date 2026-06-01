@@ -26,6 +26,7 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [lockUntil, setLockUntil] = useState(0);
   const [lockRemainingSeconds, setLockRemainingSeconds] = useState(0);
   const errorTimeoutRef = useRef(null);
@@ -126,6 +127,10 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Prevent double click
+    if (loading) return;
+
     setErrors({});
     setSuccess(false);
 
@@ -146,6 +151,8 @@ const Login = () => {
       setErrors(validationErrors);
       return;
     }
+
+    setLoading(true);
 
     try {
       const res = await signIn({
@@ -195,6 +202,8 @@ const Login = () => {
       } else {
         showApiError(errorMessage || "Đã có lỗi xảy ra. Vui lòng thử lại.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -282,9 +291,10 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer"
+              className="w-full bg-brown text-white py-3 rounded-md mt-6 font-semibold hover:shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
             >
-              Đăng nhập
+              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
           </form>
 

@@ -92,6 +92,7 @@ const ForgotPassword = () => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
+    if (loading || resendLoading) return;
     setLoading(true); setError(""); setMessage("");
     setOtpVerified(false); setCode(""); setStep(1);
     try {
@@ -106,6 +107,7 @@ const ForgotPassword = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
+    if (loading || resendLoading) return;
     setLoading(true); setError(""); setMessage("");
     try {
       const response = await verifyPasswordResetOtp({ email: normalizeEmail(email), code });
@@ -119,6 +121,7 @@ const ForgotPassword = () => {
   };
 
   const handleResendOtp = async () => {
+    if (loading || resendLoading) return;
     setResendLoading(true); setError(""); setMessage("");
     try {
       const response = await resendPasswordResetOtp({ email: normalizeEmail(email) });
@@ -132,6 +135,7 @@ const ForgotPassword = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    if (loading || resendLoading) return;
     if (!newPassword) { setError(PASSWORD_RULE_MESSAGE); return; }
     if (!isValidPassword(newPassword)) { setError(PASSWORD_RULE_MESSAGE); return; }
     if (!confirmPassword) { setError("Mật khẩu xác nhận không được để trống."); return; }
