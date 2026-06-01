@@ -1087,3 +1087,34 @@ Error: Dữ liệu không hợp lệ.
 2026-05-31T05:07:57.940Z [info] Background workers initialized {"service":"back-end"}
 2026-05-31T05:07:57.944Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
 2026-05-31T05:07:58.649Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-01T15:37:03.790Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-01T15:37:03.794Z [info] Kết nối Redis thành công! {"service":"back-end"}
+2026-06-01T15:37:03.800Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-01T15:37:03.804Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-01T15:37:03.807Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-01T15:37:03.852Z [info] Background workers initialized {"service":"back-end"}
+2026-06-01T15:37:03.861Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-01T15:37:04.649Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-01T15:40:16.107Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-01T15:40:16.114Z [info] Kết nối Redis thành công! {"service":"back-end"}
+2026-06-01T15:40:16.121Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-01T15:40:16.126Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-01T15:40:16.128Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-01T15:40:16.182Z [info] Background workers initialized {"service":"back-end"}
+2026-06-01T15:40:16.189Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-01T15:40:17.000Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-01T15:41:22.328Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-01T15:41:22.331Z [info] Kết nối Redis thành công! {"service":"back-end"}
+2026-06-01T15:41:22.337Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-01T15:41:22.339Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-01T15:41:22.340Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-01T15:41:22.390Z [info] Background workers initialized {"service":"back-end"}
+2026-06-01T15:41:22.399Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-01T15:41:23.387Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-01T15:42:44.771Z [info] GET /api/users/profile 401 10.791 ms - 62 req=a057f89c-1414-4e8d-8d95-9bc4c0049e0b {"service":"back-end"}
+2026-06-01T15:42:44.923Z [info] GET /api/products - - ms - - req=96567e60-d003-41bb-b099-8a1696422cc7 {"service":"back-end"}
+2026-06-01T15:42:44.927Z [info] GET /api/categories/catetory/shop-cho-cun - - ms - - req=7c4993d4-60d9-45c3-a22d-39fe3703dcee {"service":"back-end"}
+2026-06-01T15:42:44.928Z [info] GET /api/categories - - ms - - req=323270ae-8a0e-485c-b23d-d3041430f2d0 {"service":"back-end"}
+2026-06-01T15:42:44.929Z [info] GET /api/products/product/sales - - ms - - req=87be19ab-1062-4a55-9180-ce6c0b12b87a {"service":"back-end"}
+2026-06-01T15:42:44.930Z [info] GET /api/categories/shop-cho-meo - - ms - - req=bc4e1e78-3230-413b-a137-67e46b088611 {"service":"back-end"}
+2026-06-01T15:42:44.931Z [info] GET /api/categories/shop-cho-cun - - ms - - req=d60fe1fb-0604-4c13-8902-afb0326d8840 {"service":"back-end"}
