@@ -179,7 +179,7 @@ const ForgotPassword = () => {
                   <span className="text-xl">🐾</span>
                 </div>
                 <div>
-                  <div className="font-black text-lg tracking-tight leading-none">PawShop</div>
+                  <div className="font-black text-lg tracking-tight leading-none">PetShop</div>
                   <div className="text-amber-100 text-xs mt-0.5">Phụ kiện thú cưng</div>
                 </div>
               </div>
