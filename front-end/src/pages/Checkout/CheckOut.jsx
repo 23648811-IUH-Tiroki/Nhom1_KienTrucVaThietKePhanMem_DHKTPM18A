@@ -29,11 +29,19 @@ const CheckOut = () => {
   const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, clearCart, removeFromCart } = useCart();
   const [user, setUser] = useState(null);
   const userId = user?._id || user?.id;
   const buyNowItems = location.state?.buyNowItems || null;
-  const checkoutItems = buyNowItems && buyNowItems.length > 0 ? buyNowItems : cartItems;
+  const selectedItems = location.state?.selectedItems || null;
+
+  // Lọc sản phẩm thanh toán từ giỏ hàng nếu người dùng chỉ chọn một số sản phẩm cụ thể
+  const checkoutItems = buyNowItems && buyNowItems.length > 0
+    ? buyNowItems
+    : (selectedItems && selectedItems.length > 0
+      ? cartItems.filter(item => selectedItems.includes(item._id))
+      : cartItems);
+
   const isBuyNowMode = Boolean(buyNowItems && buyNowItems.length > 0);
 
   const subtotal = checkoutItems.reduce(
@@ -416,6 +424,7 @@ const CheckOut = () => {
         province: formData.province,
         deliveryOption: deliveryOption,
         paymentMethod: selectedMethod,
+        payment_method: selectedMethod,
         shippingCost: deliveryOption === "pickup" ? 0 : shippingCost,
       };
 
@@ -435,9 +444,15 @@ const CheckOut = () => {
           closeButton: true,
         });
 
-        // Chỉ clear cart khi thanh toán từ giỏ hàng
+        // Chỉ xóa những sản phẩm đã chọn thanh toán khỏi giỏ hàng
         if (!isBuyNowMode && userId) {
-          await clearCart(userId);
+          if (selectedItems && selectedItems.length > 0) {
+            for (const itemId of selectedItems) {
+              await removeFromCart(userId, itemId);
+            }
+          } else {
+            await clearCart(userId);
+          }
         }
 
         // Reset form
@@ -767,21 +782,43 @@ const CheckOut = () => {
             </div>
 
             <div
-              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${selectedMethod === "bank"
+              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${selectedMethod === "momo"
                 ? "border-blue-0 bg-blue-100"
                 : "border-gray-300"
                 }`}
-              onClick={() => handlePaymentSelection("bank")}
+              onClick={() => handlePaymentSelection("momo")}
             >
               <input
                 type="radio"
                 name="payment"
-                value="bank"
-                checked={selectedMethod === "bank"}
-                onChange={() => handlePaymentSelection("bank")}
+                value="momo"
+                checked={selectedMethod === "momo"}
+                onChange={() => handlePaymentSelection("momo")}
               />
-              <img src={bankCard} alt="Bank" width="30" />
-              <span>Chuyển khoản qua ngân hàng</span>
+              <div className="w-8 h-8 rounded bg-[#d82d8b] text-white flex items-center justify-center font-bold text-xs shadow-sm" style={{ minWidth: '32px' }}>
+                MoMo
+              </div>
+              <span>Thanh toán qua Ví MoMo</span>
+            </div>
+
+            <div
+              className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer mt-3 ${selectedMethod === "paypal"
+                ? "border-blue-0 bg-blue-100"
+                : "border-gray-300"
+                }`}
+              onClick={() => handlePaymentSelection("paypal")}
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="paypal"
+                checked={selectedMethod === "paypal"}
+                onChange={() => handlePaymentSelection("paypal")}
+              />
+              <div className="w-8 h-8 rounded bg-[#003087] text-white flex items-center justify-center font-bold text-[9px] shadow-sm" style={{ minWidth: '32px' }}>
+                PayPal
+              </div>
+              <span>Thanh toán qua Ví PayPal</span>
             </div>
           </div>
           {/* Right Checkout */}

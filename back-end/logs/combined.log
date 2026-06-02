@@ -3488,3 +3488,691 @@ MongooseError: Operation `products.aggregate()` buffering timed out after 10000m
 2026-06-02T06:43:52.888Z [info] GET /api/products 200 671.019 ms - 184351 req=eba8e82b-70b0-4a47-8fd8-802c65d98e7e {"service":"back-end"}
 2026-06-02T06:44:32.396Z [info] GET /api/users/profile 200 90.176 ms - 761 req=2df89146-bf6c-4c2b-87c3-323142e52d32 {"service":"back-end"}
 2026-06-02T06:44:32.647Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 136.806 ms - 19060 req=e353f4b5-97ec-4992-b520-edf1c82ff1f8 {"service":"back-end"}
+2026-06-02T06:46:36.237Z [info] GET /api/users/profile 200 103.270 ms - 761 req=daea73d9-b7c4-41f9-88d4-24690cb5d5d2 {"service":"back-end"}
+2026-06-02T06:46:36.297Z [info] GET /api/products/product/sales 200 149.717 ms - 30146 req=63b9c9a2-203f-4893-bf93-564cbe172be8 {"service":"back-end"}
+2026-06-02T06:46:36.463Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 175.406 ms - 19060 req=f2152525-48d5-43d8-a42b-37b47283bf0d {"service":"back-end"}
+2026-06-02T06:46:36.470Z [info] GET /api/categories/shop-cho-cun 200 330.814 ms - 81965 req=954aa696-7ad7-463b-8008-173672c0d6f5 {"service":"back-end"}
+2026-06-02T06:46:36.510Z [info] GET /api/categories/shop-cho-meo 200 365.823 ms - 102387 req=845d2660-4383-4a61-b0c0-e4c858d01ad1 {"service":"back-end"}
+2026-06-02T06:46:36.635Z [info] GET /api/categories 200 51.754 ms - 2785 req=eb2f08bb-4b86-49f3-bbda-df7036c5884d {"service":"back-end"}
+2026-06-02T06:46:36.708Z [info] GET /api/users/profile 200 123.305 ms - 761 req=e3395768-72e3-474d-8b8b-ff8eb714c8a9 {"service":"back-end"}
+2026-06-02T06:46:36.765Z [info] GET /api/products 200 628.141 ms - 184351 req=93870f6e-788b-44ce-a0bb-6f0dd8b62191 {"service":"back-end"}
+2026-06-02T06:46:36.776Z [info] GET /api/carts/me 200 145.194 ms - 8064 req=7ff81aa3-dbce-42da-899f-5bba03639c56 {"service":"back-end"}
+2026-06-02T06:46:36.797Z [info] GET /api/carts/me 200 152.647 ms - 8064 req=6a5cfa06-f804-43ff-b545-35c6ee8da66c {"service":"back-end"}
+2026-06-02T06:46:36.802Z [info] GET /api/carts/me 200 155.408 ms - 8064 req=eeec7b3d-37e0-4284-bc81-ab06b86b085d {"service":"back-end"}
+2026-06-02T06:46:38.053Z [info] GET /api/users/shipping-address 200 97.552 ms - 351 req=db3388db-ab27-44a7-915f-70eb8531a182 {"service":"back-end"}
+2026-06-02T06:46:41.544Z [info] PUT /api/users/shipping-address 200 155.303 ms - 352 req=cfd5ae80-2c0e-453b-8349-69aa695e983b {"service":"back-end"}
+2026-06-02T06:46:45.610Z [info] PUT /api/users/shipping-address 200 154.143 ms - 352 req=c6a5ecf0-b004-4cfa-803d-2a86e9947c6b {"service":"back-end"}
+2026-06-02T06:46:59.693Z [info] GET /api/users/shipping-address 200 89.686 ms - 352 req=d4a9e26e-88f2-453e-b60b-54229bd8e6b0 {"service":"back-end"}
+2026-06-02T06:47:01.876Z [info] PUT /api/users/shipping-address 200 443.592 ms - 352 req=7cbc2932-5a0e-4162-902c-4e7f19104d44 {"service":"back-end"}
+2026-06-02T06:48:22.346Z [info] GET /api/categories 200 45.972 ms - 2785 req=5865437b-dd54-4180-bb9b-88bd606bd440 {"service":"back-end"}
+2026-06-02T06:48:22.357Z [info] GET /api/categories/catetory/shop-cho-cun 200 47.350 ms - 1390 req=f93a19a0-9ab2-48cf-87c9-961510e33b61 {"service":"back-end"}
+2026-06-02T06:48:22.359Z [info] GET /api/categories 200 47.221 ms - 2785 req=9e0662fd-956e-4c11-adfc-f0d5484d8bde {"service":"back-end"}
+2026-06-02T06:48:22.398Z [info] GET /api/users/profile 200 94.025 ms - 762 req=3d7d3187-a237-4486-9d70-7ca56df983b7 {"service":"back-end"}
+2026-06-02T06:48:22.455Z [info] GET /api/categories/name/sua-tam-cho-cho-meo?page=1&limit=8 200 139.696 ms - 17948 req=1a00f4bf-3629-4447-b944-1748011cc0a5 {"service":"back-end"}
+2026-06-02T06:48:22.460Z [info] GET /api/carts/me 200 140.505 ms - 8064 req=c07fc26f-c58e-4512-a38e-fb1fdda1fc37 {"service":"back-end"}
+2026-06-02T06:48:22.482Z [info] GET /api/carts/me 200 132.834 ms - 8064 req=d89b7237-a482-4174-a187-4c808b6b9f36 {"service":"back-end"}
+2026-06-02T06:48:22.493Z [info] GET /api/carts/me 200 132.596 ms - 8064 req=4727576a-7aa9-43b9-9d31-77c5513232db {"service":"back-end"}
+2026-06-02T06:48:25.080Z [info] GET /api/categories/name/thuc-an-cho-cho?page=1&limit=8 200 90.689 ms - 12016 req=4c931de1-f59e-4a89-803a-1eb062643471 {"service":"back-end"}
+2026-06-02T06:48:27.831Z [info] GET /api/categories/name/thuc-an-cho-meo?page=1&limit=8 200 94.024 ms - 12142 req=e3eeca67-2411-4e75-aa8c-a765793daa71 {"service":"back-end"}
+2026-06-02T06:48:30.571Z [info] GET /api/categories 200 45.963 ms - 2785 req=fc071993-f2f2-4346-bb07-dbcd5d652d54 {"service":"back-end"}
+2026-06-02T06:48:30.582Z [info] GET /api/categories/catetory/shop-cho-cun 200 45.292 ms - 1390 req=245271f6-5cee-4551-9dde-9fd60c4cacbf {"service":"back-end"}
+2026-06-02T06:48:30.585Z [info] GET /api/categories 200 45.497 ms - 2785 req=c3cdc07c-872a-428f-bde6-b29c00dc1038 {"service":"back-end"}
+2026-06-02T06:48:30.587Z [info] GET /api/categories 200 46.123 ms - 2785 req=2abda904-81d0-4070-a98e-16a3025430db {"service":"back-end"}
+2026-06-02T06:48:30.625Z [info] GET /api/users/profile 200 89.823 ms - 762 req=f9ed56bd-cefe-49b1-8816-489793569f8a {"service":"back-end"}
+2026-06-02T06:48:30.683Z [info] GET /api/carts/me 200 140.237 ms - 8064 req=cf60531d-32b9-424a-9f91-282be9c7a58b {"service":"back-end"}
+2026-06-02T06:48:30.715Z [info] GET /api/carts/me 200 141.028 ms - 8064 req=02424c9c-f1c0-4ba7-b5f8-2fdb4b32b3fc {"service":"back-end"}
+2026-06-02T06:48:30.734Z [info] GET /api/carts/me 200 142.913 ms - 8064 req=2cd6cc24-d8f1-4478-9141-59cc372218a5 {"service":"back-end"}
+2026-06-02T06:48:46.108Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 200 94.147 ms - 79 req=07338eba-5c7c-4c8d-883f-9d69fdb87bf2 {"service":"back-end"}
+2026-06-02T06:48:46.130Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 134.614 ms - 762 req=a58ff6ce-9377-470c-bdb4-32f43ac1be28 {"service":"back-end"}
+2026-06-02T06:48:46.170Z [info] GET /api/dashboard/recent-orders?limit=5 200 164.791 ms - 635 req=f783e213-097e-4fc1-ac46-12c38fdcb575 {"service":"back-end"}
+2026-06-02T06:48:46.218Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 207.421 ms - 778 req=94937759-8b85-47b3-8b70-fdd1211606a3 {"service":"back-end"}
+2026-06-02T06:48:46.248Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 200 232.536 ms - 161 req=6a3a52df-f2b6-41d0-aa5d-a59da773fdf3 {"service":"back-end"}
+2026-06-02T06:48:46.354Z [info] GET /api/users/paginated?page=1&limit=1 200 238.608 ms - 643 req=07d27760-fd7b-4cb4-b926-08962518b333 {"service":"back-end"}
+2026-06-02T06:48:46.434Z [info] GET /api/dashboard/stats?timeFilter=7days 200 434.052 ms - 111 req=a516192b-75fb-452e-81b7-a9dccb4abf48 {"service":"back-end"}
+2026-06-02T06:48:46.982Z [info] GET /api/products 200 818.376 ms - 184351 req=83cd1ed3-b91a-4efb-b6dc-f6796bc254f3 {"service":"back-end"}
+2026-06-02T06:48:47.521Z [info] GET /api/orders 200 527.462 ms - 1452456 req=024ffa2f-7e9e-4475-9eaa-e1a9ae81cb77 {"service":"back-end"}
+2026-06-02T06:48:55.331Z [info] GET /api/settings 200 87.210 ms - 177 req=61da2042-6263-4f8c-ab6d-4517bb4fd048 {"service":"back-end"}
+2026-06-02T06:48:55.372Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 131.585 ms - 762 req=f466f5cc-90f2-4189-ad7c-afce9550ff60 {"service":"back-end"}
+2026-06-02T06:48:58.965Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 130.357 ms - 762 req=83f6349e-26c3-4eb8-bbbe-d1d55a77fcc4 {"service":"back-end"}
+2026-06-02T06:48:59.073Z [info] GET /api/users/paginated?page=1&limit=5 200 235.043 ms - 2806 req=89fd29a3-4927-48c1-a71f-285393fcc4f3 {"service":"back-end"}
+2026-06-02T06:48:59.781Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 132.925 ms - 762 req=b4378650-4b72-45a5-9ad9-89c80b65868a {"service":"back-end"}
+2026-06-02T06:48:59.835Z [info] GET /api/orders/stats 200 181.292 ms - 111 req=18d348d0-3718-474f-bd1e-9d354a977ee3 {"service":"back-end"}
+2026-06-02T06:49:00.113Z [info] GET /api/orders 200 459.870 ms - 1452456 req=e3ed85b9-db05-478b-aeac-b06b6e7fda93 {"service":"back-end"}
+2026-06-02T06:49:04.377Z [info] GET /api/categories 200 43.955 ms - 2785 req=09e1cf34-daa4-4179-81dc-b41bdfdcdb1a {"service":"back-end"}
+2026-06-02T06:49:04.465Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 134.063 ms - 762 req=654959f4-17f6-4169-8fc0-dc7dd746bd9a {"service":"back-end"}
+2026-06-02T06:49:04.784Z [info] GET /api/categories?page=1&limit=10&search=&type= 200 46.768 ms - 2828 req=af19fbdc-5cff-4d07-b760-95b3f8cdc826 {"service":"back-end"}
+2026-06-02T06:49:10.605Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 138.976 ms - 762 req=f6e18340-ddb4-49d7-afb5-fa7c2a214295 {"service":"back-end"}
+2026-06-02T06:49:10.684Z [info] GET /api/orders/stats 200 214.001 ms - 111 req=66f1909a-c905-4a70-8f50-8ef5c58168e8 {"service":"back-end"}
+2026-06-02T06:49:10.953Z [info] GET /api/orders 200 483.028 ms - 1452456 req=86f44527-9b35-4a82-a0ed-ec622ada3866 {"service":"back-end"}
+2026-06-02T06:53:02.527Z [info] GET /api/categories 200 325.253 ms - 2785 req=a14278a4-9325-44f7-9c47-5c72797a6af2 {"service":"back-end"}
+2026-06-02T06:53:02.606Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 408.687 ms - 762 req=c6ecdd8d-02c5-4812-aa58-67679b94529e {"service":"back-end"}
+2026-06-02T06:53:02.627Z [info] GET /api/categories?page=1&limit=10&search=&type= 200 48.150 ms - 2828 req=ab61743a-5af0-4f4b-acf6-b18ba277ffc2 {"service":"back-end"}
+2026-06-02T06:53:03.311Z [info] GET /api/categories 200 46.348 ms - 2785 req=73c99de9-526f-475c-a738-de2668db351e {"service":"back-end"}
+2026-06-02T06:53:03.323Z [info] GET /api/categories/catetory/shop-cho-cun 200 45.312 ms - 1390 req=fb28b664-7c4d-406d-b381-56b5187d5b32 {"service":"back-end"}
+2026-06-02T06:53:03.328Z [info] GET /api/categories 200 47.085 ms - 2785 req=9a46d00d-82f3-407f-a66d-0d7575fb191f {"service":"back-end"}
+2026-06-02T06:53:03.330Z [info] GET /api/categories 200 46.189 ms - 2785 req=655cfd72-2c75-4a07-a42e-2906a3ddc38b {"service":"back-end"}
+2026-06-02T06:53:03.364Z [info] GET /api/users/profile 200 89.709 ms - 762 req=4e8c14ec-da3d-42a6-983b-2abefb1cdf69 {"service":"back-end"}
+2026-06-02T06:53:03.441Z [info] GET /api/carts/me 200 155.159 ms - 8064 req=2214edf4-6ec8-4170-8724-83652e7b5132 {"service":"back-end"}
+2026-06-02T06:53:03.449Z [info] GET /api/carts/me 200 135.582 ms - 8064 req=118c8972-3d5e-4b3e-9df9-1ca733162beb {"service":"back-end"}
+2026-06-02T06:53:03.483Z [info] GET /api/carts/me 200 157.583 ms - 8064 req=4ac05a2d-b1b4-46f3-9d87-000d51c628dc {"service":"back-end"}
+2026-06-02T06:53:06.092Z [info] GET /api/users/profile 200 91.980 ms - 762 req=8248749b-1fa4-43b5-9cfa-0e695e0503e5 {"service":"back-end"}
+2026-06-02T06:53:06.250Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 139.543 ms - 19067 req=4aec722e-38b1-4783-b7fd-79c7ebcae2f4 {"service":"back-end"}
+2026-06-02T06:53:06.385Z [info] GET /api/categories 200 44.890 ms - 2785 req=275a0342-6c16-40f3-b2fe-9f8115e0a98e {"service":"back-end"}
+2026-06-02T06:53:06.432Z [info] GET /api/users/profile 200 89.128 ms - 762 req=29cff9d3-e7ad-4bc9-86c9-4fdd9a66e85c {"service":"back-end"}
+2026-06-02T06:53:06.509Z [info] GET /api/carts/me 200 131.933 ms - 8064 req=da2cb56d-25be-40dc-965b-6828083d8645 {"service":"back-end"}
+2026-06-02T06:53:06.512Z [info] GET /api/carts/me 200 132.951 ms - 8064 req=713d3ec9-c5a0-4905-976c-1d740aaa93d1 {"service":"back-end"}
+2026-06-02T06:53:06.514Z [info] GET /api/carts/me 200 133.883 ms - 8064 req=4347a334-900d-4ff9-8774-512c9b5c3ef6 {"service":"back-end"}
+2026-06-02T06:53:13.709Z [info] PUT /api/users/profile 200 142.532 ms - 12058 req=5dbe8a62-afda-4b0a-bda1-338a4d70ea91 {"service":"back-end"}
+2026-06-02T06:53:23.535Z [info] PUT /api/users/profile 200 142.928 ms - 19306 req=58ac98fc-85e1-4b27-a1f4-b9a84f66bdbf {"service":"back-end"}
+2026-06-02T06:53:29.390Z [info] GET /api/categories 200 45.361 ms - 2785 req=3a7c3d6f-9e38-46f5-a371-c58dd8deede5 {"service":"back-end"}
+2026-06-02T06:53:29.409Z [info] GET /api/categories 200 56.273 ms - 2785 req=57e86f08-a43b-45e9-92e5-aef31e0c582c {"service":"back-end"}
+2026-06-02T06:53:29.413Z [info] GET /api/categories 200 56.134 ms - 2785 req=61577514-5d63-4e77-b025-6b3f3b5c4a1e {"service":"back-end"}
+2026-06-02T06:53:29.416Z [info] GET /api/categories/catetory/shop-cho-cun 200 61.850 ms - 1390 req=79f56209-5fd3-4f38-b7a0-80f08603bfd9 {"service":"back-end"}
+2026-06-02T06:53:29.522Z [info] GET /api/users/profile 200 175.732 ms - 19306 req=cbd2cd14-d17d-4c13-9f52-fded5f235231 {"service":"back-end"}
+2026-06-02T06:53:29.543Z [info] GET /api/carts/me 200 185.970 ms - 8064 req=829b5260-e155-4c9b-8134-d29d3b35e181 {"service":"back-end"}
+2026-06-02T06:53:29.570Z [info] GET /api/carts/me 200 177.557 ms - 8064 req=b837e07b-6dbc-41c5-a523-bb88ad742ce0 {"service":"back-end"}
+2026-06-02T06:53:29.593Z [info] GET /api/carts/me 200 174.759 ms - 8064 req=a7a6833c-dc59-41e8-80c4-e6051ca32685 {"service":"back-end"}
+2026-06-02T06:53:33.445Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 200 131.136 ms - 79 req=7d4ea5e9-76ed-4838-ac30-aa91611ed18b {"service":"back-end"}
+2026-06-02T06:53:33.486Z [info] GET /api/dashboard/recent-orders?limit=5 200 176.073 ms - 635 req=f8870f50-eee6-4d79-ab1d-d05abea4c762 {"service":"back-end"}
+2026-06-02T06:53:33.524Z [info] GET /api/dashboard/stats?timeFilter=7days 200 216.224 ms - 111 req=ae272f16-3191-43f5-b6c6-2d956149362b {"service":"back-end"}
+2026-06-02T06:53:33.533Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 221.093 ms - 778 req=70924583-b78d-491a-9794-07fd7be20257 {"service":"back-end"}
+2026-06-02T06:53:33.539Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 200 223.398 ms - 161 req=0bc1b85e-ee10-45b7-b5ea-6c93dd6fb40e {"service":"back-end"}
+2026-06-02T06:53:33.565Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 259.359 ms - 19306 req=6f4003bd-e718-42cc-bbf8-db2424bfc331 {"service":"back-end"}
+2026-06-02T06:53:33.677Z [info] GET /api/users/paginated?page=1&limit=1 200 226.537 ms - 643 req=339d55c3-15a3-40d9-b74b-a10549418361 {"service":"back-end"}
+2026-06-02T06:53:33.982Z [info] GET /api/products 200 492.836 ms - 184351 req=4f312a20-c00b-42a7-b1f5-e10b0d07ac98 {"service":"back-end"}
+2026-06-02T06:53:34.442Z [info] GET /api/orders 200 446.899 ms - 1582264 req=9d637601-faf7-4fa4-9495-8210fb63cb68 {"service":"back-end"}
+2026-06-02T06:54:02.810Z [info] GET /api/dashboard/revenue-by-day?timeFilter=30days 200 156.621 ms - 349 req=0244db9f-dd87-42c4-aacb-a9a167bfb5b3 {"service":"back-end"}
+2026-06-02T06:54:02.826Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 181.950 ms - 19306 req=531a8bdd-a65a-4380-ad84-8d4ad5e125b3 {"service":"back-end"}
+2026-06-02T06:54:02.831Z [info] GET /api/dashboard/recent-orders?limit=5 200 180.483 ms - 635 req=03d70760-40d3-46f1-8fd2-089a7699de65 {"service":"back-end"}
+2026-06-02T06:54:02.878Z [info] GET /api/dashboard/notifications?timeFilter=30days 200 225.668 ms - 778 req=1555edc8-5a28-4076-af08-3e390c892cc9 {"service":"back-end"}
+2026-06-02T06:54:02.905Z [info] GET /api/dashboard/stats?timeFilter=30days 200 256.730 ms - 111 req=b0d7f50e-dfa4-48e8-8bca-80345267abce {"service":"back-end"}
+2026-06-02T06:54:02.946Z [info] GET /api/dashboard/revenue-by-category?timeFilter=30days 200 291.470 ms - 161 req=712128fa-a1cc-4edb-af25-85dd26d6c6f4 {"service":"back-end"}
+2026-06-02T06:54:03.152Z [info] GET /api/users/paginated?page=1&limit=1 200 339.606 ms - 643 req=7dc130fe-264c-4850-a7e4-1bf7b4e6c8e7 {"service":"back-end"}
+2026-06-02T06:54:03.240Z [info] GET /api/products 200 407.365 ms - 184351 req=1381c054-66ee-459a-9dea-c741783ed1a3 {"service":"back-end"}
+2026-06-02T06:54:03.575Z [info] GET /api/orders 200 321.942 ms - 1582264 req=d402969a-47be-4633-80f0-94eedebe306c {"service":"back-end"}
+2026-06-02T06:54:04.432Z [info] GET /api/dashboard/revenue-by-day?timeFilter=90days 200 142.153 ms - 949 req=2bda9ca0-8998-4e2f-a743-53c03682ed64 {"service":"back-end"}
+2026-06-02T06:54:04.463Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 181.071 ms - 19306 req=cbc699d5-7a7f-4919-8e0b-17807ea8226b {"service":"back-end"}
+2026-06-02T06:54:04.469Z [info] GET /api/dashboard/recent-orders?limit=5 200 182.435 ms - 635 req=33b41046-2031-422d-b69f-08b7ef434192 {"service":"back-end"}
+2026-06-02T06:54:04.507Z [info] GET /api/dashboard/stats?timeFilter=90days 200 222.692 ms - 111 req=6e5d2111-8f1a-4fa0-be32-8f375d981946 {"service":"back-end"}
+2026-06-02T06:54:04.516Z [info] GET /api/dashboard/revenue-by-category?timeFilter=90days 200 225.159 ms - 161 req=e1d03130-f6a3-4044-b1c2-1d342ea540f2 {"service":"back-end"}
+2026-06-02T06:54:04.518Z [info] GET /api/dashboard/notifications?timeFilter=90days 200 229.846 ms - 778 req=d43c234e-275b-4299-80f7-ef134c688531 {"service":"back-end"}
+2026-06-02T06:54:04.655Z [info] GET /api/users/paginated?page=1&limit=1 200 220.357 ms - 643 req=c771bef0-28b6-484d-9650-ea7d58170412 {"service":"back-end"}
+2026-06-02T06:54:04.801Z [info] GET /api/products 200 335.119 ms - 184351 req=a4026e78-1872-4411-834e-dd4ea92aa038 {"service":"back-end"}
+2026-06-02T06:54:05.163Z [info] GET /api/orders 200 350.115 ms - 1582264 req=a47d6617-8e1d-42cb-8c7e-ce57d5fd1c4e {"service":"back-end"}
+2026-06-02T06:54:07.050Z [info] GET /api/dashboard/revenue-by-day?timeFilter=year 200 156.317 ms - 195 req=06b5eeef-bfe6-422e-964f-bf260485b968 {"service":"back-end"}
+2026-06-02T06:54:07.067Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 181.297 ms - 19306 req=2fbbf699-4590-4131-aaaf-ff053e8a6dd5 {"service":"back-end"}
+2026-06-02T06:54:07.074Z [info] GET /api/dashboard/recent-orders?limit=5 200 183.906 ms - 635 req=822202d2-6c11-4056-9a5e-00dded0a2005 {"service":"back-end"}
+2026-06-02T06:54:07.106Z [info] GET /api/dashboard/stats?timeFilter=year 200 218.032 ms - 111 req=f9421040-56d6-4b7a-8be0-ff76336b00ea {"service":"back-end"}
+2026-06-02T06:54:07.116Z [info] GET /api/dashboard/notifications?timeFilter=year 200 224.029 ms - 778 req=f61e0944-f54e-4a81-b58b-4bffd1497caa {"service":"back-end"}
+2026-06-02T06:54:07.170Z [info] GET /api/dashboard/revenue-by-category?timeFilter=year 200 275.028 ms - 161 req=ef1b1069-33ae-46bf-a687-702eccea758b {"service":"back-end"}
+2026-06-02T06:54:07.272Z [info] GET /api/users/paginated?page=1&limit=1 200 219.897 ms - 643 req=93d9117e-3ec8-4048-8709-6b9db29d32d5 {"service":"back-end"}
+2026-06-02T06:54:07.464Z [info] GET /api/products 200 395.244 ms - 184351 req=875b885d-8b17-4796-af63-cf3e343425cb {"service":"back-end"}
+2026-06-02T06:54:07.795Z [info] GET /api/orders 200 319.380 ms - 1582264 req=b5a43db8-2dc1-4742-a957-2799d6f48751 {"service":"back-end"}
+2026-06-02T06:54:22.777Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 176.786 ms - 19306 req=23479d6e-ee11-4f65-aff9-ce72fc510c85 {"service":"back-end"}
+2026-06-02T06:54:22.782Z [info] GET /api/dashboard/recent-orders?limit=5 200 177.506 ms - 635 req=c3ff1e16-ceea-45a3-8e5c-cb2705f72da0 {"service":"back-end"}
+2026-06-02T06:54:22.790Z [info] GET /api/dashboard/revenue-by-day?timeFilter=all 200 182.945 ms - 54 req=41bdc2a8-9612-47ec-b0bc-684aaeda17d5 {"service":"back-end"}
+2026-06-02T06:54:22.828Z [info] GET /api/dashboard/notifications?timeFilter=all 200 221.784 ms - 778 req=d5248f88-affd-41e1-903c-6553e78bb3f1 {"service":"back-end"}
+2026-06-02T06:54:22.831Z [info] GET /api/dashboard/stats?timeFilter=all 200 228.128 ms - 111 req=4e561f2e-0e67-4f73-8f39-17bf36e623b9 {"service":"back-end"}
+2026-06-02T06:54:22.845Z [info] GET /api/dashboard/revenue-by-category?timeFilter=all 200 237.315 ms - 161 req=ff632b55-b8f3-4f3f-a0fd-a593eed557c2 {"service":"back-end"}
+2026-06-02T06:54:23.031Z [info] GET /api/products 200 239.747 ms - 184351 req=eccd6786-7aab-44a3-bd3d-362ac6ab67ed {"service":"back-end"}
+2026-06-02T06:54:23.044Z [info] GET /api/users/paginated?page=1&limit=1 200 257.358 ms - 643 req=f6e12e67-990a-4f2a-b1b2-f51e4c4aafcd {"service":"back-end"}
+2026-06-02T06:54:23.384Z [info] GET /api/orders 200 328.520 ms - 1582264 req=01d7e284-f661-4032-b5b2-0656c3ae0fa7 {"service":"back-end"}
+2026-06-02T06:54:27.703Z [info] GET /api/categories 200 44.441 ms - 2785 req=420299c0-8333-4559-ab7c-9b900dc09843 {"service":"back-end"}
+2026-06-02T06:54:27.709Z [info] GET /api/categories 200 44.731 ms - 2785 req=08c5b455-d2ac-4312-9418-d64c43a8d230 {"service":"back-end"}
+2026-06-02T06:54:27.712Z [info] GET /api/categories/catetory/shop-cho-cun 200 45.850 ms - 1390 req=f53c2442-b575-4c97-973f-977668b454f7 {"service":"back-end"}
+2026-06-02T06:54:27.714Z [info] GET /api/categories 200 46.757 ms - 2785 req=6f5770dd-da26-4a1f-a9e4-5603ec733eb6 {"service":"back-end"}
+2026-06-02T06:54:27.795Z [info] GET /api/users/profile 200 133.327 ms - 19306 req=c453c2b5-b086-4b7f-b2f0-4eadd59bb74d {"service":"back-end"}
+2026-06-02T06:54:27.845Z [info] GET /api/carts/me 200 176.056 ms - 8064 req=2b52cbc4-ab6f-406e-b4d6-ec6f44ecf418 {"service":"back-end"}
+2026-06-02T06:54:27.879Z [info] GET /api/carts/me 200 174.352 ms - 8064 req=6296faf0-4e34-4ec2-9572-30533521060c {"service":"back-end"}
+2026-06-02T06:54:27.892Z [info] GET /api/carts/me 200 176.469 ms - 8064 req=f4599ca6-b1e1-4a26-8af6-49e703f53543 {"service":"back-end"}
+2026-06-02T06:54:35.967Z [info] GET /api/categories 200 44.575 ms - 2785 req=bbb14ceb-9a2c-4db7-9a91-79861c4b49a5 {"service":"back-end"}
+2026-06-02T06:54:35.976Z [info] GET /api/categories/catetory/shop-cho-cun 200 43.423 ms - 1390 req=b6dd3668-1cd0-40a5-9c34-e295de15d099 {"service":"back-end"}
+2026-06-02T06:54:35.982Z [info] GET /api/categories 200 46.116 ms - 2785 req=90e4cea9-93b5-44d9-b5ae-d355aa497eac {"service":"back-end"}
+2026-06-02T06:54:36.034Z [info] GET /api/categories/name/thuc-an-cho-meo?page=1&limit=8 200 96.827 ms - 12142 req=d858c69f-2f10-4ff5-bbc2-de9c5346f954 {"service":"back-end"}
+2026-06-02T06:54:36.063Z [info] GET /api/users/profile 200 135.346 ms - 19306 req=559304b0-b25e-49c9-b228-f3909f0e99ce {"service":"back-end"}
+2026-06-02T06:54:36.112Z [info] GET /api/carts/me 200 172.638 ms - 8064 req=21f378d2-4942-4e70-b130-bb6a2f4abc3c {"service":"back-end"}
+2026-06-02T06:54:36.145Z [info] GET /api/carts/me 200 175.975 ms - 8064 req=303b6f81-ffc6-4441-b55c-c59ade941e22 {"service":"back-end"}
+2026-06-02T06:54:36.152Z [info] GET /api/carts/me 200 173.005 ms - 8064 req=f39f5078-2a61-4192-a3cc-8cdb9397ffd5 {"service":"back-end"}
+2026-06-02T06:54:42.566Z [info] POST /api/products/filterPrice 200 45.430 ms - 7625 req=0b8cef40-a26e-4819-9878-ea5f4f2cc001 {"service":"back-end"}
+2026-06-02T06:54:46.840Z [info] POST /api/products/filterPrice 200 187.154 ms - 75068 req=4916ea72-52b2-496d-b232-5913acbbf5df {"service":"back-end"}
+2026-06-02T06:54:50.579Z [info] POST /api/products/filterPrice 200 45.187 ms - 5374 req=f6396ac3-9c74-479c-a596-fc9d681a43d9 {"service":"back-end"}
+2026-06-02T06:54:54.452Z [info] GET /api/categories/name/thuc-an-cho-meo?page=2&limit=8 200 93.142 ms - 11951 req=b1987a4b-f4ae-4271-b100-bffb6364f1fe {"service":"back-end"}
+2026-06-02T06:54:57.813Z [info] GET /api/categories/name/thuc-an-cho-meo?page=1&limit=8 200 93.999 ms - 12142 req=754c1e4b-d78d-4b2a-afcd-4bcd6594ac16 {"service":"back-end"}
+2026-06-02T06:55:00.994Z [info] POST /api/products/filterPrice 200 44.905 ms - 5374 req=ae2aa416-8c92-4cd0-939f-2b05cedb424a {"service":"back-end"}
+2026-06-02T06:55:07.040Z [info] GET /api/categories/name/thuc-an-cho-meo?page=2&limit=8 200 101.049 ms - 11951 req=bc0cf152-f96f-4270-a3ea-5a606c0eb5a0 {"service":"back-end"}
+2026-06-02T06:55:09.445Z [info] POST /api/products/filterPrice 200 47.112 ms - 5374 req=3faf3f80-61c0-4a60-b7aa-19a8f4640dad {"service":"back-end"}
+2026-06-02T06:55:12.088Z [info] GET /api/categories 200 45.823 ms - 2785 req=d4529b6f-2504-48fc-9753-d3e8eb0318f5 {"service":"back-end"}
+2026-06-02T06:55:12.097Z [info] GET /api/categories 200 44.766 ms - 2785 req=d716ce01-d82e-4704-9ee1-5e078207a419 {"service":"back-end"}
+2026-06-02T06:55:12.100Z [info] GET /api/categories/catetory/shop-cho-cun 200 45.038 ms - 1390 req=b0d744ac-1556-4ec2-923a-bdd599de3111 {"service":"back-end"}
+2026-06-02T06:55:12.102Z [info] GET /api/categories 200 46.011 ms - 2785 req=d4c813ef-215a-4a7e-9ba8-853aecfba97c {"service":"back-end"}
+2026-06-02T06:55:12.177Z [info] GET /api/users/profile 200 130.653 ms - 19306 req=a1cb0cee-afb0-4c59-a205-908e77d68280 {"service":"back-end"}
+2026-06-02T06:55:12.250Z [info] GET /api/carts/me 200 192.565 ms - 8064 req=e53689b3-8acd-411c-b5e0-f04ff2fae8d1 {"service":"back-end"}
+2026-06-02T06:55:12.290Z [info] GET /api/carts/me 200 186.147 ms - 8064 req=9c8940a5-db09-47e0-868f-e78feff33ee9 {"service":"back-end"}
+2026-06-02T06:55:12.293Z [info] GET /api/carts/me 200 201.903 ms - 8064 req=f86a0a26-aace-4ce5-b5f9-f2438b2676c0 {"service":"back-end"}
+2026-06-02T07:10:55.701Z [info] POST /api/auth/signout 200 1.982 ms - 41 req=3d508b78-af93-4c54-a778-2eef8bac34a6 {"service":"back-end"}
+2026-06-02T07:10:57.257Z [info] GET /api/categories 200 44.871 ms - 2785 req=8183ce80-4fd8-4c03-9f6e-3ccf4b09658c {"service":"back-end"}
+2026-06-02T07:12:12.909Z [info] POST /api/auth/check-duplicate 200 45.748 ms - 120 req=63aad7ac-4935-41a4-a5de-6a960e172f06 {"service":"back-end"}
+2026-06-02T07:12:13.069Z [info] POST /api/auth/send-signup-code 200 143.154 ms - 54 req=8b8e3caa-7400-45a6-9a4e-55c60978c663 {"service":"back-end"}
+2026-06-02T07:12:13.071Z [info] Processing OTP job {"service":"back-end","jobId":"1","email":"thanhtunghtp.2003@gmail.com","purpose":"signup-verification"}
+2026-06-02T07:12:16.681Z [info] OTP job completed {"service":"back-end","jobId":"1","email":"thanhtunghtp.2003@gmail.com"}
+2026-06-02T07:12:43.441Z [info] GET /api/categories 304 46.446 ms - - req=b582ad8a-52bb-42bf-9c8b-cd2ed69ac714 {"service":"back-end"}
+2026-06-02T07:12:43.443Z [info] GET /api/categories/catetory/shop-cho-cun 304 46.554 ms - - req=fe5c4799-049c-4774-b7cc-461280564c75 {"service":"back-end"}
+2026-06-02T07:12:43.493Z [info] GET /api/categories 304 48.733 ms - - req=3893fcc6-3eea-4e2c-b48e-f49d82ad8215 {"service":"back-end"}
+2026-06-02T07:12:43.542Z [info] GET /api/categories 304 47.707 ms - - req=2aeb221f-f632-458a-b5fc-df661a0bd483 {"service":"back-end"}
+2026-06-02T07:13:43.655Z [info] GET /api/categories 304 45.717 ms - - req=9c8b4b07-2fc2-49a7-b724-2f9246c0cfcd {"service":"back-end"}
+2026-06-02T07:13:43.841Z [info] GET /api/products/sua-bot-predogen-cho-cho-con-110g 200 227.914 ms - 32528 req=b242ee5c-84e0-46f8-a90e-5856f3149d23 {"service":"back-end"}
+2026-06-02T07:13:43.939Z [info] GET /api/products 200 327.103 ms - 184351 req=385a112f-0428-4731-839b-ac3931932732 {"service":"back-end"}
+2026-06-02T07:18:37.002Z [info] GET /api/categories 304 50.826 ms - - req=2dd08f8b-e089-4295-9e69-17728f7c8af9 {"service":"back-end"}
+2026-06-02T07:18:41.289Z [info] POST /api/auth/signin 200 203.380 ms - 18916 req=45007002-8025-459f-b615-5f9cc2f0c9cc {"service":"back-end"}
+2026-06-02T07:18:41.444Z [info] GET /api/users/profile 304 147.207 ms - - req=16febc73-8279-4c7c-ab47-d0b601d01936 {"service":"back-end"}
+2026-06-02T07:18:42.247Z [info] GET /api/categories 304 46.333 ms - - req=4340fa44-a967-455d-a98d-29e914dc63ed {"service":"back-end"}
+2026-06-02T07:18:42.249Z [info] GET /api/categories/catetory/shop-cho-cun 304 46.948 ms - - req=8aa96998-6b80-42c1-8dbf-e8409b2ad60c {"service":"back-end"}
+2026-06-02T07:18:42.324Z [info] GET /api/categories 304 73.626 ms - - req=f75ddb6f-55e8-440f-9a40-2d751fb0382c {"service":"back-end"}
+2026-06-02T07:18:42.336Z [info] GET /api/users/profile 304 142.669 ms - - req=bcf374c1-bcaa-4908-8c31-34c6942e230c {"service":"back-end"}
+2026-06-02T07:18:42.376Z [info] GET /api/categories 304 49.095 ms - - req=26b8dd1c-8e04-4896-8dd4-e941d44f9927 {"service":"back-end"}
+2026-06-02T07:18:42.449Z [info] GET /api/carts/me 200 245.415 ms - 8064 req=4b0f6603-e9b6-437f-956f-5fb860d0ce3d {"service":"back-end"}
+2026-06-02T07:18:42.657Z [info] GET /api/carts/me 304 207.118 ms - - req=1e2e1164-936c-4cb3-9626-17e13aff6ff3 {"service":"back-end"}
+2026-06-02T07:18:42.919Z [info] GET /api/carts/me 304 258.598 ms - - req=160004a4-b1e5-4826-bd94-b08a53b6711d {"service":"back-end"}
+2026-06-02T07:18:45.755Z [info] GET /api/users/profile 304 173.968 ms - - req=2babdd23-23ad-4542-bc04-856746984fde {"service":"back-end"}
+2026-06-02T07:18:46.078Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 310.559 ms - 148875 req=b60b91ba-5554-4968-97c3-686314b83ecc {"service":"back-end"}
+2026-06-02T07:18:46.154Z [info] GET /api/categories 304 47.419 ms - - req=e793abe0-c6ca-4c77-9f99-1f98a8be0f69 {"service":"back-end"}
+2026-06-02T07:18:46.248Z [info] GET /api/users/profile 304 140.748 ms - - req=fadab188-699d-49c4-9c77-9a1ca1970d7a {"service":"back-end"}
+2026-06-02T07:18:46.298Z [info] GET /api/carts/me 304 182.894 ms - - req=7d63da6f-907c-4bfd-865b-b2c37c6739c5 {"service":"back-end"}
+2026-06-02T07:18:46.496Z [info] GET /api/carts/me 304 194.647 ms - - req=327fe942-9417-4b4d-bdb1-ba0323b36676 {"service":"back-end"}
+2026-06-02T07:18:47.011Z [info] GET /api/carts/me 304 512.434 ms - - req=3c6c4ed4-d75e-40cb-8d71-b50f208554c1 {"service":"back-end"}
+2026-06-02T07:19:03.965Z [info] GET /api/reviews/my-reviews 200 389.833 ms - 30992 req=5096004d-a598-4921-ab08-2092ac112d03 {"service":"back-end"}
+2026-06-02T07:19:45.832Z [info] GET /api/categories 304 44.368 ms - - req=56a796a8-98b2-43bf-b8c4-25e81ea7a103 {"service":"back-end"}
+2026-06-02T07:19:45.935Z [info] GET /api/users/profile 304 146.357 ms - - req=3ce117b3-6ab7-43a7-861d-d3c3a406b4ad {"service":"back-end"}
+2026-06-02T07:19:45.984Z [info] GET /api/carts/me 304 193.283 ms - - req=38038d4b-7305-49e3-889b-ccc1ab2b7485 {"service":"back-end"}
+2026-06-02T07:19:46.166Z [info] GET /api/carts/me 304 181.165 ms - - req=639e272f-7de6-4e0c-84c3-9f75427d7cf0 {"service":"back-end"}
+2026-06-02T07:19:46.354Z [info] GET /api/carts/me 304 186.760 ms - - req=c256f8ba-7642-4e20-95fc-0141691c0946 {"service":"back-end"}
+2026-06-02T07:19:47.716Z [info] GET /api/categories 304 44.498 ms - - req=33154cd1-97e1-4802-a6cd-e1ecbc124ac1 {"service":"back-end"}
+2026-06-02T07:19:47.810Z [info] GET /api/users/profile 304 136.599 ms - - req=9f06b0fc-c5d0-4850-b3d0-a16ab0aa3a10 {"service":"back-end"}
+2026-06-02T07:19:47.855Z [info] GET /api/carts/me 304 178.851 ms - - req=2b3077b2-e383-4fc2-b66e-2c29f91be47b {"service":"back-end"}
+2026-06-02T07:19:47.871Z [info] GET /api/users/shipping-address 200 177.815 ms - 352 req=1caf5b17-a9d3-44e8-a318-fbd3268d779f {"service":"back-end"}
+2026-06-02T07:19:48.033Z [info] GET /api/carts/me 304 177.548 ms - - req=b2826210-679e-4595-9ff1-189f754277c9 {"service":"back-end"}
+2026-06-02T07:19:48.209Z [info] GET /api/carts/me 304 174.028 ms - - req=073e3059-b928-4ca9-a62a-3758340db218 {"service":"back-end"}
+2026-06-02T07:20:22.533Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 136.941 ms - - req=42602058-dcd7-44fc-9a55-d1e3c6c0f85c {"service":"back-end"}
+2026-06-02T07:20:22.577Z [info] GET /api/dashboard/recent-orders?limit=5 200 184.435 ms - 642 req=fe788e0d-30fd-4c5e-b98d-ecc2148d21cb {"service":"back-end"}
+2026-06-02T07:20:22.605Z [info] GET /api/dashboard/stats?timeFilter=7days 304 217.624 ms - - req=1a62ab9e-773a-4bfb-ac99-97c62e83ea66 {"service":"back-end"}
+2026-06-02T07:20:22.625Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 304 227.487 ms - - req=defb3afe-676f-47ab-951b-ee16612aa1af {"service":"back-end"}
+2026-06-02T07:20:22.649Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 264.758 ms - - req=4fcfd3e3-2c88-4401-8f26-bf5f9bb164b2 {"service":"back-end"}
+2026-06-02T07:20:22.776Z [info] GET /api/users/paginated?page=1&limit=1 200 235.841 ms - 643 req=bf6fff1c-a4bf-4999-bdf9-cb9d5de6dd6d {"service":"back-end"}
+2026-06-02T07:20:22.871Z [info] GET /api/products 304 290.052 ms - - req=0312715d-9a9c-44d6-a1ae-dafd6f00209e {"service":"back-end"}
+2026-06-02T07:20:22.983Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 592.162 ms - 778 req=2c91ec40-df9f-4f44-83d0-a2bc5b138a49 {"service":"back-end"}
+2026-06-02T07:20:23.405Z [info] GET /api/orders 200 411.856 ms - 1584711 req=33421b19-dfe6-484f-b7d8-4edb37ef06f3 {"service":"back-end"}
+2026-06-02T07:20:25.299Z [info] GET /api/categories 304 45.846 ms - - req=ead4056d-971f-4896-a759-61ec2c5ae1ec {"service":"back-end"}
+2026-06-02T07:20:25.388Z [info] GET /api/users/profile 304 132.639 ms - - req=57a8ed36-f09d-4c47-9a78-2b6d0887980a {"service":"back-end"}
+2026-06-02T07:20:25.394Z [info] GET /api/users/shipping-address 304 132.058 ms - - req=966693f3-13c3-4ad6-a7ba-6f872aabb89b {"service":"back-end"}
+2026-06-02T07:20:25.462Z [info] GET /api/carts/me 304 203.355 ms - - req=d1116ed5-31f0-4bb6-aa9a-7e8e04d01a8c {"service":"back-end"}
+2026-06-02T07:20:25.639Z [info] GET /api/carts/me 304 175.412 ms - - req=e6dd2ece-710e-46f5-b537-7eeda5ae3ecb {"service":"back-end"}
+2026-06-02T07:20:25.775Z [info] GET /api/carts/me 304 134.832 ms - - req=0d957510-28e5-46cd-a784-fe27a9f8b9cb {"service":"back-end"}
+2026-06-02T07:20:26.974Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 131.752 ms - - req=fec1c9e5-ccae-472f-9e60-93b9087b147d {"service":"back-end"}
+2026-06-02T07:20:27.012Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 178.364 ms - - req=780ed0f1-8df7-40c9-8128-4262a42cbea7 {"service":"back-end"}
+2026-06-02T07:20:27.021Z [info] GET /api/dashboard/recent-orders?limit=5 304 182.464 ms - - req=79c30fd8-925e-4c38-be7b-e7c6768d21a8 {"service":"back-end"}
+2026-06-02T07:20:27.056Z [info] GET /api/dashboard/stats?timeFilter=7days 304 220.165 ms - - req=95b318ea-d15d-4b25-91cb-045fe30546e2 {"service":"back-end"}
+2026-06-02T07:20:27.068Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 227.830 ms - 778 req=c27831c5-bca4-452f-a890-26df9769d71c {"service":"back-end"}
+2026-06-02T07:20:27.114Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 304 270.142 ms - - req=e2a9a990-322c-4f62-b8b2-0b8a6b4668ba {"service":"back-end"}
+2026-06-02T07:20:27.281Z [info] GET /api/users/paginated?page=1&limit=1 304 304.637 ms - - req=c06953da-2457-4384-8de9-f17be2c168d3 {"service":"back-end"}
+2026-06-02T07:20:27.389Z [info] GET /api/products 304 374.982 ms - - req=3ee3f7e9-9f41-4244-a34d-b2f9760c1b2f {"service":"back-end"}
+2026-06-02T07:20:27.719Z [info] GET /api/orders 200 322.623 ms - 1584711 req=6f6a4c56-44c9-4490-a96b-8ae520ddb597 {"service":"back-end"}
+2026-06-02T07:20:28.497Z [info] GET /api/categories 304 44.916 ms - - req=51ca2073-b5b3-4c95-b50e-839900255b45 {"service":"back-end"}
+2026-06-02T07:20:28.589Z [info] GET /api/users/profile 304 135.622 ms - - req=26c6990b-6199-4d5b-a815-8b7bc1df0155 {"service":"back-end"}
+2026-06-02T07:20:28.632Z [info] GET /api/users/shipping-address 304 173.483 ms - - req=3c3ac41b-34d2-48b1-a8be-50edd2b50a11 {"service":"back-end"}
+2026-06-02T07:20:28.636Z [info] GET /api/carts/me 304 179.199 ms - - req=50a82b55-0c31-4248-ab13-120c945ecaa9 {"service":"back-end"}
+2026-06-02T07:20:28.812Z [info] GET /api/carts/me 304 174.681 ms - - req=bd9d9574-2a86-49ce-a22d-84b8fc8879f7 {"service":"back-end"}
+2026-06-02T07:20:28.994Z [info] GET /api/carts/me 304 180.323 ms - - req=29b666b4-07ec-4925-846f-98b12c6f7b44 {"service":"back-end"}
+2026-06-02T07:20:45.651Z [info] GET /api/categories 304 43.382 ms - - req=ec25500f-2030-4ccf-8b80-012b5f64258b {"service":"back-end"}
+2026-06-02T07:20:45.652Z [info] GET /api/categories 304 43.337 ms - - req=b9d56557-89d0-47e2-855a-b7699fe17d1a {"service":"back-end"}
+2026-06-02T07:20:45.752Z [info] GET /api/users/profile 304 141.330 ms - - req=e38fd523-680c-4a71-9f7b-99956de97d55 {"service":"back-end"}
+2026-06-02T07:20:45.797Z [info] GET /api/carts/me 304 185.247 ms - - req=f7cb0283-9df5-4934-ac8a-6025ddc97ee3 {"service":"back-end"}
+2026-06-02T07:20:55.402Z [info] GET /api/users/profile 304 132.646 ms - - req=81761393-bd37-4f36-b792-3d6cdfc7fbe0 {"service":"back-end"}
+2026-06-02T07:20:55.549Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 138.520 ms - 148875 req=d7ab8fd9-83f5-4806-b7c5-5929229699d5 {"service":"back-end"}
+2026-06-02T07:20:55.631Z [info] GET /api/categories 304 45.404 ms - - req=7ceca0a0-d163-4d58-a242-e96d5d3f9db6 {"service":"back-end"}
+2026-06-02T07:20:55.675Z [info] GET /api/users/profile 304 91.758 ms - - req=ed9b5bed-9c95-4c9c-bca2-96e5cc7a07b3 {"service":"back-end"}
+2026-06-02T07:20:55.772Z [info] GET /api/carts/me 304 171.705 ms - - req=25c55408-0efe-4898-9a6c-fa7b69e05a76 {"service":"back-end"}
+2026-06-02T07:20:55.915Z [info] GET /api/carts/me 304 142.261 ms - - req=b3409d56-e165-433c-8aac-ba84cd27f028 {"service":"back-end"}
+2026-06-02T07:20:56.048Z [info] GET /api/carts/me 304 131.747 ms - - req=fedec74c-a22e-46ef-9987-b967e7436a10 {"service":"back-end"}
+2026-06-02T07:20:57.354Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 130.216 ms - - req=8a22031d-735a-4363-8aed-433c8aea50c7 {"service":"back-end"}
+2026-06-02T07:20:57.387Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 174.874 ms - - req=e5a526cb-683c-42c1-97c1-d0a52735f33a {"service":"back-end"}
+2026-06-02T07:20:57.399Z [info] GET /api/dashboard/recent-orders?limit=5 304 181.056 ms - - req=1a9b4cae-e9cc-455e-a137-9c2419716f00 {"service":"back-end"}
+2026-06-02T07:20:57.434Z [info] GET /api/dashboard/stats?timeFilter=7days 304 219.391 ms - - req=6f64926f-747b-4880-a97a-888fa3a33be6 {"service":"back-end"}
+2026-06-02T07:20:57.442Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 221.197 ms - 778 req=bc5f5fa6-0e8c-45d7-8d9b-28efc92f55ff {"service":"back-end"}
+2026-06-02T07:20:57.492Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 304 265.908 ms - - req=c3e373b3-f20a-4de1-a2d0-19da78cfaddc {"service":"back-end"}
+2026-06-02T07:20:57.581Z [info] GET /api/users/paginated?page=1&limit=1 304 226.410 ms - - req=94e02757-e8db-4300-ad84-3d16f59bbea5 {"service":"back-end"}
+2026-06-02T07:20:57.762Z [info] GET /api/products 304 374.159 ms - - req=a4639abf-d70c-47dd-a8d5-319aa4498e87 {"service":"back-end"}
+2026-06-02T07:20:58.132Z [info] GET /api/orders 200 358.136 ms - 1584711 req=511a821c-f83a-476c-bfe0-581fbcc39434 {"service":"back-end"}
+2026-06-02T07:20:59.888Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 175.127 ms - - req=0555fe4c-42d5-4d21-94d5-c134d437411b {"service":"back-end"}
+2026-06-02T07:21:00.023Z [info] GET /api/users/paginated?page=1&limit=5 200 303.468 ms - 2806 req=96cf4ba7-65bd-45e7-9d95-f6dc29948161 {"service":"back-end"}
+2026-06-02T07:53:35.316Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:35.323Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:35.356Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:35.357Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:35.358Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:35.361Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:35.361Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:35.395Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:35.401Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:37.252Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:37.259Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:37.261Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:37.262Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:37.266Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:37.268Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:37.269Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:37.302Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:37.309Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:37.793Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:53:37.795Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:53:39.514Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:39.522Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:39.524Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:39.529Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:39.533Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:39.536Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:39.536Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:39.571Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:39.578Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:40.054Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:53:40.056Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:53:43.018Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:43.028Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:43.031Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:43.038Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:43.043Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:43.046Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:43.047Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:43.086Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:43.091Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:44.955Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:44.961Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:44.964Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:44.969Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:44.973Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:44.975Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:44.976Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:45.008Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:45.014Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:45.490Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:53:45.492Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:53:50.720Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:50.731Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:50.733Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:50.739Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:50.743Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:50.746Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:50.747Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:50.780Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:50.786Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:51.278Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:53:51.279Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:53:54.988Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:53:54.996Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:53:54.998Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:53:55.003Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:53:55.008Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:53:55.010Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:53:55.010Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:53:55.042Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:53:55.047Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:53:55.523Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:53:55.525Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:54:18.836Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:54:18.845Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:54:18.847Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:54:18.852Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:54:18.857Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:54:18.859Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:54:18.859Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:54:18.892Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:54:18.899Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:54:19.374Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:54:19.375Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:54:25.018Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:54:25.030Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:54:25.034Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:54:25.041Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:54:25.046Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:54:25.052Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:54:25.053Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:54:25.116Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:54:25.128Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:54:25.612Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:54:25.614Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:54:32.709Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:54:32.716Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:54:32.718Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:54:32.723Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:54:32.727Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:54:32.729Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:54:32.730Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:54:32.762Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:54:32.768Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:54:33.253Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:54:33.254Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:54:48.795Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:54:48.802Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:54:48.805Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:54:48.812Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:54:48.816Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:54:48.819Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:54:48.820Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:54:48.850Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:54:48.856Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:54:49.327Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:54:49.329Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:56:36.794Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:56:36.800Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:56:36.811Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:56:36.812Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:56:36.813Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:56:36.815Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:56:36.816Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:56:36.847Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:56:36.854Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:56:37.357Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:56:37.359Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T07:56:54.063Z [info] GET /api/categories 304 60.584 ms - - req=8c4c166e-0c65-4f24-b642-c535cae63e1b {"service":"back-end"}
+2026-06-02T07:56:54.067Z [info] GET /api/categories/catetory/shop-cho-cun 304 51.028 ms - - req=2a7eb83c-04bc-4b92-afa6-2b4868917be2 {"service":"back-end"}
+2026-06-02T07:56:54.113Z [info] GET /api/categories 304 44.914 ms - - req=f5abb7bf-0bd1-4ecc-a628-db95d5742dec {"service":"back-end"}
+2026-06-02T07:56:54.124Z [info] GET /api/products/product/sales 200 99.590 ms - 30146 req=85ca553b-e405-47b8-a064-fabfbd30ac42 {"service":"back-end"}
+2026-06-02T07:56:54.162Z [info] GET /api/categories 304 47.244 ms - - req=1db6073e-b90a-4451-8db6-a0c2eecab377 {"service":"back-end"}
+2026-06-02T07:56:54.247Z [info] GET /api/products 200 226.229 ms - 184351 req=4efec37c-d180-499e-843c-b1775fd35350 {"service":"back-end"}
+2026-06-02T07:56:54.295Z [info] GET /api/categories/shop-cho-meo 200 267.730 ms - 102387 req=93af9aab-3ea5-419c-b7a5-5533595e6495 {"service":"back-end"}
+2026-06-02T07:56:54.539Z [info] GET /api/categories/shop-cho-cun 200 508.227 ms - 81965 req=4bfc9f77-4429-46d9-afeb-a80c50744acf {"service":"back-end"}
+2026-06-02T07:57:24.336Z [info] GET /api/categories 304 49.720 ms - - req=4642b58f-3f3e-4021-8125-6f6090cf4015 {"service":"back-end"}
+2026-06-02T07:57:30.901Z [info] POST /api/auth/signin 200 112.618 ms - 18916 req=566e8368-f546-4659-934e-b0ac457dfd7f {"service":"back-end"}
+2026-06-02T07:57:31.007Z [info] GET /api/users/profile 200 97.002 ms - 19306 req=b7969fda-0ecb-4535-b851-3c08ddb2c390 {"service":"back-end"}
+2026-06-02T07:57:31.747Z [info] GET /api/categories 304 48.250 ms - - req=fa173ba9-8226-4fe9-82a3-c99ac751f35c {"service":"back-end"}
+2026-06-02T07:57:31.750Z [info] GET /api/categories/catetory/shop-cho-cun 304 49.287 ms - - req=022f795d-dd1b-4fc7-91ed-5c52e8bea583 {"service":"back-end"}
+2026-06-02T07:57:31.799Z [info] GET /api/categories 304 48.908 ms - - req=5e53a9fa-cd96-42c2-b3d2-6de0cbff0362 {"service":"back-end"}
+2026-06-02T07:57:31.827Z [info] GET /api/users/profile 304 137.575 ms - - req=483087a7-4da8-4ca0-979e-48facfa50c7e {"service":"back-end"}
+2026-06-02T07:57:31.849Z [info] GET /api/categories 304 46.586 ms - - req=b9d1f97c-9fec-4311-b417-01ff01e34d06 {"service":"back-end"}
+2026-06-02T07:57:31.896Z [info] GET /api/carts/me 200 192.664 ms - 8064 req=e1dcc1d6-7d61-48ed-8ac1-7b31bded9293 {"service":"back-end"}
+2026-06-02T07:57:32.041Z [info] GET /api/carts/me 304 139.615 ms - - req=ee83c5c1-3c41-4e72-8003-9464f3ac130e {"service":"back-end"}
+2026-06-02T07:57:32.183Z [info] GET /api/carts/me 304 139.505 ms - - req=b2dc7af9-e809-4c52-b170-3735a3206274 {"service":"back-end"}
+2026-06-02T07:57:34.611Z [info] GET /api/categories 304 52.427 ms - - req=24478c54-1923-4f85-b162-d3f91231904c {"service":"back-end"}
+2026-06-02T07:57:34.706Z [info] GET /api/users/profile 304 144.827 ms - - req=4709334d-49af-4c11-8ba1-217317936411 {"service":"back-end"}
+2026-06-02T07:57:34.753Z [info] GET /api/carts/me 304 183.449 ms - - req=f78afbd0-725c-47a4-876a-5d6701adc952 {"service":"back-end"}
+2026-06-02T07:57:34.894Z [info] GET /api/carts/me 304 137.627 ms - - req=21c984a6-c930-4e40-bafd-71f121416d53 {"service":"back-end"}
+2026-06-02T07:57:35.032Z [info] GET /api/carts/me 304 135.084 ms - - req=aedae01f-ac8e-43fa-9a3c-18ff4d22d8d5 {"service":"back-end"}
+2026-06-02T07:57:39.204Z [info] GET /api/categories 304 47.963 ms - - req=c7f7c8ce-ec70-4863-a443-2cb199f01038 {"service":"back-end"}
+2026-06-02T07:57:39.295Z [info] GET /api/users/shipping-address 200 132.378 ms - 352 req=dcf8f8b8-54aa-4891-b7b1-13ba210b5c4d {"service":"back-end"}
+2026-06-02T07:57:39.337Z [info] GET /api/users/profile 304 180.506 ms - - req=08ba0315-7532-432f-be16-b7ee9c8cec6e {"service":"back-end"}
+2026-06-02T07:57:39.350Z [info] GET /api/carts/me 304 193.131 ms - - req=3e8a8ff2-3cbc-47d8-82d4-61991f02c828 {"service":"back-end"}
+2026-06-02T07:57:39.491Z [info] GET /api/carts/me 304 137.265 ms - - req=bec39ccc-677f-4293-86c5-48d4c13d42fe {"service":"back-end"}
+2026-06-02T07:57:39.631Z [info] GET /api/carts/me 304 136.262 ms - - req=45db2b2c-6719-4c5c-9a89-01f3f375123e {"service":"back-end"}
+2026-06-02T07:57:54.626Z [info] POST /api/orders 201 699.235 ms - 787 req=09818db2-cbc4-45ab-864c-2b889b8ffe15 {"service":"back-end"}
+2026-06-02T07:57:54.732Z [info] DELETE /api/carts/me 200 96.822 ms - 91 req=b52534ec-167a-4cb4-89dd-720752b18b62 {"service":"back-end"}
+2026-06-02T07:57:55.893Z [info] GET /api/users/profile 304 134.821 ms - - req=895f1fa9-ba15-4043-81bc-ce8c1d8b096f {"service":"back-end"}
+2026-06-02T07:57:56.064Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 156.685 ms - 176886 req=5ce40072-79c9-43b8-9dd3-dd7309f0ac91 {"service":"back-end"}
+2026-06-02T07:57:56.166Z [info] GET /api/categories 304 47.340 ms - - req=7ae2744c-eb71-49ea-921c-97c301cc3cc6 {"service":"back-end"}
+2026-06-02T07:57:56.208Z [info] GET /api/users/profile 304 93.106 ms - - req=07fe133f-3b11-4130-8e31-2947dfb0f573 {"service":"back-end"}
+2026-06-02T07:57:56.262Z [info] GET /api/carts/me 200 132.890 ms - 119 req=2129d2bc-3077-46ea-9cc2-4bdb6c117377 {"service":"back-end"}
+2026-06-02T07:57:56.354Z [info] GET /api/carts/me 304 89.887 ms - - req=85d02745-9d44-410e-8672-f4d3207e3eda {"service":"back-end"}
+2026-06-02T07:57:56.451Z [info] GET /api/carts/me 304 92.499 ms - - req=830eb50d-0985-486c-8b67-a2a4308afdd2 {"service":"back-end"}
+2026-06-02T07:58:36.120Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T07:58:36.127Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T07:58:36.134Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T07:58:36.135Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T07:58:36.139Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T07:58:36.141Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T07:58:36.142Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T07:58:36.174Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T07:58:36.180Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T07:58:36.706Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T07:58:36.708Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T08:01:04.531Z [info] GET /api/products/product/sales 200 96.124 ms - 30146 req=44bbd307-eaf0-4376-b31d-c5809246dfd7 {"service":"back-end"}
+2026-06-02T08:01:04.586Z [info] GET /api/users/profile 304 177.139 ms - - req=6295087b-3a3c-4099-8e36-5bea62ecdbcd {"service":"back-end"}
+2026-06-02T08:01:04.626Z [info] GET /api/categories/shop-cho-cun 200 195.545 ms - 81965 req=e6e79515-065b-499b-b471-b843db960530 {"service":"back-end"}
+2026-06-02T08:01:04.639Z [info] GET /api/products 200 213.646 ms - 184351 req=656dca3f-0f13-4fa3-88db-563fd79f08b6 {"service":"back-end"}
+2026-06-02T08:01:04.726Z [info] GET /api/categories/shop-cho-meo 200 293.983 ms - 102387 req=60e45b2f-d398-47f5-bed3-e5051ab5215c {"service":"back-end"}
+2026-06-02T08:01:04.812Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 160.106 ms - 176886 req=57ce6b3b-405f-414c-8e16-97db469c6d0c {"service":"back-end"}
+2026-06-02T08:01:04.938Z [info] GET /api/categories 304 49.391 ms - - req=44b12901-8086-449b-9ab2-abc8e395dcb3 {"service":"back-end"}
+2026-06-02T08:01:04.978Z [info] GET /api/users/profile 304 94.836 ms - - req=300545d6-287e-418f-9d8f-dbe874903930 {"service":"back-end"}
+2026-06-02T08:01:04.999Z [info] GET /api/carts/me 304 94.453 ms - - req=5d9cea80-fa89-4a09-8ba9-3ebe54424fd7 {"service":"back-end"}
+2026-06-02T08:01:05.092Z [info] GET /api/carts/me 304 91.683 ms - - req=6c51628a-a64c-4a6e-9eca-57f678863897 {"service":"back-end"}
+2026-06-02T08:01:05.187Z [info] GET /api/carts/me 304 92.345 ms - - req=08a89ec4-97fd-449c-a118-30ed80597494 {"service":"back-end"}
+2026-06-02T08:01:08.468Z [info] GET /api/categories 304 44.940 ms - - req=006a01cd-d83f-4402-8e3a-464a18735045 {"service":"back-end"}
+2026-06-02T08:01:08.562Z [info] GET /api/users/profile 304 136.630 ms - - req=ba4d7ae2-cd82-4198-a254-0d4f1be7d105 {"service":"back-end"}
+2026-06-02T08:01:08.574Z [info] GET /api/carts/me 304 139.427 ms - - req=2747b761-25eb-4c57-a567-d28a3fb79b29 {"service":"back-end"}
+2026-06-02T08:01:08.665Z [info] GET /api/carts/me 304 89.504 ms - - req=015bb011-a56c-478f-aa8c-5a4beab27ab8 {"service":"back-end"}
+2026-06-02T08:01:08.755Z [info] GET /api/carts/me 304 88.784 ms - - req=748825ad-b899-4d74-9dc4-43b67febe953 {"service":"back-end"}
+2026-06-02T08:01:21.784Z [info] GET /api/categories 304 50.060 ms - - req=c83b1847-5680-4bee-b718-605b6cddf9d8 {"service":"back-end"}
+2026-06-02T08:01:21.909Z [info] GET /api/users/profile 304 166.734 ms - - req=f8de289d-b4a1-406c-811a-0f0ffdb33394 {"service":"back-end"}
+2026-06-02T08:01:21.966Z [info] GET /api/products 304 217.452 ms - - req=1cdf2daf-152b-4009-920c-30b434b9931c {"service":"back-end"}
+2026-06-02T08:01:21.973Z [info] GET /api/categories/shop-cho-cun 304 220.515 ms - - req=86ea8825-3414-4721-9325-52829f31ca3c {"service":"back-end"}
+2026-06-02T08:01:21.977Z [info] GET /api/carts/me 304 190.910 ms - - req=a284814a-b7a0-4bb2-a9b5-b83b470ca07e {"service":"back-end"}
+2026-06-02T08:01:21.999Z [info] GET /api/categories/shop-cho-meo 304 242.449 ms - - req=a1934d2e-9d5c-4112-bbf8-6448140152b8 {"service":"back-end"}
+2026-06-02T08:01:22.073Z [info] GET /api/carts/me 304 91.034 ms - - req=ad8cb19a-9154-4e8f-b265-e4fc85187251 {"service":"back-end"}
+2026-06-02T08:01:22.165Z [info] GET /api/carts/me 304 90.177 ms - - req=cbc6efbf-347b-4943-ae54-cca6677b8745 {"service":"back-end"}
+2026-06-02T08:01:22.255Z [info] GET /api/products/product/sales 304 493.061 ms - - req=c90db63a-85ef-4f6d-ba50-4ae90e7f3fe3 {"service":"back-end"}
+2026-06-02T08:01:35.393Z [info] GET /api/categories 304 45.820 ms - - req=11cd7fa4-f1f3-460e-9777-a6e9478e90b0 {"service":"back-end"}
+2026-06-02T08:01:35.397Z [info] GET /api/categories/catetory/shop-cho-cun 304 45.409 ms - - req=0b1a9a17-451e-436c-a918-5b52d0b5167d {"service":"back-end"}
+2026-06-02T08:01:35.451Z [info] GET /api/categories 304 55.569 ms - - req=fa250bff-e564-4891-9847-d26fa43b1965 {"service":"back-end"}
+2026-06-02T08:01:35.492Z [info] GET /api/users/profile 304 141.912 ms - - req=bf68028a-7235-442a-92b8-b34440b65023 {"service":"back-end"}
+2026-06-02T08:01:35.507Z [info] GET /api/categories 304 51.399 ms - - req=250f0b43-3197-4aa5-b09d-85de5b3b3d83 {"service":"back-end"}
+2026-06-02T08:01:35.509Z [info] GET /api/carts/me 304 154.026 ms - - req=cbd71935-e893-43ed-8332-d0558a40ef70 {"service":"back-end"}
+2026-06-02T08:01:35.603Z [info] GET /api/carts/me 304 91.729 ms - - req=5b87efe2-cac6-4eaf-970a-c9764e1380c2 {"service":"back-end"}
+2026-06-02T08:01:35.694Z [info] GET /api/carts/me 304 89.160 ms - - req=709e5f39-4f75-47b1-a0f1-b955e6e19101 {"service":"back-end"}
+2026-06-02T08:01:40.523Z [info] POST /api/carts/add 201 200.167 ms - 178 req=c219f66e-5d5e-4934-9184-b90b980253c8 {"service":"back-end"}
+2026-06-02T08:01:40.671Z [info] GET /api/carts/me 200 139.711 ms - 1382 req=e33e517b-4254-4a86-9f37-63c817e09a10 {"service":"back-end"}
+2026-06-02T08:01:42.328Z [info] POST /api/carts/add 201 184.956 ms - 266 req=328d6a1f-035f-4ef1-8efc-3e77e93f0343 {"service":"back-end"}
+2026-06-02T08:01:42.466Z [info] GET /api/carts/me 200 133.037 ms - 2927 req=184f6d12-cba1-45ed-a464-879b87f172d0 {"service":"back-end"}
+2026-06-02T08:01:43.616Z [info] POST /api/carts/add 201 175.970 ms - 354 req=fcedbbba-9b13-4f7d-9f22-a64b217eeb01 {"service":"back-end"}
+2026-06-02T08:01:43.755Z [info] GET /api/carts/me 200 134.396 ms - 4135 req=93a8d9db-ced5-4e46-80af-a86381e98f5b {"service":"back-end"}
+2026-06-02T08:01:44.108Z [info] GET /api/categories 304 44.375 ms - - req=a3a62cc6-0114-4e6f-8445-5883ff483f12 {"service":"back-end"}
+2026-06-02T08:01:44.205Z [info] GET /api/users/profile 304 140.051 ms - - req=800b93ae-8001-4728-bff7-2c94b2e027c4 {"service":"back-end"}
+2026-06-02T08:01:44.255Z [info] GET /api/carts/me 304 183.585 ms - - req=b1453737-53d8-4937-b34f-b1b4664e6787 {"service":"back-end"}
+2026-06-02T08:01:44.390Z [info] GET /api/carts/me 304 133.201 ms - - req=528db1cb-9eef-4b0a-b5af-08731bfa723c {"service":"back-end"}
+2026-06-02T08:01:44.527Z [info] GET /api/carts/me 304 135.787 ms - - req=2016dc8b-3d3b-4f59-8ff1-a5859e5041a2 {"service":"back-end"}
+2026-06-02T08:01:49.819Z [info] GET /api/categories 304 44.229 ms - - req=b138e2f8-b8ef-4eaf-b651-c8793a807286 {"service":"back-end"}
+2026-06-02T08:01:49.912Z [info] GET /api/users/profile 304 134.409 ms - - req=fa2050ce-2483-4daf-af9c-b0ab9f0bd2d5 {"service":"back-end"}
+2026-06-02T08:01:49.920Z [info] GET /api/users/shipping-address 304 136.211 ms - - req=dc67c610-572c-459e-a9c6-3a4dee98eefb {"service":"back-end"}
+2026-06-02T08:01:49.961Z [info] GET /api/carts/me 304 180.152 ms - - req=a1113ca3-7743-4248-967b-01dc588468a3 {"service":"back-end"}
+2026-06-02T08:01:50.099Z [info] GET /api/carts/me 304 136.217 ms - - req=d98bc9b4-11f7-4a13-8953-7515ca2c1617 {"service":"back-end"}
+2026-06-02T08:01:50.237Z [info] GET /api/carts/me 304 137.093 ms - - req=08583d3a-e87f-4c96-940b-5ada23718d6c {"service":"back-end"}
+2026-06-02T08:01:58.014Z [info] POST /api/orders 201 411.751 ms - 522 req=861efb90-73d7-4362-aa36-c1191ad76981 {"service":"back-end"}
+2026-06-02T08:01:58.117Z [info] DELETE /api/carts/me 200 96.121 ms - 91 req=b331554d-a72a-4b46-b149-77ab6cbc0164 {"service":"back-end"}
+2026-06-02T08:01:59.277Z [info] GET /api/users/profile 304 134.926 ms - - req=57026743-91d5-4428-a660-865c1085f5dc {"service":"back-end"}
+2026-06-02T08:01:59.469Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 183.430 ms - 200617 req=b89e8800-a971-4acd-83a1-9e17352cfbec {"service":"back-end"}
+2026-06-02T08:01:59.568Z [info] GET /api/categories 304 68.835 ms - - req=ab76b6f5-399c-4d6b-b8a3-803d26ba1621 {"service":"back-end"}
+2026-06-02T08:01:59.617Z [info] GET /api/users/profile 304 120.539 ms - - req=1ac3f349-f5ca-4082-895d-1fd3f329d159 {"service":"back-end"}
+2026-06-02T08:01:59.665Z [info] GET /api/carts/me 200 156.078 ms - 119 req=47651a0d-d8cb-40e6-bc6e-2baadefc5891 {"service":"back-end"}
+2026-06-02T08:01:59.756Z [info] GET /api/carts/me 304 89.369 ms - - req=8376e4cd-6142-4f93-9c49-2bab11705a22 {"service":"back-end"}
+2026-06-02T08:01:59.848Z [info] GET /api/carts/me 304 90.606 ms - - req=f29fe04b-cb7e-4a6b-b2a1-5a8729a4da8f {"service":"back-end"}
+2026-06-02T08:02:01.604Z [info] GET /api/categories 304 45.899 ms - - req=e2607e92-3d01-4511-8938-e24e2ecf70f3 {"service":"back-end"}
+2026-06-02T08:02:01.694Z [info] GET /api/users/profile 304 132.931 ms - - req=ede2761d-801f-4c67-8e60-cbf37884795f {"service":"back-end"}
+2026-06-02T08:02:01.703Z [info] GET /api/carts/me 304 132.050 ms - - req=af438c41-5833-4d7e-8a0a-e80f1910240f {"service":"back-end"}
+2026-06-02T08:02:01.794Z [info] GET /api/carts/me 304 89.705 ms - - req=60bae30e-af53-47c3-9994-b05de9565d9a {"service":"back-end"}
+2026-06-02T08:02:02.141Z [info] GET /api/carts/me 304 345.078 ms - - req=7c3c3375-c275-4005-8af1-15a0cae9ddbd {"service":"back-end"}
+2026-06-02T08:02:50.451Z [info] GET /api/categories 304 46.456 ms - - req=05a4a1d6-aef6-4979-8b57-793e8c8ed95b {"service":"back-end"}
+2026-06-02T08:02:50.519Z [info] GET /api/products/product/sales 200 101.523 ms - 30146 req=b4a00441-47e8-4ad3-b87d-6d7b5cd3e4c8 {"service":"back-end"}
+2026-06-02T08:02:50.553Z [info] GET /api/users/profile 304 145.678 ms - - req=149094cd-9310-45fd-9ec2-0040028e6021 {"service":"back-end"}
+2026-06-02T08:02:50.586Z [info] GET /api/carts/me 304 133.070 ms - - req=7abf020f-0949-45c8-a60d-d05bf7037ca3 {"service":"back-end"}
+2026-06-02T08:02:50.606Z [info] GET /api/categories/shop-cho-cun 200 191.889 ms - 81965 req=20aa82d5-f587-4500-b98e-6e379bf411fb {"service":"back-end"}
+2026-06-02T08:02:50.629Z [info] GET /api/products 200 217.603 ms - 184351 req=00f5980e-ae3d-4ca4-8673-2bd35eef3f63 {"service":"back-end"}
+2026-06-02T08:02:50.679Z [info] GET /api/categories/shop-cho-meo 304 263.490 ms - - req=e677bdb8-8866-4bee-a189-90dd435b7415 {"service":"back-end"}
+2026-06-02T08:02:50.681Z [info] GET /api/carts/me 304 92.927 ms - - req=dbdfc723-5f1a-4f5f-8f2e-08a78a2acdb5 {"service":"back-end"}
+2026-06-02T08:02:50.775Z [info] GET /api/carts/me 304 92.326 ms - - req=6c69bb7d-b9a5-4e8d-90d4-c4aec51d20b7 {"service":"back-end"}
+2026-06-02T08:03:08.307Z [info] GET /api/categories 304 46.679 ms - - req=5f6f7e3a-a4d3-449c-a7c4-2fd0d72cb4c0 {"service":"back-end"}
+2026-06-02T08:03:08.448Z [info] GET /api/users/profile 304 185.801 ms - - req=e35a44e1-e659-48eb-94af-6d29d9eb375c {"service":"back-end"}
+2026-06-02T08:03:08.683Z [info] GET /api/carts/me 304 408.235 ms - - req=eb5006aa-2166-4b73-8c6d-b98037c657b7 {"service":"back-end"}
+2026-06-02T08:03:08.779Z [info] GET /api/carts/me 304 94.537 ms - - req=92c55bcb-37dc-4967-9879-28a85bc3048f {"service":"back-end"}
+2026-06-02T08:03:08.910Z [info] GET /api/carts/me 304 130.089 ms - - req=c4ac2e03-9c5d-4294-ad1e-408d9ce4713e {"service":"back-end"}
+2026-06-02T08:03:18.101Z [info] GET /api/categories 304 47.080 ms - - req=caa65c04-e633-4514-b411-d9cadc509953 {"service":"back-end"}
+2026-06-02T08:03:18.108Z [info] GET /api/categories/catetory/shop-cho-cun 304 46.264 ms - - req=be52de18-8cb0-467a-94b9-8deaf7fe7b15 {"service":"back-end"}
+2026-06-02T08:03:18.199Z [info] GET /api/carts/me 304 133.376 ms - - req=db038280-08e4-4ad8-a363-a48f2e6ea217 {"service":"back-end"}
+2026-06-02T08:03:18.218Z [info] GET /api/categories 304 115.463 ms - - req=d75bbbf4-4559-4add-afba-26a193061e5a {"service":"back-end"}
+2026-06-02T08:03:18.268Z [info] GET /api/categories 304 47.584 ms - - req=79e04ca7-eddc-4833-bb0e-32bc9f1bb0a0 {"service":"back-end"}
+2026-06-02T08:03:18.303Z [info] GET /api/users/profile 304 245.926 ms - - req=3dd0b8f8-6165-498a-862d-188038756b95 {"service":"back-end"}
+2026-06-02T08:03:18.419Z [info] GET /api/carts/me 304 217.237 ms - - req=56f84fc8-ffd1-4109-9748-a703bc3662e3 {"service":"back-end"}
+2026-06-02T08:03:18.594Z [info] GET /api/carts/me 304 173.885 ms - - req=4e4b1bad-67c2-44ed-95ce-90c29a86a7d0 {"service":"back-end"}
+2026-06-02T08:04:20.121Z [info] GET /api/categories 304 47.358 ms - - req=63ceb02d-4cc5-463d-b381-74a5001f7c66 {"service":"back-end"}
+2026-06-02T08:04:20.123Z [info] GET /api/categories/catetory/shop-cho-cun 304 45.207 ms - - req=da306cad-8d8f-4784-8289-d493bcb47160 {"service":"back-end"}
+2026-06-02T08:04:20.277Z [info] GET /api/carts/me 304 149.072 ms - - req=9115322a-508b-4d8a-9613-778ba20f13ff {"service":"back-end"}
+2026-06-02T08:04:20.297Z [info] GET /api/categories/shop-cho-cun 304 213.256 ms - - req=75d7d922-9dfa-4aea-88a4-e4913c770b96 {"service":"back-end"}
+2026-06-02T08:04:20.324Z [info] GET /api/categories 304 44.983 ms - - req=d40af567-a082-403a-be4f-69cfbf6fc047 {"service":"back-end"}
+2026-06-02T08:04:20.330Z [info] GET /api/products 304 249.151 ms - - req=bedfab31-ec0c-4061-b4cc-d9d60e2bb148 {"service":"back-end"}
+2026-06-02T08:04:20.363Z [info] GET /api/products/product/sales 304 237.471 ms - - req=5212618f-bf97-4e8f-b19b-a352eb8046d9 {"service":"back-end"}
+2026-06-02T08:04:20.378Z [info] GET /api/categories 304 46.363 ms - - req=4c41a869-e815-410d-8873-d9112f7289e4 {"service":"back-end"}
+2026-06-02T08:04:20.417Z [info] GET /api/categories/shop-cho-meo 304 331.667 ms - - req=4ebd86b6-f9a6-4e90-8702-5de0fe0082b8 {"service":"back-end"}
+2026-06-02T08:04:20.436Z [info] GET /api/carts/me 304 137.857 ms - - req=3c7a5659-f8d6-4096-bfad-b72e99c2e06a {"service":"back-end"}
+2026-06-02T08:04:20.486Z [info] GET /api/users/profile 304 409.834 ms - - req=30007ecb-7a7b-44a6-9834-d314f1fb940d {"service":"back-end"}
+2026-06-02T08:04:20.526Z [info] GET /api/carts/me 304 88.695 ms - - req=cb8ac5df-5c53-4929-a79f-cdf95f1e8c90 {"service":"back-end"}
+2026-06-02T08:04:22.938Z [info] POST /api/carts/add 201 240.946 ms - 178 req=a07a601f-97c4-4585-b3f6-d7fa8b0d2926 {"service":"back-end"}
+2026-06-02T08:04:23.076Z [info] GET /api/carts/me 200 133.134 ms - 1382 req=3352b324-d4c3-4341-a514-590b49bb8384 {"service":"back-end"}
+2026-06-02T08:04:24.078Z [info] POST /api/carts/add 201 250.855 ms - 266 req=8379867f-ed34-49f8-b150-743933d8f24f {"service":"back-end"}
+2026-06-02T08:04:24.263Z [info] GET /api/carts/me 200 179.983 ms - 2927 req=382d6dbd-25f0-4ba7-b02f-7828a0a45b1f {"service":"back-end"}
+2026-06-02T08:04:24.478Z [info] POST /api/carts/add 201 176.264 ms - 266 req=4bb33c40-e02c-4ffc-aa0f-537a47346878 {"service":"back-end"}
+2026-06-02T08:04:24.654Z [info] GET /api/carts/me 200 170.943 ms - 2927 req=ac38d08e-c877-4331-ac58-38ee81cebc32 {"service":"back-end"}
+2026-06-02T08:04:25.463Z [info] POST /api/carts/add 201 174.443 ms - 354 req=766ad8bc-cb57-463f-ab16-358755e85d16 {"service":"back-end"}
+2026-06-02T08:04:25.642Z [info] GET /api/carts/me 200 171.950 ms - 4135 req=bf2faee3-9b31-42e3-a1ca-1e237c08c8a5 {"service":"back-end"}
+2026-06-02T08:04:26.549Z [info] GET /api/categories 304 44.208 ms - - req=ef0de823-f997-4392-a813-075212f8626b {"service":"back-end"}
+2026-06-02T08:04:26.680Z [info] GET /api/users/profile 304 173.993 ms - - req=0c8f532d-1557-43fb-9bcc-829f78a429cc {"service":"back-end"}
+2026-06-02T08:04:26.691Z [info] GET /api/carts/me 304 172.061 ms - - req=ddff1a90-b2ea-4918-a55a-cd1b70a673a9 {"service":"back-end"}
+2026-06-02T08:04:26.825Z [info] GET /api/carts/me 304 132.937 ms - - req=d9816e6b-3a87-4576-ac8a-2ab1a8e6b5cb {"service":"back-end"}
+2026-06-02T08:04:27.003Z [info] GET /api/carts/me 304 176.513 ms - - req=6fece60a-96d3-4d03-bb22-a887ff05ff7d {"service":"back-end"}
+2026-06-02T08:04:31.146Z [info] GET /api/categories 304 44.545 ms - - req=1277c1d2-15d7-4bd2-991e-b61d16d5495c {"service":"back-end"}
+2026-06-02T08:04:31.241Z [info] GET /api/users/shipping-address 304 131.569 ms - - req=d8f16553-568f-4eff-96c9-1b82fea23f07 {"service":"back-end"}
+2026-06-02T08:04:31.280Z [info] GET /api/users/profile 304 177.113 ms - - req=503449d5-dbe4-49f8-8b49-0a877bddf52a {"service":"back-end"}
+2026-06-02T08:04:31.286Z [info] GET /api/carts/me 304 178.101 ms - - req=8cb91704-3385-4bb6-b2c8-acf07c505f31 {"service":"back-end"}
+2026-06-02T08:04:31.421Z [info] GET /api/carts/me 304 133.647 ms - - req=d640ca1e-ed47-4005-b8e8-67ad6d1af213 {"service":"back-end"}
+2026-06-02T08:04:31.555Z [info] GET /api/carts/me 304 132.723 ms - - req=be4039f2-1ed1-4ac3-a7d8-c60d4537991e {"service":"back-end"}
+2026-06-02T08:04:34.382Z [info] POST /api/orders 201 219.679 ms - 345 req=26225458-3256-4157-8697-8f90f7bb4220 {"service":"back-end"}
+2026-06-02T08:04:34.613Z [info] DELETE /api/carts/product/6a1e8e868413666c844359f4 200 223.409 ms - 2925 req=fc3731da-9f28-422a-8eba-2691a89bd212 {"service":"back-end"}
+2026-06-02T08:04:34.795Z [info] GET /api/carts/me 200 174.181 ms - 2871 req=7057258e-fc9a-4302-9c6d-6f178cb095a7 {"service":"back-end"}
+2026-06-02T08:04:35.995Z [info] GET /api/users/profile 304 174.767 ms - - req=3a2e7137-9c5d-4ec6-9673-b2230df5db44 {"service":"back-end"}
+2026-06-02T08:04:36.226Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 221.411 ms - 221594 req=4824db8b-31d0-436c-b8c1-14da9d5c589f {"service":"back-end"}
+2026-06-02T08:04:36.302Z [info] GET /api/categories 304 44.139 ms - - req=dd591a02-2acc-4a87-a131-b84775d1dc7c {"service":"back-end"}
+2026-06-02T08:04:36.432Z [info] GET /api/users/profile 304 177.312 ms - - req=42016627-7c5b-4067-be9a-a52894dd93ce {"service":"back-end"}
+2026-06-02T08:04:36.447Z [info] GET /api/carts/me 304 176.289 ms - - req=fcacccfa-be20-4438-a05a-b6e075c25ae1 {"service":"back-end"}
+2026-06-02T08:04:36.583Z [info] GET /api/carts/me 304 134.601 ms - - req=eb3c4f2f-bb06-4a3e-9428-e4d9a5e4aef7 {"service":"back-end"}
+2026-06-02T08:04:36.717Z [info] GET /api/carts/me 304 133.025 ms - - req=ad9dee81-278a-4ba6-9c53-584ba8fb357d {"service":"back-end"}
+2026-06-02T08:04:41.455Z [info] GET /api/reviews/my-reviews 200 225.604 ms - 30992 req=5ad20b5f-e257-4ed5-868f-77c897b7caff {"service":"back-end"}
+2026-06-02T08:04:43.928Z [info] GET /api/users/shipping-address 304 181.323 ms - - req=d0934002-5384-41a0-8571-75a1094cfa05 {"service":"back-end"}
+2026-06-02T08:04:44.791Z [info] GET /api/reviews/my-reviews 304 265.562 ms - - req=cd64d5bc-a937-47f5-8889-6587e05a8539 {"service":"back-end"}
+2026-06-02T08:04:46.871Z [info] GET /api/categories 304 113.280 ms - - req=ef763371-bde7-4412-a948-7def6a7d0aea {"service":"back-end"}
+2026-06-02T08:04:46.958Z [info] GET /api/carts/me 304 178.960 ms - - req=0ab669d5-eb86-4dc5-9791-d21de1048551 {"service":"back-end"}
+2026-06-02T08:04:46.992Z [info] GET /api/users/profile 304 231.249 ms - - req=a5f6c4ab-3fff-4fe1-beae-e8418649891d {"service":"back-end"}
+2026-06-02T08:04:47.134Z [info] GET /api/carts/me 304 174.294 ms - - req=0f3baa9e-8c4d-40db-abc7-e9fba041dcdc {"service":"back-end"}
+2026-06-02T08:04:47.272Z [info] GET /api/carts/me 304 136.220 ms - - req=59addeb3-9c5d-4713-a6f5-6ff17455d5d0 {"service":"back-end"}
+2026-06-02T08:04:49.352Z [info] GET /api/categories 304 46.536 ms - - req=a0c79bcd-dd83-46a7-8158-9899a88d3ee8 {"service":"back-end"}
+2026-06-02T08:04:49.356Z [info] GET /api/categories/catetory/shop-cho-cun 304 44.867 ms - - req=fd6b876a-34a9-4eb2-9386-37b1c103bc61 {"service":"back-end"}
+2026-06-02T08:04:49.400Z [info] GET /api/categories 304 47.313 ms - - req=8f9b38a1-cdc7-4144-9f2d-2e366430b528 {"service":"back-end"}
+2026-06-02T08:04:49.452Z [info] GET /api/categories 304 50.316 ms - - req=a1e1949f-fa72-4cfd-82c1-891a04cf8c08 {"service":"back-end"}
+2026-06-02T08:04:49.482Z [info] GET /api/users/profile 304 174.423 ms - - req=d0b16256-cd08-4aad-87d1-e812386270f4 {"service":"back-end"}
+2026-06-02T08:04:49.489Z [info] GET /api/carts/me 304 180.353 ms - - req=e246173f-2eea-4575-a49a-f11214dbb2a9 {"service":"back-end"}
+2026-06-02T08:04:49.669Z [info] GET /api/carts/me 304 178.211 ms - - req=99405a47-b71f-4853-815c-260c04d54f33 {"service":"back-end"}
+2026-06-02T08:04:50.215Z [info] GET /api/carts/me 304 545.422 ms - - req=b7dc45e4-ed0f-448e-a5c0-c0353fc082a9 {"service":"back-end"}
+2026-06-02T08:05:19.068Z [info] GET /api/categories 304 45.135 ms - - req=de0a5568-889e-4acf-9955-5f153d16415c {"service":"back-end"}
+2026-06-02T08:05:19.199Z [info] GET /api/users/profile 304 174.043 ms - - req=516b7f7e-f29f-4816-b699-f1c6cb50b2d7 {"service":"back-end"}
+2026-06-02T08:05:19.217Z [info] GET /api/carts/me 304 175.619 ms - - req=6a249d88-b6f1-4164-a253-848626a38959 {"service":"back-end"}
+2026-06-02T08:05:19.362Z [info] GET /api/carts/me 304 143.164 ms - - req=33c829de-cc78-41dd-8dc8-8ab80149b26c {"service":"back-end"}
+2026-06-02T08:05:19.496Z [info] GET /api/carts/me 304 132.672 ms - - req=210f91e0-ccfa-4df5-a578-2b979f37b32f {"service":"back-end"}
+2026-06-02T08:05:28.842Z [info] GET /api/users/6a00b69d0af467688ea55f1b 200 199.932 ms - 19306 req=42664cd5-bd02-4953-9aa5-7e68de5a2ae6 {"service":"back-end"}
+2026-06-02T08:05:28.888Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 240.167 ms - 780 req=d0ec1fe5-88fa-4a1c-ac27-227d6fc499c1 {"service":"back-end"}
+2026-06-02T08:05:28.948Z [info] GET /api/dashboard/stats?timeFilter=7days 304 301.049 ms - - req=3d9d3f2e-1b26-45cd-8949-064854d46dac {"service":"back-end"}
+2026-06-02T08:05:28.980Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 304 330.437 ms - - req=89d6bcd1-f1ac-43e7-86fd-87fea7e3f899 {"service":"back-end"}
+2026-06-02T08:05:28.990Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 144.618 ms - - req=d8e45619-aa60-4f6f-9611-05ee2ce00a90 {"service":"back-end"}
+2026-06-02T08:05:29.227Z [info] GET /api/users/paginated?page=1&limit=1 200 337.225 ms - 643 req=388e9ac0-96bf-4b04-8a30-02d84115f875 {"service":"back-end"}
+2026-06-02T08:05:29.253Z [info] GET /api/dashboard/recent-orders?limit=5 200 608.242 ms - 669 req=81170d0f-513b-407c-ab87-47157eeb3755 {"service":"back-end"}
+2026-06-02T08:05:29.508Z [info] GET /api/products 200 857.123 ms - 184351 req=7d24c9ac-6eb3-43f5-ab63-bb499ec7f3d2 {"service":"back-end"}
+2026-06-02T08:05:30.051Z [info] GET /api/orders 200 532.277 ms - 1660430 req=12d04a8e-5cab-4d64-90e5-a47989334e91 {"service":"back-end"}
+2026-06-02T08:05:31.342Z [info] GET /api/categories 304 44.946 ms - - req=e9eddbeb-018c-41f9-85fc-e2273e5bb568 {"service":"back-end"}
+2026-06-02T08:05:31.348Z [info] GET /api/categories/catetory/shop-cho-cun 304 45.115 ms - - req=d4ade79f-efe9-4fa5-a3f1-d0c405ffb5dc {"service":"back-end"}
+2026-06-02T08:05:31.390Z [info] GET /api/categories 304 45.045 ms - - req=6a4966ad-3d0e-49e0-9240-6eccf0fe1d63 {"service":"back-end"}
+2026-06-02T08:05:31.434Z [info] GET /api/users/profile 304 134.821 ms - - req=2850281b-5bff-42cd-b17c-23d406efe546 {"service":"back-end"}
+2026-06-02T08:05:31.438Z [info] GET /api/categories 304 46.546 ms - - req=a90486fa-c7dd-4a1e-a94f-4f2b37dc21c6 {"service":"back-end"}
+2026-06-02T08:05:31.483Z [info] GET /api/carts/me 304 182.219 ms - - req=50f90a9c-ed24-4c88-88d6-ab47612c4bb9 {"service":"back-end"}
+2026-06-02T08:05:31.664Z [info] GET /api/carts/me 304 179.228 ms - - req=3ed5b74d-51e5-432e-8121-72540337f82f {"service":"back-end"}
+2026-06-02T08:05:31.843Z [info] GET /api/carts/me 304 177.869 ms - - req=bdf7ae18-f4b8-4c3d-af19-d00381fa3289 {"service":"back-end"}
+2026-06-02T08:05:46.106Z [info] GET /api/categories 304 48.595 ms - - req=2c62ff00-7c80-4254-9273-e276e7872ddb {"service":"back-end"}
+2026-06-02T08:05:46.194Z [info] GET /api/users/profile 304 129.671 ms - - req=9a01f87a-4a6c-4cf3-a271-720ef399a179 {"service":"back-end"}
+2026-06-02T08:05:46.241Z [info] GET /api/carts/me 304 174.981 ms - - req=862ae447-39bc-4ce7-b639-1e30fc6cda7f {"service":"back-end"}
+2026-06-02T08:05:46.247Z [info] GET /api/products/bat-an-hinh-trung-op-la-cho-cho-meo 200 178.206 ms - 2535 req=91757179-632d-4f38-8b6b-391e73b83b75 {"service":"back-end"}
+2026-06-02T08:05:46.425Z [info] GET /api/carts/me 304 181.244 ms - - req=9149db6c-eaa3-40ba-947a-448cabd1dc57 {"service":"back-end"}
+2026-06-02T08:05:46.623Z [info] GET /api/reviews/can-review/67d7a301829c3db098dca6ef 200 176.208 ms - 179 req=c9c273fd-c827-4f35-bbef-d8950cfe4b59 {"service":"back-end"}
+2026-06-02T08:05:46.632Z [info] GET /api/reviews/my-reviews 304 182.093 ms - - req=3530ef74-ee1e-4c1a-9332-f6d395f0b1cc {"service":"back-end"}
+2026-06-02T08:05:46.674Z [info] GET /api/products 304 611.900 ms - - req=02a95869-d55c-4943-b6d4-5453b98e46bd {"service":"back-end"}
+2026-06-02T08:05:46.843Z [info] GET /api/reviews/can-review/67d7a301829c3db098dca6ef 304 218.720 ms - - req=be6452e1-a03f-471f-94b0-dd2a3457697d {"service":"back-end"}
+2026-06-02T08:05:46.898Z [info] GET /api/carts/me 304 472.211 ms - - req=fe65e2d5-42f1-4b64-a103-88a84c4bb1cf {"service":"back-end"}
+2026-06-02T08:05:46.981Z [info] GET /api/reviews/my-reviews 304 347.697 ms - - req=c921e9d3-10ef-407f-9b02-52ddf7e62751 {"service":"back-end"}
+2026-06-02T08:06:04.645Z [info] GET /api/users/6a00b69d0af467688ea55f1b 401 1.304 ms - 62 req=f063939a-de1f-46df-8b0e-e876ed160609 {"service":"back-end"}
+2026-06-02T08:06:04.648Z [info] GET /api/users/paginated?page=1&limit=5 401 0.933 ms - 62 req=6eeb89f8-e364-4006-a7d6-2a83204be7ae {"service":"back-end"}
+2026-06-02T08:06:04.723Z [info] GET /api/categories/shop-cho-cun - - ms - - req=d62f5605-ece9-43cb-a5a4-26ac44716328 {"service":"back-end"}
+2026-06-02T08:06:04.725Z [info] GET /api/products - - ms - - req=f80b5f88-1f4b-49ca-8977-e392341338ec {"service":"back-end"}
+2026-06-02T08:06:04.726Z [info] GET /api/products/product/sales - - ms - - req=ccb78e0d-1e85-4e16-a972-8e5168e7d944 {"service":"back-end"}
+2026-06-02T08:06:04.726Z [info] GET /api/categories/shop-cho-meo - - ms - - req=00fcacb2-e4be-4196-ae1d-93bddd0b6b57 {"service":"back-end"}
+2026-06-02T08:06:05.590Z [info] GET /api/categories 304 55.905 ms - - req=1ba5e385-02cb-423b-9ac8-acd2cb5cf063 {"service":"back-end"}
+2026-06-02T08:06:05.629Z [info] GET /api/products/product/sales 200 91.780 ms - 30146 req=9a2330f6-35c2-4de7-9316-10535eb4f640 {"service":"back-end"}
+2026-06-02T08:06:05.855Z [info] GET /api/categories/shop-cho-cun 200 322.061 ms - 81965 req=f2c3ec13-760e-4b23-b9a3-5170c23a0e45 {"service":"back-end"}
+2026-06-02T08:06:05.951Z [info] GET /api/products 200 420.034 ms - 184351 req=93571106-0b7d-4196-8936-e65fb40fd8a2 {"service":"back-end"}
+2026-06-02T08:06:05.956Z [info] GET /api/categories/shop-cho-meo 200 420.329 ms - 102387 req=5ef0e89c-fe28-4cb6-8f59-84f512716db3 {"service":"back-end"}
+2026-06-02T08:07:45.798Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T08:07:45.805Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T08:07:45.807Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T08:07:45.808Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T08:07:45.812Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T08:07:45.814Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T08:07:45.815Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T08:07:45.849Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T08:07:45.855Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T08:07:46.373Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T08:07:46.375Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T08:13:27.303Z [info] POST /api/auth/signout 200 7.177 ms - 41 req=465f710d-d6ff-446a-aedd-2af338d5b4b0 {"service":"back-end"}
+2026-06-02T08:13:28.244Z [info] GET /api/categories 304 54.625 ms - - req=b4e20ad1-6fe5-41e3-ba18-d69574038da1 {"service":"back-end"}
+2026-06-02T08:13:28.247Z [info] GET /api/categories/catetory/shop-cho-cun 304 51.244 ms - - req=cef11fec-2951-4537-8138-138727a54cfa {"service":"back-end"}
+2026-06-02T08:13:28.296Z [info] GET /api/categories 304 47.910 ms - - req=15a1afa5-f576-4395-9ba7-580bbcc94847 {"service":"back-end"}
+2026-06-02T08:13:28.346Z [info] GET /api/categories 304 46.702 ms - - req=20240c62-e027-413c-800f-01fca22a92c3 {"service":"back-end"}
+2026-06-02T08:13:30.242Z [info] GET /api/categories 304 49.943 ms - - req=cb85d9f6-116b-4077-bdf5-6a8d72dee5ed {"service":"back-end"}
+2026-06-02T08:13:47.202Z [info] POST /api/auth/check-duplicate 200 56.316 ms - 120 req=3ef953eb-0c55-494a-a65e-694dce51606e {"service":"back-end"}
+2026-06-02T08:13:47.358Z [info] POST /api/auth/send-signup-code 200 140.283 ms - 54 req=f9bc75a7-1b2e-4ef0-965a-d97baef4368b {"service":"back-end"}
+2026-06-02T08:13:47.362Z [info] Processing OTP job {"service":"back-end","jobId":"2","email":"khongcotien1.2023@gmail.com","purpose":"signup-verification"}
+2026-06-02T08:13:51.339Z [info] OTP job completed {"service":"back-end","jobId":"2","email":"khongcotien1.2023@gmail.com"}
+2026-06-02T08:15:14.536Z [info] GET /api/categories 304 47.391 ms - - req=2b83476c-6dca-48e8-8841-1440625400cf {"service":"back-end"}
+2026-06-02T08:15:14.540Z [info] GET /api/categories/catetory/shop-cho-cun 304 48.018 ms - - req=f5aa7e03-a018-478c-aefa-db82ccb4bcea {"service":"back-end"}
+2026-06-02T08:15:14.585Z [info] GET /api/categories 304 47.197 ms - - req=0a9ee796-3f62-4a13-9461-dbee46fa31f7 {"service":"back-end"}
+2026-06-02T08:15:14.636Z [info] GET /api/categories 304 48.985 ms - - req=3762d5fd-d32c-472a-810f-147d5b82969e {"service":"back-end"}
+2026-06-02T08:15:16.130Z [info] GET /api/categories 304 49.486 ms - - req=0605c64c-2231-4634-91c8-e92f0a01ce51 {"service":"back-end"}
+2026-06-02T08:15:29.777Z [info] POST /api/auth/check-duplicate 200 118.375 ms - 119 req=1d7ed435-d8b3-4992-8dfd-a5e0c371c4d9 {"service":"back-end"}
+2026-06-02T08:15:49.936Z [info] POST /api/auth/check-duplicate 200 60.221 ms - 120 req=3a3f05ac-820e-4fdd-8378-b95763037f4f {"service":"back-end"}
+2026-06-02T08:15:50.069Z [info] Processing OTP job {"service":"back-end","jobId":"3","email":"khongcotien11.2023@gmail.com","purpose":"signup-verification"}
+2026-06-02T08:15:50.071Z [info] POST /api/auth/send-signup-code 200 124.404 ms - 54 req=841013b3-c902-4a17-b9db-31181670add3 {"service":"back-end"}
+2026-06-02T08:15:53.440Z [info] OTP job completed {"service":"back-end","jobId":"3","email":"khongcotien11.2023@gmail.com"}
+2026-06-02T08:16:08.356Z [info] GET /api/categories 304 50.296 ms - - req=0e2af29a-b3bd-4073-85a0-8312f22e4f11 {"service":"back-end"}
+2026-06-02T08:16:08.366Z [info] GET /api/categories/catetory/shop-cho-cun 304 57.907 ms - - req=6f0c12f8-b787-40d0-8e1e-99b1ce8e9952 {"service":"back-end"}
+2026-06-02T08:16:08.424Z [info] GET /api/categories 304 52.945 ms - - req=2c72c020-58cf-48f1-bd22-39d7477371a7 {"service":"back-end"}
+2026-06-02T08:16:08.474Z [info] GET /api/categories 304 47.889 ms - - req=45e12732-0926-4895-8112-ef899b93b587 {"service":"back-end"}
+2026-06-02T08:16:11.449Z [info] GET /api/categories 304 44.752 ms - - req=fa83c66f-a995-455e-a85b-27d3a97e116c {"service":"back-end"}
+2026-06-02T08:16:28.434Z [info] POST /api/auth/check-duplicate 200 43.713 ms - 120 req=b6020ad6-2ead-48cb-813f-ffec7c8bccb0 {"service":"back-end"}
+2026-06-02T08:16:28.564Z [info] POST /api/auth/send-signup-code 200 118.064 ms - 54 req=6195ea92-1025-4cda-9e2a-5f1dbf82cd16 {"service":"back-end"}
+2026-06-02T08:16:28.564Z [info] Processing OTP job {"service":"back-end","jobId":"4","email":"khongcotien1.2023@gmail.com","purpose":"signup-verification"}
+2026-06-02T08:16:32.676Z [info] OTP job completed {"service":"back-end","jobId":"4","email":"khongcotien1.2023@gmail.com"}
+2026-06-02T08:16:54.612Z [info] GET /api/categories/catetory/shop-cho-cun 304 46.733 ms - - req=cec010ff-299e-41e0-b734-e2bd1854f2aa {"service":"back-end"}
+2026-06-02T08:16:54.677Z [info] GET /api/categories 304 114.224 ms - - req=db5c0c1d-2e82-4e72-b17e-eb5906b346e7 {"service":"back-end"}
+2026-06-02T08:16:54.727Z [info] GET /api/categories 304 46.916 ms - - req=20b191d4-ccb9-4dbd-8d6b-8869a46d4ace {"service":"back-end"}
+2026-06-02T08:16:54.779Z [info] GET /api/categories 304 47.549 ms - - req=56930865-c5cb-41b0-af58-54b6b6405fd5 {"service":"back-end"}
+2026-06-02T08:16:56.425Z [info] GET /api/categories 304 46.246 ms - - req=7e2aac94-87b7-412c-a2ff-4de57b5786ee {"service":"back-end"}
+2026-06-02T08:17:10.634Z [info] POST /api/auth/check-duplicate 200 43.223 ms - 120 req=5e5e627a-2594-4f01-89a4-ec160a07843d {"service":"back-end"}
+2026-06-02T08:17:10.697Z [warn] Lỗi khi gọi sendSignupCode Vui lòng chờ trước khi yêu cầu mã xác thực mới. {"service":"back-end","email":"khongcotien1.2023@gmail.com"}
+2026-06-02T08:17:10.699Z [info] POST /api/auth/send-signup-code 400 52.363 ms - 76 req=d4a561bc-9e26-433a-bf44-1240c176cc6d {"service":"back-end"}
+2026-06-02T08:19:15.013Z [info] POST /api/auth/check-duplicate 200 47.006 ms - 120 req=389144a3-693f-4f8c-9123-63820d573f75 {"service":"back-end"}
+2026-06-02T08:19:15.152Z [info] POST /api/auth/send-signup-code 200 124.705 ms - 54 req=15677c01-742e-4e87-be01-a6b6aa901317 {"service":"back-end"}
+2026-06-02T08:19:15.152Z [info] Processing OTP job {"service":"back-end","jobId":"5","email":"khongcotien1.2023@gmail.com","purpose":"signup-verification"}
+2026-06-02T08:19:18.602Z [info] OTP job completed {"service":"back-end","jobId":"5","email":"khongcotien1.2023@gmail.com"}
+2026-06-02T08:19:26.293Z [warn] Lỗi khi gọi sendSignupCode Vui lòng chờ trước khi yêu cầu mã xác thực mới. {"service":"back-end","email":"khongcotien1.2023@gmail.com"}
+2026-06-02T08:19:26.294Z [info] POST /api/auth/send-signup-code 400 47.306 ms - 76 req=bfe31ba3-3520-4f25-8a2a-f30363049e0a {"service":"back-end"}
+2026-06-02T08:19:50.214Z [info] GET /api/categories 304 44.829 ms - - req=018726af-d254-4e12-a419-329795f125da {"service":"back-end"}
+2026-06-02T08:19:50.216Z [info] GET /api/categories/catetory/shop-cho-cun 304 44.838 ms - - req=456bb539-65a5-428f-b4fe-13a21b1554d4 {"service":"back-end"}
+2026-06-02T08:19:50.263Z [info] GET /api/categories 304 46.323 ms - - req=009611bf-d047-4e07-8f93-b43856c46bfc {"service":"back-end"}
+2026-06-02T08:19:50.310Z [info] GET /api/categories 304 45.500 ms - - req=ef187324-37d7-45d5-8f50-b37bd3c4634e {"service":"back-end"}
+2026-06-02T08:20:12.608Z [info] POST /api/ai/chat 200 9016.669 ms - 653 req=15205bf4-23f4-41a0-9192-bf3d4c4cb5f7 {"service":"back-end"}
+2026-06-02T08:20:49.226Z [info] POST /api/ai/chat 200 9031.866 ms - 2842 req=911047d6-e2b6-44d1-abdd-6fe4abadb1f8 {"service":"back-end"}
+2026-06-02T08:21:05.274Z [warn] AI request attempt 1 failed getaddrinfo ENOTFOUND openrouter.ai {"service":"back-end"}
+2026-06-02T08:21:10.031Z [warn] AI request attempt 2 failed getaddrinfo ENOTFOUND openrouter.ai {"service":"back-end"}
+2026-06-02T08:21:13.521Z [warn] AI request attempt 3 failed getaddrinfo ENOTFOUND openrouter.ai {"service":"back-end"}
+2026-06-02T08:21:13.522Z [info] POST /api/ai/chat 500 8251.749 ms - 42 req=f16a2b9a-40e8-4784-9e11-ab6354fbd8eb {"service":"back-end"}
+2026-06-02T08:21:17.391Z [warn] MongoDB disconnected {"service":"back-end"}
+2026-06-02T08:21:30.283Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T08:21:30.283Z [info] MongoDB reconnected {"service":"back-end"}

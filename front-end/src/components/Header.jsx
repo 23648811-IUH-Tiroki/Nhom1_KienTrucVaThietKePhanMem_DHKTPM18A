@@ -370,11 +370,11 @@ const Header = () => {
       icon: <FaUser className="mr-2" />,
       href: `/userProfile`,
     },
-    {
-      label: "Thống kê",
-      icon: <MdDashboardCustomize className="mr-2" />,
-      href: `/dashboard/`,
-    },
+    // {
+    //   label: "Thống kê",
+    //   icon: <MdDashboardCustomize className="mr-2" />,
+    //   href: `/dashboard/`,
+    // },
 
     // {
     //   label: "Quản lý người dùng",

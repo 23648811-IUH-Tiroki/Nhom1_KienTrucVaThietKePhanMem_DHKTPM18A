@@ -61,6 +61,18 @@ const orderSchema = new mongoose.Schema({
         enum: ["pending", "confirmed", "shipping", "delivered", "cancelled"],
         set: normalizeStatus,
     },
+    payment_method: {
+        type: String,
+        required: true,
+        default: "COD",
+        enum: ["COD", "MOMO", "PAYPAL"],
+    },
+    payment_status: {
+        type: String,
+        required: true,
+        default: "pending",
+        enum: ["pending", "paid", "refunded"],
+    },
     order_date: {
         type: Date,
         default: Date.now,

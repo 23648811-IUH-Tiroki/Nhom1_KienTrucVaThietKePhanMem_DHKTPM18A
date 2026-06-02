@@ -39,6 +39,7 @@ export const createChatAI = async (message) => {
           "X-Title": "PetShop AI",
           "Content-Type": "application/json",
         },
+        timeout: 10000, // Timeout sau 10 giây để kích hoạt cơ chế retry
       }
     );
   };

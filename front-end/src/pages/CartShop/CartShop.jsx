@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../../layout/MainLayout";
 import Breadcrumb2 from "../../components/Breadcrumb2";
 import { FaTrash } from "react-icons/fa";
@@ -13,15 +13,27 @@ const links = [
 ];
 
 const CartShop = () => {
+  const navigate = useNavigate();
   // Sử dụng CartContext để lấy dữ liệu giỏ hàng và các hàm cần thiết
   const { cartItems, updateCartItemQuantity, removeFromCart, clearCart } =
     useCart();
   const [isClearing, setIsClearing] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [hasInitializedSelection, setHasInitializedSelection] = useState(false);
 
-  // Tính tổng tiền
+  // Tự động chọn tất cả sản phẩm khi giỏ hàng được tải lần đầu
+  useEffect(() => {
+    if (cartItems.length > 0 && !hasInitializedSelection) {
+      setSelectedItems(cartItems.map((item) => item._id));
+      setHasInitializedSelection(true);
+    }
+  }, [cartItems, hasInitializedSelection]);
+
+  // Tính tổng tiền cho các sản phẩm được chọn
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + (item.product_id?.price || 0) * item.quantity,
+    (sum, item) => selectedItems.includes(item._id)
+      ? sum + (item.product_id?.price || 0) * item.quantity
+      : sum,
     0
   );
   const allSelected = cartItems.length > 0 && selectedItems.length === cartItems.length;
@@ -266,12 +278,18 @@ const CartShop = () => {
           </Link>
 
           {cartItems.length > 0 && (
-            <Link
-              to="/checkout"
-              className="bg-brown text-white py-2 px-4 rounded-lg shadow-md border-brown-hover transition"
+            <button
+              onClick={() => {
+                if (selectedItems.length === 0) {
+                  toast.warning("Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
+                  return;
+                }
+                navigate("/checkout", { state: { selectedItems } });
+              }}
+              className="bg-brown text-white py-2 px-4 rounded-lg shadow-md border-brown-hover transition cursor-pointer"
             >
               Tiến hành thanh toán →
-            </Link>
+            </button>
           )}
         </div>
       </div>

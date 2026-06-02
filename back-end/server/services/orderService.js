@@ -1,6 +1,10 @@
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import { createServiceError } from "../utils/serviceError.js";
+import PaymentContext from "./payment/paymentContext.js";
+import CodPaymentStrategy from "./payment/codStrategy.js";
+import MomoPaymentStrategy from "./payment/momoStrategy.js";
+import PaypalPaymentStrategy from "./payment/paypalStrategy.js";
 
 const REVENUE_STATUSES = ["delivered"];
 
@@ -36,8 +40,10 @@ export const normalizeStatus = (value) => {
 
 export const createOrder = async (orderData = {}) => {
   const { user_id, items, total_price, status } = orderData;
+  const payment_method = orderData.payment_method || orderData.paymentMethod || "COD";
   const normalizedStatus = normalizeStatus(status) || "pending";
 
+  // 1. Kiểm tra tồn kho sản phẩm
   for (const item of items) {
     const product = await Product.findById(item.product_id);
     if (!product) {
@@ -52,11 +58,34 @@ export const createOrder = async (orderData = {}) => {
     await product.save();
   }
 
+  // 2. Áp dụng Strategy Pattern để xử lý thanh toán
+  let paymentStrategy;
+  switch (String(payment_method).toUpperCase()) {
+    case "MOMO":
+      paymentStrategy = new MomoPaymentStrategy();
+      break;
+    case "PAYPAL":
+      paymentStrategy = new PaypalPaymentStrategy();
+      break;
+    case "COD":
+    default:
+      paymentStrategy = new CodPaymentStrategy();
+      break;
+  }
+
+  const paymentContext = new PaymentContext(paymentStrategy);
+  
+  // Thực thi thanh toán qua Context
+  const paymentResult = await paymentContext.executePayment(total_price, { user_id, items });
+
+  // 3. Khởi tạo và lưu đơn hàng với kết quả thanh toán tương ứng
   const newOrder = new Order({
     user_id,
     items,
     total_price,
     status: normalizedStatus,
+    payment_method: payment_method.toUpperCase(),
+    payment_status: paymentResult.payment_status,
   });
 
   return newOrder.save();
