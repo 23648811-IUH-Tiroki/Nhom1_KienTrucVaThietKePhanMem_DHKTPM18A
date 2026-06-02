@@ -135,13 +135,29 @@ const Login = () => {
     setSuccess(false);
 
     if (lockUntil && lockUntil > Date.now()) {
-      const remainingHours = Math.max(
-        1,
-        Math.ceil((lockUntil - Date.now()) / 3600000),
-      );
+      const remainingMs = lockUntil - Date.now();
+      const seconds = Math.ceil(remainingMs / 1000);
+      let durationText = "";
+      
+      if (seconds < 60) {
+        durationText = `${seconds} giây`;
+      } else {
+        const minutes = Math.ceil(remainingMs / 60000);
+        if (minutes < 60) {
+          durationText = `${minutes} phút`;
+        } else {
+          const hours = Math.floor(minutes / 60);
+          const remMinutes = minutes % 60;
+          if (remMinutes === 0) {
+            durationText = `${hours} giờ`;
+          } else {
+            durationText = `${hours} giờ ${remMinutes} phút`;
+          }
+        }
+      }
 
       showApiError(
-        `Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau ${remainingHours} giờ.`,
+        `Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau ${durationText}.`,
       );
       return;
     }

@@ -4253,3 +4253,296 @@ MongooseError: Operation `products.aggregate()` buffering timed out after 10000m
 2026-06-02T08:31:23.497Z [info] GET /api/users/profile 304 183.006 ms - - req=5583cdbf-08a4-44e6-a61b-815ac7ae248c {"service":"back-end"}
 2026-06-02T08:31:23.574Z [info] GET /api/carts/me 304 112.440 ms - - req=b49f326a-bc62-401c-bf36-772830bf7ce4 {"service":"back-end"}
 2026-06-02T08:31:23.693Z [info] GET /api/carts/me 304 117.476 ms - - req=549bf01e-8e1c-4cd9-a8bd-50290d148c6a {"service":"back-end"}
+2026-06-02T09:22:49.722Z [info] GET /api/reviews/can-review/680de42db30140a9e2dcbb71 401 2.831 ms - 62 req=aa9c4a57-34ed-41cf-9b30-c4dd4a27365a {"service":"back-end"}
+2026-06-02T09:22:49.725Z [info] GET /api/users/profile 401 1.008 ms - 62 req=e607912f-6471-4deb-8bfe-a80e1d5ea420 {"service":"back-end"}
+2026-06-02T09:22:49.728Z [info] GET /api/carts/me 401 1.329 ms - 62 req=8d43ebdb-dff0-4444-b2ad-053885818c8e {"service":"back-end"}
+2026-06-02T09:22:49.733Z [info] GET /api/reviews/my-reviews 401 0.850 ms - 62 req=c1245216-184d-45c6-807e-0da9cb60d205 {"service":"back-end"}
+2026-06-02T09:22:49.739Z [info] GET /api/carts/me 401 1.229 ms - 62 req=8261c071-f2ca-429c-9233-f6414dfbbcdb {"service":"back-end"}
+2026-06-02T09:22:49.748Z [info] GET /api/carts/me 401 1.271 ms - 62 req=8e1c80e3-10e0-48a4-b09f-52d4b868fd89 {"service":"back-end"}
+2026-06-02T09:22:49.787Z [info] GET /api/categories 304 75.681 ms - - req=2fc8c2ab-f83b-4383-8e5f-6752f4c830a1 {"service":"back-end"}
+2026-06-02T09:22:50.259Z [info] GET /api/products/sua-bot-predogen-cho-cho-con-110g 200 524.520 ms - 32528 req=943bbafb-6928-44b7-878a-955e8873b0f8 {"service":"back-end"}
+2026-06-02T09:22:51.064Z [info] GET /api/products 304 1335.320 ms - - req=4661848c-809e-4d0e-95e3-881e65c17054 {"service":"back-end"}
+2026-06-02T09:28:51.772Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T09:28:51.809Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T09:28:51.814Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T09:28:51.815Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T09:28:51.830Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T09:28:51.834Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T09:28:51.836Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T09:28:51.922Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T09:28:51.935Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:15:15.368Z [warn] MongoDB disconnected {"service":"back-end"}
+2026-06-02T10:15:15.373Z [warn] MongoDB connection failed. Server continuing without DB. Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/ {"service":"back-end"}
+2026-06-02T10:15:15.376Z [error] MongoDB connection error Server selection timed out after 5000 ms {"service":"back-end"}
+2026-06-02T10:15:39.985Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:15:39.993Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:15:39.995Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:15:40.001Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:15:40.005Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:15:40.007Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:15:40.008Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:15:40.043Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:15:40.050Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:15:40.580Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:15:40.581Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:15:46.872Z [info] GET /api/categories 304 76.447 ms - - req=7a5dcd6d-f602-4ee1-ad36-f8b6ff02364f {"service":"back-end"}
+2026-06-02T10:15:46.998Z [info] GET /api/products/product/sales 200 186.324 ms - 30146 req=dc927dfc-1a5c-49d9-9804-aeabd32d1d52 {"service":"back-end"}
+2026-06-02T10:15:47.086Z [info] GET /api/categories/shop-cho-meo 200 275.874 ms - 102387 req=b71b1de6-2c21-40ca-a1d6-1031eb7ff8b1 {"service":"back-end"}
+2026-06-02T10:15:47.092Z [info] GET /api/products 200 288.862 ms - 184350 req=a0e9679e-5acb-4a7f-ab58-1246a755ce54 {"service":"back-end"}
+2026-06-02T10:15:47.100Z [info] GET /api/categories/shop-cho-cun 200 293.067 ms - 81964 req=cfe509a3-cf8a-43a9-a9d0-acc08146b8be {"service":"back-end"}
+2026-06-02T10:15:56.295Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":1,"ip":"::1"}
+2026-06-02T10:15:56.296Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:15:56.297Z [info] POST /api/auth/signin 401 113.809 ms - 94 req=f758c413-ff2d-4270-bc9c-9c0455bd8f8c {"service":"back-end"}
+2026-06-02T10:16:19.338Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":2,"ip":"::1"}
+2026-06-02T10:16:19.338Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:16:19.339Z [info] POST /api/auth/signin 401 102.461 ms - 94 req=dfbb8752-6370-4f25-ad2d-225d5886d081 {"service":"back-end"}
+2026-06-02T10:16:21.011Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":3,"ip":"::1"}
+2026-06-02T10:16:21.012Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:16:21.012Z [info] POST /api/auth/signin 401 99.455 ms - 94 req=1c8ab382-2115-4308-87f3-6692fc068669 {"service":"back-end"}
+2026-06-02T10:16:21.924Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":4,"ip":"::1"}
+2026-06-02T10:16:21.925Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:16:21.925Z [info] POST /api/auth/signin 401 98.685 ms - 94 req=5c68c097-915d-4b84-be02-caf150ce4db0 {"service":"back-end"}
+2026-06-02T10:16:23.055Z [warn] Lỗi khi gọi signIn Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau 24 giờ. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:16:23.056Z [info] POST /api/auth/signin 429 103.088 ms - 145 req=df43b194-48b8-4083-9828-84ea3292ac4a {"service":"back-end"}
+2026-06-02T10:17:52.303Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:17:52.315Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:17:52.344Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:17:52.345Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:17:52.348Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:17:52.352Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:17:52.354Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:17:52.414Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:17:52.424Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:17:53.010Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:17:53.012Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:17:59.596Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:17:59.609Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:17:59.612Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:17:59.621Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:17:59.626Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:17:59.630Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:17:59.631Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:17:59.690Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:17:59.701Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:18:00.194Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:18:00.196Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:18:08.157Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:18:08.166Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:18:08.174Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:18:08.175Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:18:08.179Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:18:08.182Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:18:08.183Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:18:08.221Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:18:08.228Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:18:08.717Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:18:08.719Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:18:15.469Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:18:15.490Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:18:15.505Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:18:15.507Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:18:15.515Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:18:15.522Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:18:15.524Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:18:15.613Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:18:15.656Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:18:16.176Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:18:16.178Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:18:21.707Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:18:21.719Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:18:21.723Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:18:21.729Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:18:21.736Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:18:21.739Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:18:21.740Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:18:21.795Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:18:21.805Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:18:23.314Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:18:23.317Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:19:18.499Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:19:18.512Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:19:18.513Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:19:49.104Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:19:49.115Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:19:49.119Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:19:49.126Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:19:49.132Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:19:49.136Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:19:49.137Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:19:49.196Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:19:49.203Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:19:49.792Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:19:49.795Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:19:50.877Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:19:50.887Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:19:50.888Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:19:50.945Z [warn] Redis client disconnected {"service":"back-end"}
+2026-06-02T10:20:02.564Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:20:02.575Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:20:02.579Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:20:02.586Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:20:02.591Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:20:02.595Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:20:02.596Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:20:02.652Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:20:02.659Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:20:03.177Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:20:03.179Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:20:09.254Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:20:09.295Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:20:09.296Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:20:22.351Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:20:22.394Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:20:22.395Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:20:29.693Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:20:29.701Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:20:29.704Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:20:29.705Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:20:29.711Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:20:29.714Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:20:29.715Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:20:29.763Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:20:29.771Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:20:30.253Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:20:30.255Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:20:44.956Z [info] GET /api/categories 304 80.731 ms - - req=92c552ac-4c31-4709-a2ac-544789a2cce8 {"service":"back-end"}
+2026-06-02T10:20:45.057Z [info] GET /api/products/product/sales 304 149.974 ms - - req=8535776d-2c14-4698-9475-c5e9fa1a0338 {"service":"back-end"}
+2026-06-02T10:20:45.131Z [info] GET /api/products 304 239.184 ms - - req=d6806561-9aea-4717-80af-8e47ebec9693 {"service":"back-end"}
+2026-06-02T10:20:45.148Z [info] GET /api/categories/shop-cho-cun 304 248.328 ms - - req=4d87dd48-915b-4fa9-a1f1-1e24cdf1f645 {"service":"back-end"}
+2026-06-02T10:20:45.194Z [info] GET /api/categories/shop-cho-meo 304 289.596 ms - - req=5eee02a6-b9df-4262-92e7-34a4b6c55f27 {"service":"back-end"}
+2026-06-02T10:20:55.187Z [info] GET /api/categories 304 50.430 ms - - req=f213d7a2-476f-46d0-b053-abff77b83529 {"service":"back-end"}
+2026-06-02T10:20:55.526Z [info] GET /api/products/product/sales 304 371.840 ms - - req=95376c2c-8e44-4a19-8d68-f3fcfd710e18 {"service":"back-end"}
+2026-06-02T10:20:55.685Z [info] GET /api/products 304 542.270 ms - - req=e4a04404-3f5e-4155-bac9-2834a5a91f72 {"service":"back-end"}
+2026-06-02T10:20:55.695Z [info] GET /api/categories/shop-cho-cun 304 548.510 ms - - req=caa48027-8139-421f-bb78-78e23b4f669b {"service":"back-end"}
+2026-06-02T10:20:55.769Z [info] GET /api/categories/shop-cho-meo 304 617.182 ms - - req=b359dedf-d904-44f7-ab23-03ec4e18e321 {"service":"back-end"}
+2026-06-02T10:21:13.186Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":1,"ip":"::1"}
+2026-06-02T10:21:13.187Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:21:13.189Z [info] POST /api/auth/signin 401 124.335 ms - 94 req=5b1d99b8-b41a-4a57-8768-2d7b446e6587 {"service":"back-end"}
+2026-06-02T10:21:21.526Z [info] POST /api/auth/signin 200 116.988 ms - 18916 req=167382c5-a640-4bfe-92bc-530a4b1b4aea {"service":"back-end"}
+2026-06-02T10:21:21.684Z [info] GET /api/users/profile 304 105.447 ms - - req=694e7384-68a7-4080-9fc7-ca026ea08914 {"service":"back-end"}
+2026-06-02T10:21:22.856Z [info] GET /api/categories 304 58.149 ms - - req=ca6e1691-efac-4656-a96b-66f2f76a4ba3 {"service":"back-end"}
+2026-06-02T10:21:22.874Z [info] GET /api/categories/catetory/shop-cho-cun 304 60.826 ms - - req=f75423f9-5996-4759-b320-ed10a9cd6b15 {"service":"back-end"}
+2026-06-02T10:21:22.952Z [info] GET /api/categories 304 84.095 ms - - req=ee508167-bb7b-4d07-8c60-2713f0443577 {"service":"back-end"}
+2026-06-02T10:21:22.954Z [info] GET /api/users/profile 304 178.059 ms - - req=efef15b2-5224-408b-9bd8-eb8c1cc25af0 {"service":"back-end"}
+2026-06-02T10:21:22.990Z [info] GET /api/carts/me 200 172.000 ms - 119 req=5d6b26a5-38ee-466c-8ce0-5bc99ebd5d8e {"service":"back-end"}
+2026-06-02T10:21:23.008Z [info] GET /api/categories 304 50.556 ms - - req=0651e84e-e02f-478a-99f4-2424675256df {"service":"back-end"}
+2026-06-02T10:21:23.096Z [info] GET /api/carts/me 304 106.509 ms - - req=f9476440-ad95-405f-a941-c3a8b5525afe {"service":"back-end"}
+2026-06-02T10:21:23.194Z [info] GET /api/carts/me 304 94.243 ms - - req=5908a106-b67b-4581-8c2c-2e4f61ca2b82 {"service":"back-end"}
+2026-06-02T10:21:27.168Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 192.878 ms - - req=831e478b-cf84-4c3d-b465-fdc7dd826d67 {"service":"back-end"}
+2026-06-02T10:21:27.170Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 151.968 ms - - req=e01476c8-3c2c-46ab-b884-5df0f1aba69b {"service":"back-end"}
+2026-06-02T10:21:27.240Z [info] GET /api/dashboard/stats?timeFilter=7days 304 232.839 ms - - req=7cf05429-0e83-47fa-9071-e7bf445589c2 {"service":"back-end"}
+2026-06-02T10:21:27.254Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 237.004 ms - 779 req=5db0e655-2256-43a9-b432-e119ebc785ed {"service":"back-end"}
+2026-06-02T10:21:27.351Z [info] GET /api/products 304 178.748 ms - - req=7b1a63a3-1965-4d92-bc50-301f1953ceec {"service":"back-end"}
+2026-06-02T10:21:27.413Z [info] GET /api/users/paginated?page=1&limit=1 304 239.516 ms - - req=8c82a80b-0d0e-4c8f-bf9f-3aff155e21cb {"service":"back-end"}
+2026-06-02T10:21:27.513Z [info] GET /api/dashboard/recent-orders?limit=5 200 502.992 ms - 663 req=dc278f0a-a161-42b1-9c2a-e42dbd9460b4 {"service":"back-end"}
+2026-06-02T10:21:27.654Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 304 636.232 ms - - req=1450d8f5-48fb-4501-8ea8-2a65bea8b2ff {"service":"back-end"}
+2026-06-02T10:21:27.952Z [info] GET /api/orders 200 245.624 ms - 1691652 req=cba8de73-169a-4af4-adbf-a876591e3419 {"service":"back-end"}
+2026-06-02T10:21:28.719Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 141.454 ms - - req=107af31b-1333-406b-8f1d-718f6a280fa6 {"service":"back-end"}
+2026-06-02T10:21:28.840Z [info] GET /api/orders 200 268.089 ms - 1691652 req=0513cc6b-d886-45c5-af77-3c6907add436 {"service":"back-end"}
+2026-06-02T10:21:28.842Z [info] GET /api/orders/stats 200 263.793 ms - 111 req=6b6b5fe2-52e0-44a3-9c94-746f4e78a522 {"service":"back-end"}
+2026-06-02T10:21:35.491Z [info] PUT /api/orders/67d7d441829c3db098dca720 200 445.127 ms - 21613 req=4412a1f2-b038-4a7a-8425-253339bebf29 {"service":"back-end"}
+2026-06-02T10:21:39.439Z [info] PUT /api/orders/67dc26858391f389c6b8115f 200 412.655 ms - 32155 req=93a7e5a8-a2e7-41be-b32c-9cdf363b41f5 {"service":"back-end"}
+2026-06-02T10:21:41.370Z [info] PUT /api/orders/67dc29908391f389c6b81160 200 407.544 ms - 21613 req=053510f5-e9a1-47e9-b233-2bdb8a859d02 {"service":"back-end"}
+2026-06-02T10:21:42.935Z [info] PUT /api/orders/68062c4be477fcff0944a77f 200 429.301 ms - 31452 req=62b8569c-5d2d-4715-8707-052077249db7 {"service":"back-end"}
+2026-06-02T10:21:44.308Z [info] PUT /api/orders/68062ca0e477fcff0944a7e7 200 498.986 ms - 33801 req=8275a935-c387-40ab-ab04-88c315345f0e {"service":"back-end"}
+2026-06-02T10:21:45.551Z [info] PUT /api/orders/680637f93006a9628e8435e7 200 321.131 ms - 31385 req=9e648aae-caf1-4d93-93f6-0a16fab60487 {"service":"back-end"}
+2026-06-02T10:21:47.584Z [info] PUT /api/orders/680638673006a9628e843654 200 324.176 ms - 31407 req=a5aeac46-b982-4acb-94f3-89a38427f7ae {"service":"back-end"}
+2026-06-02T10:21:51.886Z [info] PUT /api/orders/6906383f1bfacb0cb37c2c89 200 429.475 ms - 9884 req=d0170829-51f0-401c-9ce0-a34ad420a2c9 {"service":"back-end"}
+2026-06-02T10:21:57.362Z [info] PUT /api/orders/6a1acd4660ec624e2ccff740 200 318.987 ms - 2442 req=f1ffcd0c-44bf-4724-90ad-beab2c581db0 {"service":"back-end"}
+2026-06-02T10:22:14.340Z [info] GET /api/categories 304 77.441 ms - - req=1d18cc30-0bd8-40cb-9d50-9d62fc75558e {"service":"back-end"}
+2026-06-02T10:22:14.472Z [info] GET /api/products 200 214.186 ms - 184351 req=9433dd74-ff3c-4770-a8ec-f84db6903ecf {"service":"back-end"}
+2026-06-02T10:22:14.480Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 226.855 ms - - req=4eac2799-5dcc-4605-ab9d-c0d521bd9db4 {"service":"back-end"}
+2026-06-02T10:22:17.057Z [info] GET /api/dashboard/revenue-by-day?timeFilter=7days 304 179.775 ms - - req=bec3f3d0-5798-493a-a68e-05bcccdee46d {"service":"back-end"}
+2026-06-02T10:22:17.104Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 229.127 ms - - req=bdda2c04-c891-4391-9f20-c89bdddceaf4 {"service":"back-end"}
+2026-06-02T10:22:17.113Z [info] GET /api/dashboard/recent-orders?limit=5 304 238.807 ms - - req=75cd677f-a7e9-43fc-ac0e-b1ff2a8a9174 {"service":"back-end"}
+2026-06-02T10:22:17.152Z [info] GET /api/dashboard/stats?timeFilter=7days 200 277.964 ms - 111 req=bdbf3e52-7ded-493b-8f3b-83d4cbadc198 {"service":"back-end"}
+2026-06-02T10:22:17.156Z [info] GET /api/dashboard/notifications?timeFilter=7days 200 281.413 ms - 779 req=f6d62800-82ca-4158-ad7b-d62a6f703e13 {"service":"back-end"}
+2026-06-02T10:22:17.291Z [info] GET /api/products 304 422.864 ms - - req=473fb578-84fc-440c-890d-a7380ab167ac {"service":"back-end"}
+2026-06-02T10:22:17.786Z [info] GET /api/dashboard/revenue-by-category?timeFilter=7days 200 261.724 ms - 159 req=8d250400-0b59-4fbd-bb80-f9ce4a9c011a {"service":"back-end"}
+2026-06-02T10:22:17.835Z [info] GET /api/users/paginated?page=1&limit=1 304 313.266 ms - - req=d71a6ce6-2b9f-4b12-a4af-aa011cc714f4 {"service":"back-end"}
+2026-06-02T10:22:18.278Z [info] GET /api/products 304 259.992 ms - - req=00fc062b-d62d-4b2a-8e04-f825c61a76c8 {"service":"back-end"}
+2026-06-02T10:22:19.346Z [info] GET /api/orders 200 303.460 ms - 1691656 req=1d7dd5e8-c312-4a6b-9e3e-72de2e9a18ad {"service":"back-end"}
+2026-06-02T10:22:26.036Z [info] GET /api/dashboard/revenue-by-day?timeFilter=30days 200 187.333 ms - 349 req=66c8d72b-ef90-4343-9b40-4cf6d9fae7aa {"service":"back-end"}
+2026-06-02T10:22:26.052Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 224.790 ms - - req=fe6f979e-1e0e-44ea-b8e0-6893a4e9da1b {"service":"back-end"}
+2026-06-02T10:22:26.092Z [info] GET /api/dashboard/recent-orders?limit=5 304 249.825 ms - - req=5eff57cf-ec82-4f2c-af86-7476576260ff {"service":"back-end"}
+2026-06-02T10:22:26.099Z [info] GET /api/dashboard/stats?timeFilter=30days 200 276.494 ms - 111 req=b4093377-ef85-4e5b-925b-557e8a9e85b7 {"service":"back-end"}
+2026-06-02T10:22:26.134Z [info] GET /api/dashboard/notifications?timeFilter=30days 200 300.068 ms - 779 req=2c6e5d00-6483-4b0d-a7cc-85da59e03e8c {"service":"back-end"}
+2026-06-02T10:22:26.140Z [info] GET /api/dashboard/revenue-by-category?timeFilter=30days 200 264.683 ms - 159 req=49f675aa-bd7f-42a2-a053-6cfe1ae47fa2 {"service":"back-end"}
+2026-06-02T10:22:26.269Z [info] GET /api/users/paginated?page=1&limit=1 304 230.226 ms - - req=d8b69b6f-eed0-46c8-97a1-877bfffb6ce5 {"service":"back-end"}
+2026-06-02T10:22:26.400Z [info] GET /api/products 304 345.615 ms - - req=472e1ce5-f710-4798-b4dc-d674cd959001 {"service":"back-end"}
+2026-06-02T10:22:26.752Z [info] GET /api/orders 200 330.915 ms - 1691656 req=895500b8-4307-4664-94a7-6efada7d9c41 {"service":"back-end"}
+2026-06-02T10:22:30.361Z [info] GET /api/users/6a00b69d0af467688ea55f1b 304 361.941 ms - - req=e2bce127-84e3-4b7c-bb0e-5680b6a25c31 {"service":"back-end"}
+2026-06-02T10:22:30.390Z [info] GET /api/dashboard/recent-orders?limit=5 304 382.733 ms - - req=a4e552c9-b69c-4076-a694-685ad881a526 {"service":"back-end"}
+2026-06-02T10:22:30.445Z [info] GET /api/dashboard/stats?timeFilter=year 200 424.201 ms - 111 req=547e0d2a-5e70-4e78-ae7b-3bd7517a0b9f {"service":"back-end"}
+2026-06-02T10:22:30.461Z [info] GET /api/products 304 436.410 ms - - req=fa193f78-f1f3-4ef8-84e1-c3817bf6b857 {"service":"back-end"}
+2026-06-02T10:22:30.467Z [info] GET /api/dashboard/notifications?timeFilter=year 200 437.877 ms - 779 req=51534a73-d01d-402e-ae8f-f6bf61250542 {"service":"back-end"}
+2026-06-02T10:22:30.469Z [info] GET /api/dashboard/revenue-by-day?timeFilter=year 200 103.965 ms - 195 req=df9eb0b8-fdcc-48a7-8228-7a0cc22f2d92 {"service":"back-end"}
+2026-06-02T10:22:30.616Z [info] GET /api/dashboard/revenue-by-category?timeFilter=year 200 211.774 ms - 159 req=fc199e67-fe8e-4c9c-9bca-218266113cb6 {"service":"back-end"}
+2026-06-02T10:22:30.910Z [info] GET /api/users/paginated?page=1&limit=1 304 894.361 ms - - req=811aac5d-1c49-4ef6-93c2-71eb251b4667 {"service":"back-end"}
+2026-06-02T10:22:31.198Z [info] GET /api/orders 200 277.751 ms - 1691656 req=40fba5e1-b513-4c48-a9c0-e22aa035284d {"service":"back-end"}
+2026-06-02T10:24:00.138Z [info] GET /api/categories 304 48.116 ms - - req=133018a1-2598-41dd-9731-f7d3e14a7a0e {"service":"back-end"}
+2026-06-02T10:24:00.147Z [info] GET /api/categories/catetory/shop-cho-cun 304 49.569 ms - - req=1316d04b-68a3-4ec9-9599-21bd8d0e8cb1 {"service":"back-end"}
+2026-06-02T10:24:00.199Z [info] GET /api/categories 304 48.648 ms - - req=6f1d23dd-c77a-4597-8425-331d1facebea {"service":"back-end"}
+2026-06-02T10:24:00.233Z [info] GET /api/users/profile 304 139.361 ms - - req=89cb5531-34c8-404d-866d-9805d168b971 {"service":"back-end"}
+2026-06-02T10:24:00.240Z [info] GET /api/carts/me 304 139.854 ms - - req=152426ce-a2e6-42ae-9f62-e4ac3d73affd {"service":"back-end"}
+2026-06-02T10:24:00.250Z [info] GET /api/categories 304 49.852 ms - - req=4102c1ef-f9f8-4aad-bcf9-26c854e7d61f {"service":"back-end"}
+2026-06-02T10:24:00.337Z [info] GET /api/carts/me 304 94.174 ms - - req=91afb807-53b5-4229-a1a1-e84fa2f5bb27 {"service":"back-end"}
+2026-06-02T10:24:00.439Z [info] GET /api/carts/me 304 98.810 ms - - req=1dc5df87-9b7a-44bd-b824-0f004679e610 {"service":"back-end"}
+2026-06-02T10:24:02.427Z [info] POST /api/auth/signout 200 1.405 ms - 41 req=c225d594-cd53-4f2d-a2d5-603ca2d8b4f4 {"service":"back-end"}
+2026-06-02T10:24:04.548Z [info] GET /api/categories 304 44.975 ms - - req=93c72d79-be7d-45de-9c7c-7e44e54aa5cb {"service":"back-end"}
+2026-06-02T10:24:08.838Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":1,"ip":"::1"}
+2026-06-02T10:24:08.839Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:08.841Z [info] POST /api/auth/signin 401 109.144 ms - 94 req=d4924b24-8be8-40e4-a192-f86fafa14211 {"service":"back-end"}
+2026-06-02T10:24:09.942Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":2,"ip":"::1"}
+2026-06-02T10:24:09.943Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:09.944Z [info] POST /api/auth/signin 401 111.621 ms - 94 req=4fb32c21-fb71-4516-818b-c386173044ea {"service":"back-end"}
+2026-06-02T10:24:10.767Z [warn] Lỗi khi gọi signIn Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau 30 giây. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:10.769Z [info] POST /api/auth/signin 429 111.634 ms - 142 req=2ce68f1f-d301-493f-970f-4d7b71d1bc7d {"service":"back-end"}
+2026-06-02T10:24:37.787Z [info] GET /api/categories 304 45.164 ms - - req=e314b241-4fc9-4f8c-88fa-a7961b96ca16 {"service":"back-end"}
+2026-06-02T10:24:37.842Z [info] GET /api/products/product/sales 200 91.780 ms - 30213 req=d469125a-3f2a-4985-a664-7415fc9cbcf8 {"service":"back-end"}
+2026-06-02T10:24:37.932Z [info] GET /api/categories/shop-cho-cun 304 186.242 ms - - req=f6048a7c-a283-4769-96d9-e424b0f8eea8 {"service":"back-end"}
+2026-06-02T10:24:37.988Z [info] GET /api/products 304 244.878 ms - - req=9279b0ac-35df-4e20-b334-15dfef2f13e1 {"service":"back-end"}
+2026-06-02T10:24:37.994Z [info] GET /api/categories/shop-cho-meo 200 245.974 ms - 102388 req=3d3bbd2d-0ef0-4020-b132-47827ac0d039 {"service":"back-end"}
+2026-06-02T10:24:40.889Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":1,"ip":"::1"}
+2026-06-02T10:24:40.890Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:40.892Z [info] POST /api/auth/signin 401 114.302 ms - 94 req=a72ba4b9-4e3f-4c4d-bb54-f7d4a9ff0435 {"service":"back-end"}
+2026-06-02T10:24:42.691Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":2,"ip":"::1"}
+2026-06-02T10:24:42.692Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:42.693Z [info] POST /api/auth/signin 401 110.514 ms - 94 req=396e76d6-3cff-4837-a632-a837f6fd376a {"service":"back-end"}
+2026-06-02T10:24:43.369Z [warn] Lỗi khi gọi signIn Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau 30 giây. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:24:43.371Z [info] POST /api/auth/signin 429 114.572 ms - 142 req=e1ed18e3-f661-4a1a-ad86-34bf7784effe {"service":"back-end"}
+2026-06-02T10:26:02.277Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:26:02.288Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T10:26:02.298Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:26:02.298Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:26:02.304Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T10:26:02.307Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T10:26:02.308Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T10:26:02.363Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T10:26:02.371Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T10:26:02.977Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T10:26:02.981Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T10:26:06.409Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:26:06.423Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:26:06.424Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:26:31.607Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":4,"ip":"::1"}
+2026-06-02T10:26:31.608Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:26:31.612Z [info] POST /api/auth/signin 401 125.431 ms - 94 req=cd58b7c2-022c-4be9-835d-528c33862f5f {"service":"back-end"}
+2026-06-02T10:26:32.711Z [warn] Lỗi khi gọi signIn Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau 3 phút. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:26:32.713Z [info] POST /api/auth/signin 429 113.363 ms - 142 req=f0bf02c4-0d35-491d-946e-97ca4abdcf7f {"service":"back-end"}
+2026-06-02T10:28:13.861Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T10:28:13.894Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T10:28:13.896Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T10:29:03.536Z [info] GET /api/categories 304 55.165 ms - - req=a5ba87a9-97c2-461a-9d45-89260c997942 {"service":"back-end"}
+2026-06-02T10:29:03.595Z [info] GET /api/products/product/sales 304 99.227 ms - - req=63faee5f-3db0-4e44-85bc-7af2b5090201 {"service":"back-end"}
+2026-06-02T10:29:03.695Z [info] GET /api/categories/shop-cho-cun 304 204.315 ms - - req=a26007db-523e-40f0-a5b3-eed5af395c5a {"service":"back-end"}
+2026-06-02T10:29:03.705Z [info] GET /api/products 304 220.196 ms - - req=6dd22a01-950a-4ad0-b056-aeaedd19591e {"service":"back-end"}
+2026-06-02T10:29:03.737Z [info] GET /api/categories/shop-cho-meo 304 243.994 ms - - req=15c10a27-c0f0-4191-b13f-bcbb66497cb8 {"service":"back-end"}
+2026-06-02T10:29:06.454Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":1,"ip":"::1"}
+2026-06-02T10:29:06.454Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:29:06.456Z [info] POST /api/auth/signin 401 106.321 ms - 94 req=27838420-3d24-450c-a49e-501e5d5bf780 {"service":"back-end"}
+2026-06-02T10:29:07.467Z [warn] Failed login attempt {"service":"back-end","email":"khongcotien.2023@gmail.com","attempts":2,"ip":"::1"}
+2026-06-02T10:29:07.467Z [warn] Lỗi khi gọi signIn Email hoặc mật khẩu không đúng. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:29:07.468Z [info] POST /api/auth/signin 401 104.391 ms - 94 req=b942d2c7-8377-4284-8148-dfd7433a7f41 {"service":"back-end"}
+2026-06-02T10:29:08.079Z [warn] Lỗi khi gọi signIn Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau 30 giây. {"service":"back-end","email":"khongcotien.2023@gmail.com"}
+2026-06-02T10:29:08.081Z [info] POST /api/auth/signin 429 110.472 ms - 142 req=d60630f9-91ae-4306-9d91-75fb37deaf51 {"service":"back-end"}

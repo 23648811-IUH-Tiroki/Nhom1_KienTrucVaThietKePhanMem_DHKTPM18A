@@ -5,9 +5,6 @@ const ATTEMPTS_PREFIX = "login_attempts:";
 const LOCK_PREFIX = "lock:";
 const ATTEMPTS_TTL_SECONDS = 24 * 60 * 60;
 
-const LOCK_THRESHOLD = 5;
-const LOCK_DURATION_MS = 24 * 60 * 60 * 1000;
-
 const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
 
 const getAttemptsKey = (email) => `${ATTEMPTS_PREFIX}${normalizeEmail(email)}`;
@@ -19,11 +16,21 @@ const parseNumber = (value) => {
 };
 
 const getRemainingLockText = (remainingMs) => {
-  if (remainingMs <= 0) return "0 giờ 0 phút";
-  const roundedMinutes = Math.ceil(remainingMs / 60000);
-  const hours = Math.floor(roundedMinutes / 60);
-  const minutes = roundedMinutes % 60;
-  return `${hours} giờ`;
+  if (remainingMs <= 0) return "0 giây";
+  const seconds = Math.ceil(remainingMs / 1000);
+  if (seconds < 60) {
+    return `${seconds} giây`;
+  }
+  const minutes = Math.ceil(remainingMs / 60000);
+  if (minutes < 60) {
+    return `${minutes} phút`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if (remMinutes === 0) {
+    return `${hours} giờ`;
+  }
+  return `${hours} giờ ${remMinutes} phút`;
 };
 
 const formatLockMessage = (remainingMs) =>
@@ -135,35 +142,55 @@ export const recordFailedLogin = async (email) => {
     const attempts = await redisClient.incr(attemptsKey);
     await redisClient.expire(attemptsKey, ATTEMPTS_TTL_SECONDS);
 
+    const getRemainingAttemptsToNextTier = (attemptsCount) => {
+      if (attemptsCount < 3) return 3 - attemptsCount;
+      if (attemptsCount < 5) return 5 - attemptsCount;
+      if (attemptsCount < 10) return 10 - attemptsCount;
+      return 0;
+    };
+
     logger.debug("Redis recordFailedLogin attempt", {
       email: normalizedEmail,
       attemptsKey,
       attempts,
-      lockThreshold: LOCK_THRESHOLD,
     });
+
+    let lockDurationMs = 0;
+    if (attempts >= 10) {
+      lockDurationMs = 24 * 60 * 60 * 1000; // 24 giờ
+    } else if (attempts === 5) {
+      lockDurationMs = 3 * 60 * 1000; // 3 phút
+    } else if (attempts === 3) {
+      lockDurationMs = 30 * 1000; // 30 giây
+    }
 
     let lockUntil = null;
     let remainingMs = 0;
     let ttl = null;
     let message = null;
 
-    if (attempts >= LOCK_THRESHOLD) {
+    if (lockDurationMs > 0) {
       const lockKey = getLockKey(normalizedEmail);
-      lockUntil = Date.now() + LOCK_DURATION_MS;
+      lockUntil = Date.now() + lockDurationMs;
       await redisClient.set(lockKey, String(lockUntil), {
-        EX: Math.ceil(LOCK_DURATION_MS / 1000),
+        EX: Math.ceil(lockDurationMs / 1000),
       });
-      await redisClient.del(attemptsKey);
-      remainingMs = LOCK_DURATION_MS;
+
+      // Chỉ xóa đếm số lần sai khi bị khóa vĩnh viễn/tối đa (>= 10 lần)
+      if (attempts >= 10) {
+        await redisClient.del(attemptsKey);
+      }
+
+      remainingMs = lockDurationMs;
       ttl = await redisClient.ttl(lockKey);
       message = formatLockMessage(remainingMs);
     }
 
-    logger.debug("Redis failed login", {
+    logger.debug("Redis failed login result", {
       attemptsKey,
       attempts,
-      lockKey: lockUntil ? getLockKey(normalizedEmail) : null,
       lockUntil,
+      remainingMs,
       ttl,
     });
 
@@ -174,6 +201,7 @@ export const recordFailedLogin = async (email) => {
       remainingMs,
       ttl,
       message,
+      remainingAttempts: getRemainingAttemptsToNextTier(attempts),
     };
   } catch (error) {
     logger.warn("Redis failed login write failed", {
@@ -201,7 +229,7 @@ export const resetLoginState = async (email) => {
     const attemptsKey = getAttemptsKey(normalizedEmail);
     const lockKey = getLockKey(normalizedEmail);
 
-    await redisClient.del(attemptsKey, lockKey);
+    await redisClient.del([attemptsKey, lockKey]);
     logger.debug("Redis login state reset", {
       attemptsKey,
       lockKey,

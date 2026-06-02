@@ -323,7 +323,7 @@ export const signIn = async (userData, req) => {
     throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
       message: "Email hoặc mật khẩu không đúng.",
       loginAttempts: failure.attempts,
-      remainingAttempts: Math.max(0, 5 - failure.attempts),
+      remainingAttempts: failure.remainingAttempts,
     });
   }
 

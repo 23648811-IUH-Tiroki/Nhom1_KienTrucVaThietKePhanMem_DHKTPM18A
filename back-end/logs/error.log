@@ -177,3 +177,4 @@ MongooseError: Operation `products.aggregate()` buffering timed out after 10000m
 2026-06-02T06:30:19.716Z [error] Redis client error {"service":"back-end"}
 2026-06-02T06:30:21.302Z [error] Queue Redis error {"service":"back-end"}
 2026-06-02T06:30:23.314Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T10:15:15.376Z [error] MongoDB connection error Server selection timed out after 5000 ms {"service":"back-end"}
