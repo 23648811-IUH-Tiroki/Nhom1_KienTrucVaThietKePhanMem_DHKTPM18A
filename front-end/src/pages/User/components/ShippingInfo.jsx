@@ -397,6 +397,7 @@ const ShippingInfo = ({ onAddressUpdated }) => {
             if (onAddressUpdated) {
                 onAddressUpdated(response?.data);
             }
+            // toast.success("Thông tin giao hàng đã được cập nhật.");
         } catch (err) {
             console.error("Failed to update shipping address:", err);
             const payloadErrors = err?.response?.data?.errors || {};
@@ -404,6 +405,8 @@ const ShippingInfo = ({ onAddressUpdated }) => {
             toast.error(
                 err?.response?.data?.message || "Không thể lưu địa chỉ giao hàng."
             );
+            toast.error("Vui lòng kiểm tra lại thông tin và thử lại sau.")
+        
         } finally {
             setSaving(false);
         }

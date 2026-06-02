@@ -63,7 +63,7 @@ const UserForm = ({
       setFormData({
         fullName: "",
         birthDate: "",
-        gender: "Nam",
+        gender: "male",
         email: "",
         phone: "",
         address: "",
@@ -245,8 +245,8 @@ const UserForm = ({
           value={formData.gender}
           onChange={handleInputChange}
           options={[
-            { value: "Nam", label: "Nam" },
-            { value: "Nữ", label: "Nữ" },
+            { value: "male", label: "Nam" },
+            { value: "female", label: "Nữ" },
           ]}
           disabled={submitting}
         />

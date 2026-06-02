@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import LoadingOverlay from "../../components/LoadingOverlay";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import Modal from "../../components/Modal";
 
@@ -109,6 +109,16 @@ const UserProfile = () => {
         gender: "",
     });
 
+    const [initialUser, setInitialUser] = useState({
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
+        birthDate: "",
+        avatar: "",
+        gender: "",
+    });
+
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [ordersLoading, setOrdersLoading] = useState(true);
@@ -130,10 +140,24 @@ const UserProfile = () => {
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
-        const date = new Date(dateString);
+        
+        // Parse the date string
+        let date = new Date(dateString);
+        
+        // If date is invalid, try parsing it as is
+        if (isNaN(date.getTime())) {
+            return "";
+        }
+        
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
+        
+        // Validate year is reasonable (between 1900 and current year + 1)
+        if (year < 1900 || year > new Date().getFullYear() + 1) {
+            return "";
+        }
+        
         return `${year}-${month}-${day}`;
     };
 
@@ -178,6 +202,22 @@ const UserProfile = () => {
         setErrors(nextErrors);
         return Object.keys(nextErrors).length === 0;
     };
+
+    const hasProfileChanged = () => {
+        return (
+            user.fullName !== initialUser.fullName ||
+            user.email !== initialUser.email ||
+            user.phone !== initialUser.phone ||
+            user.address !== initialUser.address ||
+            user.birthDate !== initialUser.birthDate ||
+            user.gender !== initialUser.gender
+        );
+    };
+
+    const handleCancelEdit = () => {
+        setUser(initialUser);
+        setErrors({});
+    };
     
     const convertBase64ToImage = (value) => {
         if (!value) return "/avatar.png";
@@ -200,6 +240,7 @@ const UserProfile = () => {
                 const userData = res.data;
                 userData.avatar = convertBase64ToImage(userData.avatar);
                 setUser(userData);
+                setInitialUser(userData);
 
                 await fetchUserOrders(userData._id);
                 setLoading(false);
@@ -529,10 +570,10 @@ const UserProfile = () => {
                                             <div>
                                                 <label className="text-sm font-medium text-slate-600">Giới tính</label>
                                                 <select
-                                                    value={user.gender === true ? "male" : user.gender === false ? "female" : ""}
+                                                    value={user.gender || ""}
                                                     onChange={(e) => setUser({
                                                         ...user,
-                                                        gender: e.target.value === "male" ? true : e.target.value === "female" ? false : "",
+                                                        gender: e.target.value,
                                                     })}
                                                     className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-200"
                                                 >
@@ -585,12 +626,21 @@ const UserProfile = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={handleUpdateProfile}
-                                            className="mt-4 bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-500 transition"
-                                        >
-                                            Cập nhật thông tin
-                                        </button>
+                                        <div className="flex gap-3 mt-4">
+                                            <button
+                                                onClick={handleUpdateProfile}
+                                                disabled={!hasProfileChanged()}
+                                                className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-500 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-600"
+                                            >
+                                                Cập nhật thông tin
+                                            </button>
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="flex-1 border border-slate-300 text-slate-700 px-6 py-3 rounded-xl font-semibold hover:bg-slate-50 transition"
+                                            >
+                                                Hủy
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -717,7 +767,7 @@ const UserProfile = () => {
                 </div>
             </div>
             <Footer />
-            <ToastContainer />
+
             <ScrollToTopButton />
         </>
     );

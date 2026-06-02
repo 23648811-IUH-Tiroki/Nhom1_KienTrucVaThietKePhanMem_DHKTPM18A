@@ -2950,3 +2950,541 @@ MongooseError: Operation `products.aggregate()` buffering timed out after 10000m
 2026-06-01T18:41:14.723Z [info] GET /api/products 304 372.422 ms - - req=c4caf6d8-574c-462c-b8af-7d2c2911da74 {"service":"back-end"}
 2026-06-01T18:43:27.648Z [info] PUT /api/users/69ee4ce8438c4d958797f6b8 200 312.876 ms - 541 req=e6c3860e-29f5-43ef-9951-2c7a3e50d1c2 {"service":"back-end"}
 2026-06-01T18:43:28.101Z [info] GET /api/users/search?searchTerm=l%C3%AA+th%E1%BB%8B+ng%E1%BB%8Dc 200 440.487 ms - 1062 req=cdbcea19-de2d-4d9b-a81a-8c7dddac1ab4 {"service":"back-end"}
+2026-06-01T18:43:55.609Z [info] Redis client connecting {"service":"back-end"}
+2026-06-01T18:43:55.615Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-01T18:43:55.623Z [info] Redis client ready {"service":"back-end"}
+2026-06-01T18:43:55.624Z [info] Redis client connected {"service":"back-end"}
+2026-06-01T18:43:55.626Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-01T18:43:55.628Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-01T18:43:55.629Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-01T18:43:55.662Z [info] Background workers initialized {"service":"back-end"}
+2026-06-01T18:43:55.667Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-01T18:43:56.456Z [info] MongoDB connected {"service":"back-end"}
+2026-06-01T18:43:56.457Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-01T19:01:03.881Z [info] MongoDB reconnected {"service":"back-end"}
+2026-06-01T19:01:03.882Z [info] MongoDB reconnected {"service":"back-end"}
+2026-06-01T19:01:15.365Z [warn] MongoDB disconnected {"service":"back-end"}
+2026-06-01T19:01:15.691Z [info] MongoDB connected {"service":"back-end"}
+2026-06-01T19:01:15.692Z [info] MongoDB reconnected {"service":"back-end"}
+2026-06-02T06:27:49.330Z [warn] Redis reconnect attempt {"service":"back-end","attempt":0,"delay":0}
+2026-06-02T06:27:49.333Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:27:49.335Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:49.336Z [warn] Queue Redis reconnecting {"service":"back-end","delay":50}
+2026-06-02T06:27:49.336Z [warn] Queue Redis connection will retry on demand Connection is closed. {"service":"back-end"}
+2026-06-02T06:27:49.344Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:27:49.346Z [warn] Redis reconnect attempt {"service":"back-end","attempt":1,"delay":1000}
+2026-06-02T06:27:49.347Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:27:49.390Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:49.393Z [warn] Queue Redis reconnecting {"service":"back-end","delay":100}
+2026-06-02T06:27:49.498Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:49.500Z [warn] Queue Redis reconnecting {"service":"back-end","delay":150}
+2026-06-02T06:27:49.654Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:49.655Z [warn] Queue Redis reconnecting {"service":"back-end","delay":200}
+2026-06-02T06:27:49.869Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:49.870Z [warn] Queue Redis reconnecting {"service":"back-end","delay":250}
+2026-06-02T06:27:50.135Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:50.137Z [warn] Queue Redis reconnecting {"service":"back-end","delay":300}
+2026-06-02T06:27:50.350Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:27:50.352Z [warn] Redis reconnect attempt {"service":"back-end","attempt":2,"delay":2000}
+2026-06-02T06:27:50.353Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:27:50.445Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:50.447Z [warn] Queue Redis reconnecting {"service":"back-end","delay":350}
+2026-06-02T06:27:50.801Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:50.803Z [warn] Queue Redis reconnecting {"service":"back-end","delay":400}
+2026-06-02T06:27:51.206Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:51.207Z [warn] Queue Redis reconnecting {"service":"back-end","delay":450}
+2026-06-02T06:27:51.674Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:51.676Z [warn] Queue Redis reconnecting {"service":"back-end","delay":500}
+2026-06-02T06:27:52.185Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:52.187Z [warn] Queue Redis reconnecting {"service":"back-end","delay":550}
+2026-06-02T06:27:52.354Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:27:52.360Z [warn] Redis reconnect attempt {"service":"back-end","attempt":3,"delay":3000}
+2026-06-02T06:27:52.361Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:27:52.742Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:52.743Z [warn] Queue Redis reconnecting {"service":"back-end","delay":600}
+2026-06-02T06:27:53.350Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:53.352Z [warn] Queue Redis reconnecting {"service":"back-end","delay":650}
+2026-06-02T06:27:54.006Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:54.007Z [warn] Queue Redis reconnecting {"service":"back-end","delay":700}
+2026-06-02T06:27:54.724Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:54.725Z [warn] Queue Redis reconnecting {"service":"back-end","delay":750}
+2026-06-02T06:27:55.363Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:27:55.365Z [warn] Redis reconnect attempt {"service":"back-end","attempt":4,"delay":4000}
+2026-06-02T06:27:55.366Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:27:55.490Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:55.491Z [warn] Queue Redis reconnecting {"service":"back-end","delay":800}
+2026-06-02T06:27:56.300Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:56.302Z [warn] Queue Redis reconnecting {"service":"back-end","delay":850}
+2026-06-02T06:27:57.158Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:57.159Z [warn] Queue Redis reconnecting {"service":"back-end","delay":900}
+2026-06-02T06:27:58.061Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:58.069Z [warn] Queue Redis reconnecting {"service":"back-end","delay":950}
+2026-06-02T06:27:59.021Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:27:59.022Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1000}
+2026-06-02T06:27:59.379Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:27:59.382Z [warn] Redis reconnect attempt {"service":"back-end","attempt":5,"delay":5000}
+2026-06-02T06:27:59.383Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:00.039Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:00.040Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1050}
+2026-06-02T06:28:01.101Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:01.103Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1100}
+2026-06-02T06:28:02.205Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:02.206Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1150}
+2026-06-02T06:28:03.360Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:03.361Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1200}
+2026-06-02T06:28:04.388Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:04.390Z [warn] Redis reconnect attempt {"service":"back-end","attempt":6,"delay":5000}
+2026-06-02T06:28:04.390Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:04.562Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:04.565Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1250}
+2026-06-02T06:28:05.829Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:05.830Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1300}
+2026-06-02T06:28:07.142Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:07.143Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1350}
+2026-06-02T06:28:08.498Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:08.499Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1400}
+2026-06-02T06:28:09.397Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:09.400Z [warn] Redis reconnect attempt {"service":"back-end","attempt":7,"delay":5000}
+2026-06-02T06:28:09.400Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:09.912Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:09.913Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1450}
+2026-06-02T06:28:11.373Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:11.376Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1500}
+2026-06-02T06:28:12.887Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:12.888Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1550}
+2026-06-02T06:28:14.410Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:14.413Z [warn] Redis reconnect attempt {"service":"back-end","attempt":8,"delay":5000}
+2026-06-02T06:28:14.413Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:14.442Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:14.443Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1600}
+2026-06-02T06:28:16.057Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:16.059Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1650}
+2026-06-02T06:28:17.710Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:17.712Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1700}
+2026-06-02T06:28:19.423Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:19.426Z [warn] Redis reconnect attempt {"service":"back-end","attempt":9,"delay":5000}
+2026-06-02T06:28:19.426Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:19.427Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:19.428Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1750}
+2026-06-02T06:28:21.192Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:21.193Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1800}
+2026-06-02T06:28:23.002Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:23.004Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1850}
+2026-06-02T06:28:24.434Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:24.438Z [warn] Redis reconnect attempt {"service":"back-end","attempt":10,"delay":5000}
+2026-06-02T06:28:24.438Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:24.857Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:24.859Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1900}
+2026-06-02T06:28:26.763Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:26.765Z [warn] Queue Redis reconnecting {"service":"back-end","delay":1950}
+2026-06-02T06:28:28.729Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:28.730Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:29.444Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:29.446Z [warn] Redis reconnect attempt {"service":"back-end","attempt":11,"delay":5000}
+2026-06-02T06:28:29.446Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:30.739Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:30.740Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:32.749Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:32.750Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:34.449Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:34.452Z [warn] Redis reconnect attempt {"service":"back-end","attempt":12,"delay":5000}
+2026-06-02T06:28:34.452Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:34.763Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:34.765Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:36.771Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:36.772Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:38.784Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:38.785Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:39.453Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:39.455Z [warn] Redis reconnect attempt {"service":"back-end","attempt":13,"delay":5000}
+2026-06-02T06:28:39.456Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:40.792Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:40.793Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:42.802Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:42.803Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:44.480Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:44.495Z [warn] Redis reconnect attempt {"service":"back-end","attempt":14,"delay":5000}
+2026-06-02T06:28:44.496Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:44.811Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:44.813Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:46.816Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:46.817Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:48.829Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:48.831Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:49.511Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:49.512Z [warn] Redis reconnect attempt {"service":"back-end","attempt":15,"delay":5000}
+2026-06-02T06:28:49.512Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:50.839Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:50.840Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:52.846Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:52.847Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:54.514Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:54.517Z [warn] Redis reconnect attempt {"service":"back-end","attempt":16,"delay":5000}
+2026-06-02T06:28:54.517Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:28:54.857Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:54.858Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:56.865Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:56.867Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:58.874Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:28:58.875Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:28:59.528Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:28:59.530Z [warn] Redis reconnect attempt {"service":"back-end","attempt":17,"delay":5000}
+2026-06-02T06:28:59.530Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:00.891Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:00.904Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:02.911Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:02.912Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:04.544Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:04.547Z [warn] Redis reconnect attempt {"service":"back-end","attempt":18,"delay":5000}
+2026-06-02T06:29:04.548Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:04.920Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:04.921Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:06.936Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:06.938Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:08.945Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:08.947Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:09.563Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:09.566Z [warn] Redis reconnect attempt {"service":"back-end","attempt":19,"delay":5000}
+2026-06-02T06:29:09.566Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:10.950Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:10.951Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:12.968Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:12.969Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:14.568Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:14.570Z [warn] Redis reconnect attempt {"service":"back-end","attempt":20,"delay":5000}
+2026-06-02T06:29:14.570Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:14.974Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:14.975Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:16.989Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:16.992Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:18.994Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:18.995Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:19.586Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:19.588Z [warn] Redis reconnect attempt {"service":"back-end","attempt":21,"delay":5000}
+2026-06-02T06:29:19.589Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:21.003Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:21.004Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:23.021Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:23.023Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:24.591Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:24.592Z [warn] Redis reconnect attempt {"service":"back-end","attempt":22,"delay":5000}
+2026-06-02T06:29:24.593Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:25.030Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:25.032Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:27.039Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:27.040Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:29.050Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:29.051Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:29.605Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:29.607Z [warn] Redis reconnect attempt {"service":"back-end","attempt":23,"delay":5000}
+2026-06-02T06:29:29.607Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:31.056Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:31.058Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:33.063Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:33.064Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:34.619Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:34.621Z [warn] Redis reconnect attempt {"service":"back-end","attempt":24,"delay":5000}
+2026-06-02T06:29:34.622Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:35.074Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:35.075Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:37.080Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:37.082Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:39.086Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:39.087Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:39.627Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:39.630Z [warn] Redis reconnect attempt {"service":"back-end","attempt":25,"delay":5000}
+2026-06-02T06:29:39.630Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:41.093Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:41.094Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:43.104Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:43.106Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:44.631Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:44.634Z [warn] Redis reconnect attempt {"service":"back-end","attempt":26,"delay":5000}
+2026-06-02T06:29:44.635Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:45.114Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:45.115Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:47.119Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:47.120Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:49.136Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:49.137Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:49.646Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:49.648Z [warn] Redis reconnect attempt {"service":"back-end","attempt":27,"delay":5000}
+2026-06-02T06:29:49.648Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:51.154Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:51.155Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:53.160Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:53.161Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:54.659Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:54.662Z [warn] Redis reconnect attempt {"service":"back-end","attempt":28,"delay":5000}
+2026-06-02T06:29:54.662Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:29:55.176Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:55.177Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:57.186Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:57.187Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:59.197Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:29:59.198Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:29:59.677Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:29:59.679Z [warn] Redis reconnect attempt {"service":"back-end","attempt":29,"delay":5000}
+2026-06-02T06:29:59.679Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:30:01.214Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:01.215Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:03.222Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:03.223Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:04.687Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:30:04.689Z [warn] Redis reconnect attempt {"service":"back-end","attempt":30,"delay":5000}
+2026-06-02T06:30:04.690Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:30:05.233Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:05.234Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:07.238Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:07.238Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:09.248Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:09.249Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:09.694Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:30:09.695Z [warn] Redis reconnect attempt {"service":"back-end","attempt":31,"delay":5000}
+2026-06-02T06:30:09.696Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:30:11.252Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:11.253Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:13.265Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:13.266Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:14.704Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:30:14.706Z [warn] Redis reconnect attempt {"service":"back-end","attempt":32,"delay":5000}
+2026-06-02T06:30:14.706Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:30:15.280Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:15.281Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:17.290Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:17.291Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:19.294Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:19.295Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:19.713Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:30:19.716Z [warn] Redis reconnect attempt {"service":"back-end","attempt":33,"delay":5000}
+2026-06-02T06:30:19.716Z [error] Redis client error {"service":"back-end"}
+2026-06-02T06:30:21.302Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:21.304Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:23.314Z [error] Queue Redis error {"service":"back-end"}
+2026-06-02T06:30:23.315Z [warn] Queue Redis reconnecting {"service":"back-end","delay":2000}
+2026-06-02T06:30:24.726Z [warn] Redis client reconnecting {"service":"back-end"}
+2026-06-02T06:30:24.729Z [info] Redis client connecting {"service":"back-end"}
+2026-06-02T06:30:24.734Z [info] Redis client ready {"service":"back-end"}
+2026-06-02T06:30:24.735Z [info] Redis client connected {"service":"back-end"}
+2026-06-02T06:30:24.736Z [info] Loading .env {"service":"back-end","envPath":"D:\\Project\\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A-main\\back-end\\.env"}
+2026-06-02T06:30:24.737Z [info] .env file loaded successfully {"service":"back-end"}
+2026-06-02T06:30:24.785Z [info] Background workers initialized {"service":"back-end"}
+2026-06-02T06:30:24.789Z [info] Server is running: http://localhost:5000 {"service":"back-end"}
+2026-06-02T06:30:25.295Z [info] MongoDB connected {"service":"back-end"}
+2026-06-02T06:30:25.298Z [info] Connected to MongoDB {"service":"back-end"}
+2026-06-02T06:30:25.330Z [info] Queue Redis connecting {"service":"back-end","redisUrl":"redis://localhost:6379"}
+2026-06-02T06:30:25.333Z [info] Queue Redis ready {"service":"back-end"}
+2026-06-02T06:31:15.136Z [info] POST /api/auth/signin 200 77.156 ms - 366 req=a210857a-ca20-4664-84e7-2c2367f4e3c1 {"service":"back-end"}
+2026-06-02T06:31:15.246Z [info] GET /api/users/profile 304 100.747 ms - - req=852dfbc0-068b-48c0-aac3-856a74d8be4f {"service":"back-end"}
+2026-06-02T06:31:15.942Z [info] GET /api/categories/catetory/shop-cho-cun 304 71.541 ms - - req=90befb87-0119-4f19-b4cf-d4a1b4042e85 {"service":"back-end"}
+2026-06-02T06:31:15.943Z [info] GET /api/categories 304 77.161 ms - - req=efdd62a2-2103-4489-b6a7-6e2bf7b205ac {"service":"back-end"}
+2026-06-02T06:31:15.956Z [info] GET /api/users/profile 304 104.512 ms - - req=8ccca9e8-f04a-4d0e-b211-9281385e0a16 {"service":"back-end"}
+2026-06-02T06:31:16.002Z [info] GET /api/categories 304 53.632 ms - - req=5a07c27a-8242-4964-90a0-db12d68e776a {"service":"back-end"}
+2026-06-02T06:31:16.078Z [info] GET /api/carts/me 304 174.760 ms - - req=4bf72b50-5295-4385-87c5-02ea4aee52c7 {"service":"back-end"}
+2026-06-02T06:31:16.079Z [info] GET /api/categories 304 58.174 ms - - req=e1b84c7b-676f-4c1a-9653-a21dc535268b {"service":"back-end"}
+2026-06-02T06:31:16.425Z [info] GET /api/carts/me 304 342.337 ms - - req=3f2a804c-c1f3-425a-a6c8-adb5a4f51e94 {"service":"back-end"}
+2026-06-02T06:31:16.573Z [info] GET /api/carts/me 304 145.088 ms - - req=b03363a3-d00f-4c3c-ac98-67c4c8e12ef9 {"service":"back-end"}
+2026-06-02T06:31:40.718Z [info] GET /api/users/profile 304 93.761 ms - - req=41b56d9d-1750-4ce9-931a-c82cd97fc56f {"service":"back-end"}
+2026-06-02T06:31:40.877Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 147.594 ms - 18920 req=cb76a737-8155-4207-9efd-fca67cb633ab {"service":"back-end"}
+2026-06-02T06:31:41.009Z [info] GET /api/categories 304 52.476 ms - - req=1565b794-d257-4df9-b827-b82900891020 {"service":"back-end"}
+2026-06-02T06:31:41.044Z [info] GET /api/users/profile 304 99.582 ms - - req=4cd3fe88-b810-422f-8963-a6f5f8cdc96a {"service":"back-end"}
+2026-06-02T06:31:41.099Z [info] GET /api/carts/me 304 140.455 ms - - req=8768fa9e-806d-4e49-b303-3ead8ecc80a2 {"service":"back-end"}
+2026-06-02T06:31:41.237Z [info] GET /api/carts/me 304 134.960 ms - - req=fe44fe6c-236d-4f2a-854f-155f47b0ce96 {"service":"back-end"}
+2026-06-02T06:31:41.382Z [info] GET /api/carts/me 304 141.451 ms - - req=1b376207-b2b0-4195-bd2c-bc13889066d9 {"service":"back-end"}
+2026-06-02T06:31:52.398Z [info] GET /api/users/profile 200 95.836 ms - 741 req=4bed3588-d476-4432-9a86-c4f38264cbd1 {"service":"back-end"}
+2026-06-02T06:31:52.473Z [info] GET /api/products/product/sales 200 154.328 ms - 30146 req=76536f7c-48f9-4d35-977c-6ca9b9415849 {"service":"back-end"}
+2026-06-02T06:31:52.532Z [info] GET /api/products 200 226.979 ms - 184351 req=e6587bd4-d59a-458d-96c6-7f64af1820e3 {"service":"back-end"}
+2026-06-02T06:31:52.551Z [info] GET /api/categories/shop-cho-cun 200 235.429 ms - 81965 req=f745e01a-e0e7-488c-b4ba-fc263b74155c {"service":"back-end"}
+2026-06-02T06:31:52.632Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 158.174 ms - 18920 req=ad72acb3-3adb-4d1f-ac64-7a7109c81786 {"service":"back-end"}
+2026-06-02T06:31:52.680Z [info] GET /api/categories/shop-cho-meo 200 362.573 ms - 102387 req=545b6039-5168-4644-aa2b-42fb19e09623 {"service":"back-end"}
+2026-06-02T06:31:52.875Z [info] GET /api/categories 200 52.273 ms - 2785 req=35bb7aa9-a681-4cbc-b501-cdc2e5648557 {"service":"back-end"}
+2026-06-02T06:31:52.930Z [info] GET /api/users/profile 200 103.596 ms - 741 req=c0b6b44c-3f05-489d-9493-50cae0a4d43c {"service":"back-end"}
+2026-06-02T06:31:52.996Z [info] GET /api/carts/me 200 167.241 ms - 8064 req=040823c7-c929-472e-8ad2-a947dbecc3be {"service":"back-end"}
+2026-06-02T06:31:52.997Z [info] GET /api/carts/me 200 171.974 ms - 8064 req=9d55c338-b34e-4ccd-9a64-0eaafe003742 {"service":"back-end"}
+2026-06-02T06:31:53.005Z [info] GET /api/carts/me 200 174.537 ms - 8064 req=ac247fab-e790-4135-9a28-f1c2a0547722 {"service":"back-end"}
+2026-06-02T06:31:59.077Z [info] PUT /api/users/profile 200 147.799 ms - 741 req=f548993d-7fdc-4613-99a8-0a9a73944ee7 {"service":"back-end"}
+2026-06-02T06:32:02.728Z [info] PUT /api/users/profile 200 135.640 ms - 741 req=5f226292-dc3e-4ddf-8ae6-a516902f154f {"service":"back-end"}
+2026-06-02T06:32:07.437Z [info] GET /api/users/profile 200 126.331 ms - 741 req=d03a1d33-cdc2-4e74-8610-f2582b2c36f9 {"service":"back-end"}
+2026-06-02T06:32:07.505Z [info] GET /api/products/product/sales 200 165.410 ms - 30146 req=46c9e060-a34f-47b7-9fd3-c2e4bc172cd1 {"service":"back-end"}
+2026-06-02T06:32:07.649Z [info] GET /api/categories/shop-cho-cun 200 315.142 ms - 81965 req=4bf5ced6-7f4c-4978-8878-3af366aff6a4 {"service":"back-end"}
+2026-06-02T06:32:07.684Z [info] GET /api/products 200 360.953 ms - 184351 req=ee07b116-5d82-48ba-bfb4-357afc3cd1d4 {"service":"back-end"}
+2026-06-02T06:32:07.699Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 237.577 ms - 18920 req=dad3ea63-61b4-46bb-a7c9-166a42547fdf {"service":"back-end"}
+2026-06-02T06:32:07.904Z [info] GET /api/categories/shop-cho-meo 200 572.782 ms - 102387 req=bf9857e7-5da2-4628-b850-3f1b1499f775 {"service":"back-end"}
+2026-06-02T06:32:07.991Z [info] GET /api/categories 200 51.630 ms - 2785 req=9dc7df67-5c74-40d7-ae3e-7b8a40ea5e05 {"service":"back-end"}
+2026-06-02T06:32:08.045Z [info] GET /api/users/profile 200 95.320 ms - 741 req=48c754bf-8c02-4718-9f38-0836e919b464 {"service":"back-end"}
+2026-06-02T06:32:08.117Z [info] GET /api/carts/me 200 144.823 ms - 8064 req=473a4106-9343-445e-985a-54672789f385 {"service":"back-end"}
+2026-06-02T06:32:08.118Z [info] GET /api/carts/me 200 142.537 ms - 8064 req=4951618d-e272-4c6b-8e09-ba7688aaad53 {"service":"back-end"}
+2026-06-02T06:32:08.121Z [info] GET /api/carts/me 200 151.312 ms - 8064 req=cec42d89-3bfd-4cee-a117-0f885c9278df {"service":"back-end"}
+2026-06-02T06:33:25.384Z [info] GET /api/users/profile 200 92.096 ms - 741 req=de4235e2-bd60-4590-9fcc-e4add6376f5c {"service":"back-end"}
+2026-06-02T06:33:25.475Z [info] GET /api/products/product/sales 200 168.148 ms - 30146 req=c2fd5a1b-4281-407f-8c45-9f8cfea7ae21 {"service":"back-end"}
+2026-06-02T06:33:25.512Z [info] GET /api/categories/shop-cho-cun 200 209.528 ms - 81965 req=128e0857-98a2-4a75-8260-6b606c84f6cd {"service":"back-end"}
+2026-06-02T06:33:25.552Z [info] GET /api/products 200 252.287 ms - 184351 req=9a76d5d4-7d4d-4c25-8ad5-ead1ed59c974 {"service":"back-end"}
+2026-06-02T06:33:25.591Z [info] GET /api/categories/shop-cho-meo 200 286.630 ms - 102387 req=d361c324-e35a-46f6-b8de-efbf3ce3f406 {"service":"back-end"}
+2026-06-02T06:33:25.663Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 148.715 ms - 18920 req=7fc8127f-115f-4a5a-80e9-edef724ddc82 {"service":"back-end"}
+2026-06-02T06:33:26.037Z [info] GET /api/categories 200 66.544 ms - 2785 req=2f8eb2a7-d66a-48de-96fd-bd151bf3357c {"service":"back-end"}
+2026-06-02T06:33:26.112Z [info] GET /api/users/profile 200 97.734 ms - 741 req=d1c83cf0-f332-4592-88fa-017dc284f8ca {"service":"back-end"}
+2026-06-02T06:33:26.167Z [info] GET /api/carts/me 200 146.958 ms - 8064 req=1c58540e-e901-4c90-8505-0447cb361ec9 {"service":"back-end"}
+2026-06-02T06:33:26.174Z [info] GET /api/carts/me 200 147.886 ms - 8064 req=f73d139f-2407-44bb-b7bc-1a2d8a783d98 {"service":"back-end"}
+2026-06-02T06:33:26.181Z [info] GET /api/carts/me 200 149.913 ms - 8064 req=91a1ddd1-a794-4f78-b647-899b47530f8b {"service":"back-end"}
+2026-06-02T06:33:57.063Z [info] PUT /api/users/profile 200 139.844 ms - 743 req=851c6db7-fa40-4cb6-a511-5d2509820036 {"service":"back-end"}
+2026-06-02T06:34:00.434Z [info] PUT /api/users/profile 200 133.565 ms - 741 req=ba374f46-4166-450c-8cf8-e41853d17a6d {"service":"back-end"}
+2026-06-02T06:34:06.959Z [info] PUT /api/users/profile 200 140.634 ms - 743 req=8ddfc6ee-3328-46ed-8837-575d0bc606bd {"service":"back-end"}
+2026-06-02T06:34:07.652Z [info] PUT /api/users/profile 200 135.152 ms - 743 req=ac8cd821-98af-4818-8e53-6008aa282f55 {"service":"back-end"}
+2026-06-02T06:34:33.583Z [info] PUT /api/users/profile 200 136.977 ms - 746 req=49a04a32-383f-4a0f-9c89-538d16f40c63 {"service":"back-end"}
+2026-06-02T06:35:12.090Z [info] GET /api/users/profile 200 92.048 ms - 746 req=15a1e0fd-d527-4952-9b2e-cdfefb720f50 {"service":"back-end"}
+2026-06-02T06:35:12.196Z [info] GET /api/products/product/sales 304 180.974 ms - - req=5c676e48-6d4f-44ed-b0a7-f955337f037c {"service":"back-end"}
+2026-06-02T06:35:12.209Z [info] GET /api/categories/shop-cho-cun 304 200.851 ms - - req=e60a8a75-b024-4598-b4b1-16eda9025f03 {"service":"back-end"}
+2026-06-02T06:35:12.243Z [info] GET /api/categories/shop-cho-meo 304 231.020 ms - - req=9057aff5-fece-452e-a2ea-5d2a06461ac4 {"service":"back-end"}
+2026-06-02T06:35:12.657Z [info] GET /api/products 304 653.383 ms - - req=b010b40a-9838-44b7-8bff-4aea4b2e1a04 {"service":"back-end"}
+2026-06-02T06:35:12.789Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 690.611 ms - 18955 req=79a8489c-c2d4-476c-8b03-ee3c6aaab4aa {"service":"back-end"}
+2026-06-02T06:35:12.949Z [info] GET /api/categories 304 46.901 ms - - req=2d92dcff-94df-4c22-ab05-23e810b34130 {"service":"back-end"}
+2026-06-02T06:35:13.239Z [info] GET /api/users/profile 304 344.032 ms - - req=a48e277b-3c56-4851-a86f-13a181477171 {"service":"back-end"}
+2026-06-02T06:35:13.305Z [info] GET /api/carts/me 304 397.754 ms - - req=d43bf4d3-aae1-4205-8ae3-79b01da770a2 {"service":"back-end"}
+2026-06-02T06:35:13.486Z [info] GET /api/carts/me 304 179.464 ms - - req=e45a62a2-916c-4673-82d6-d6feeb88a259 {"service":"back-end"}
+2026-06-02T06:35:13.625Z [info] GET /api/carts/me 304 136.810 ms - - req=a42ebb65-0cc9-4c9b-9910-486b8c86af55 {"service":"back-end"}
+2026-06-02T06:35:14.120Z [info] GET /api/users/profile 304 89.432 ms - - req=f2dd4d8c-0dae-40e0-a71f-b70692f58dcd {"service":"back-end"}
+2026-06-02T06:35:14.264Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 138.354 ms - 18955 req=03d0f4b9-f33d-4087-9d60-882b0dd5975e {"service":"back-end"}
+2026-06-02T06:36:11.840Z [info] PUT /api/users/profile 200 135.245 ms - 746 req=1f375444-95da-4a53-b0d7-4a536acad2f4 {"service":"back-end"}
+2026-06-02T06:36:17.968Z [info] PUT /api/users/profile 200 133.632 ms - 746 req=b1635367-30e9-48c1-8132-54a8cbf4a7f0 {"service":"back-end"}
+2026-06-02T06:36:18.430Z [info] PUT /api/users/profile 200 144.297 ms - 746 req=fa7c067d-7105-43c0-8170-08804ce14936 {"service":"back-end"}
+2026-06-02T06:36:18.658Z [info] PUT /api/users/profile 200 133.606 ms - 746 req=eb0a7251-3811-4034-bdcb-5b526262366a {"service":"back-end"}
+2026-06-02T06:36:18.877Z [info] PUT /api/users/profile 200 134.854 ms - 746 req=96e1b4f0-9947-40a8-b628-61422eaaa7b0 {"service":"back-end"}
+2026-06-02T06:36:30.699Z [info] GET /api/users/profile 200 87.397 ms - 746 req=58eea0dc-3c0e-4017-81a8-2fbb79a81a6d {"service":"back-end"}
+2026-06-02T06:36:30.851Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 138.136 ms - 18955 req=470cc624-f745-4389-b3d2-fbc8e714dc7c {"service":"back-end"}
+2026-06-02T06:36:31.046Z [info] GET /api/categories 200 50.050 ms - 2785 req=8a6367a5-aceb-466f-aafe-4fe61afc2e9c {"service":"back-end"}
+2026-06-02T06:36:31.092Z [info] GET /api/users/profile 200 92.189 ms - 746 req=8a8791ee-62a0-43b0-9c73-931270667094 {"service":"back-end"}
+2026-06-02T06:36:31.141Z [info] GET /api/carts/me 200 137.396 ms - 8064 req=a38c77f2-1229-4a97-85b4-c08bccb52c62 {"service":"back-end"}
+2026-06-02T06:36:31.144Z [info] GET /api/carts/me 200 137.551 ms - 8064 req=86dba43d-42c9-49ba-9272-5cef3ec0c09c {"service":"back-end"}
+2026-06-02T06:36:31.147Z [info] GET /api/carts/me 200 137.286 ms - 8064 req=bb6c5ef1-8394-4f60-9c2e-d7a719f00d90 {"service":"back-end"}
+2026-06-02T06:36:35.732Z [info] GET /api/users/profile 200 91.076 ms - 746 req=c6556c96-1333-4e4c-a682-092e039536bc {"service":"back-end"}
+2026-06-02T06:36:36.188Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 392.691 ms - 18955 req=f6837cb7-e1b2-4083-9666-8c8e8010d75b {"service":"back-end"}
+2026-06-02T06:36:40.764Z [info] GET /api/users/profile 200 90.367 ms - 746 req=33794767-cf35-473f-b34f-96e94a90f2eb {"service":"back-end"}
+2026-06-02T06:36:40.958Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 143.163 ms - 18955 req=6c97d27c-acaa-4f63-9f2b-4ea8c4a5ccc8 {"service":"back-end"}
+2026-06-02T06:36:48.112Z [info] GET /api/categories 304 54.322 ms - - req=574d6b6b-00ce-43fe-bad4-0fa3fda5812a {"service":"back-end"}
+2026-06-02T06:36:48.114Z [info] GET /api/categories/catetory/shop-cho-cun 200 53.155 ms - 1390 req=800c4175-ff5a-4d4f-832c-8505fedfcecd {"service":"back-end"}
+2026-06-02T06:36:48.198Z [info] GET /api/categories 304 81.178 ms - - req=6b0da915-b663-47f7-a522-9a7d23297989 {"service":"back-end"}
+2026-06-02T06:36:48.288Z [info] GET /api/products/product/sales 200 215.695 ms - 30146 req=033fcd93-1929-4e41-889b-d9f679408595 {"service":"back-end"}
+2026-06-02T06:36:48.291Z [info] GET /api/categories 304 90.429 ms - - req=826e0000-8afa-4d02-8316-72dcf80c8d9e {"service":"back-end"}
+2026-06-02T06:36:48.473Z [info] GET /api/users/profile 200 90.155 ms - 746 req=b3102c07-be94-439c-92e1-2fba5a68f62b {"service":"back-end"}
+2026-06-02T06:36:48.583Z [info] GET /api/categories/shop-cho-cun 200 516.337 ms - 81965 req=c8d36a8a-672a-47c6-af32-9cb038d768e3 {"service":"back-end"}
+2026-06-02T06:36:48.662Z [info] GET /api/categories/shop-cho-meo 200 592.751 ms - 102387 req=47313fb8-4ac3-4b9e-9cb8-0ab78a721979 {"service":"back-end"}
+2026-06-02T06:36:48.668Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 180.182 ms - 18955 req=bc3f3461-5a0b-446e-aef9-abef7de516d4 {"service":"back-end"}
+2026-06-02T06:36:48.679Z [info] GET /api/products 200 614.544 ms - 184351 req=f7958559-f049-452c-877d-105df5ca6b8d {"service":"back-end"}
+2026-06-02T06:36:48.747Z [info] GET /api/categories/shop-cho-cun 200 354.805 ms - 81965 req=9a544b00-45df-4a8c-b886-3d71dad85615 {"service":"back-end"}
+2026-06-02T06:36:48.947Z [info] GET /api/products/product/sales 200 547.649 ms - 30146 req=5b0fb4c7-ac6b-4d48-84da-c0fa2d6483bf {"service":"back-end"}
+2026-06-02T06:36:49.205Z [info] GET /api/categories 200 289.112 ms - 2785 req=1ebbb6b6-ea3e-4cef-83fb-d2943e372cf0 {"service":"back-end"}
+2026-06-02T06:36:49.257Z [info] GET /api/products 200 869.184 ms - 184351 req=6ac9375e-0439-43bc-8d18-0f26f13d3c76 {"service":"back-end"}
+2026-06-02T06:36:49.263Z [info] GET /api/carts/me 200 312.846 ms - 8064 req=4a4f3f26-ca28-4448-a4c0-67bbb6148e07 {"service":"back-end"}
+2026-06-02T06:36:49.277Z [info] GET /api/users/profile 200 343.748 ms - 746 req=014b0958-de86-4356-9853-13739bb0126f {"service":"back-end"}
+2026-06-02T06:36:49.299Z [info] GET /api/categories/shop-cho-meo 200 903.400 ms - 102387 req=54dd4240-060d-4450-8c41-63e640ee9d45 {"service":"back-end"}
+2026-06-02T06:36:49.353Z [info] GET /api/carts/me 200 145.619 ms - 8064 req=463afad0-1e4b-4fcf-9790-c0ebd52afba3 {"service":"back-end"}
+2026-06-02T06:36:49.463Z [info] GET /api/carts/me 200 525.352 ms - 8064 req=272ea6de-0e83-4682-b391-5bd6d866204d {"service":"back-end"}
+2026-06-02T06:36:52.706Z [info] GET /api/categories 304 46.826 ms - - req=3a64f842-74e1-40cd-8d50-b7b02455b618 {"service":"back-end"}
+2026-06-02T06:36:52.709Z [info] GET /api/categories/catetory/shop-cho-cun 304 47.106 ms - - req=e7d45edf-d305-4760-bab6-3c0fec2e7b5d {"service":"back-end"}
+2026-06-02T06:36:52.756Z [info] GET /api/categories 304 45.680 ms - - req=470f2500-4e28-49f5-ad54-4857373a1727 {"service":"back-end"}
+2026-06-02T06:36:52.806Z [info] GET /api/categories 304 46.467 ms - - req=bbf61e4c-8f7e-48c3-9bbb-f724922b2865 {"service":"back-end"}
+2026-06-02T06:36:52.807Z [info] GET /api/products/product/sales 304 136.610 ms - - req=6d52348d-d1bc-43f8-ba7a-cb33361925df {"service":"back-end"}
+2026-06-02T06:36:52.944Z [info] GET /api/categories/shop-cho-meo 304 274.907 ms - - req=7f434bde-52b4-460b-9482-a8c33266bc07 {"service":"back-end"}
+2026-06-02T06:36:53.023Z [info] GET /api/categories/shop-cho-cun 304 355.656 ms - - req=b5b6ca49-ef5a-4a67-b12a-e51ad7126805 {"service":"back-end"}
+2026-06-02T06:36:53.106Z [info] GET /api/products 304 441.197 ms - - req=f40dd693-7bcb-4143-ad08-7f09df6947ec {"service":"back-end"}
+2026-06-02T06:36:53.536Z [info] GET /api/users/profile 200 89.471 ms - 746 req=89034195-25a3-4c33-8f3c-3392566b0a48 {"service":"back-end"}
+2026-06-02T06:36:53.599Z [info] GET /api/products/product/sales 200 141.032 ms - 30146 req=c0da9fe3-06a5-4ae9-a3ff-4467eb7863e7 {"service":"back-end"}
+2026-06-02T06:36:53.682Z [info] GET /api/categories/shop-cho-cun 200 228.368 ms - 81965 req=77e2b752-9ab1-41fb-abbe-0439f1c50295 {"service":"back-end"}
+2026-06-02T06:36:53.697Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 144.489 ms - 18955 req=316ec24e-7cad-4b26-8d8f-ec8c7a580192 {"service":"back-end"}
+2026-06-02T06:36:53.820Z [info] GET /api/categories/shop-cho-meo 200 363.452 ms - 102387 req=768089ec-ef48-4fcf-9fe9-ceb1e32202c2 {"service":"back-end"}
+2026-06-02T06:36:53.957Z [info] GET /api/products 200 504.133 ms - 184351 req=6e011964-9c36-4193-8de3-459c47231b3b {"service":"back-end"}
+2026-06-02T06:36:54.104Z [info] GET /api/categories 200 46.550 ms - 2785 req=628264c5-d9b3-49a9-a515-bd3e7133085a {"service":"back-end"}
+2026-06-02T06:36:54.153Z [info] GET /api/users/profile 200 91.484 ms - 746 req=3e5cad8b-87a1-4d22-be68-858891d49f6c {"service":"back-end"}
+2026-06-02T06:36:54.203Z [info] GET /api/carts/me 200 138.852 ms - 8064 req=3d0bad10-b059-40c9-9969-c23fa38bc709 {"service":"back-end"}
+2026-06-02T06:36:54.207Z [info] GET /api/carts/me 200 139.672 ms - 8064 req=c8042b8a-d15f-4d07-9406-c6c9ff4e88c3 {"service":"back-end"}
+2026-06-02T06:36:54.210Z [info] GET /api/carts/me 200 139.920 ms - 8064 req=15e4b8db-3f56-418e-b5e3-003746cce0fe {"service":"back-end"}
+2026-06-02T06:37:00.747Z [info] GET /api/users/profile 200 90.878 ms - 746 req=7407e195-b3b4-4d9b-a2d2-51ad4370dfec {"service":"back-end"}
+2026-06-02T06:37:00.899Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 139.223 ms - 18955 req=420bfd34-7259-426e-8373-747d6795e38c {"service":"back-end"}
+2026-06-02T06:37:03.549Z [info] GET /api/categories 304 44.351 ms - - req=9e12a9c1-c7bd-42f6-a6f5-f7e5f9aa3db5 {"service":"back-end"}
+2026-06-02T06:37:03.551Z [info] GET /api/categories/catetory/shop-cho-cun 304 44.533 ms - - req=54918af7-0675-4581-8bbf-c50984d93dba {"service":"back-end"}
+2026-06-02T06:37:03.596Z [info] GET /api/categories 304 44.067 ms - - req=554e2e54-be1d-4b1e-a187-d329c5cb1247 {"service":"back-end"}
+2026-06-02T06:37:03.648Z [info] GET /api/categories 304 50.286 ms - - req=278a5491-51ee-4294-b3fe-c624cf8c1c5e {"service":"back-end"}
+2026-06-02T06:37:03.737Z [info] GET /api/products/product/sales 304 223.190 ms - - req=234c1133-eb87-4931-b609-28b769bc9ae8 {"service":"back-end"}
+2026-06-02T06:37:03.784Z [info] GET /api/categories/shop-cho-cun 304 273.749 ms - - req=98523b7a-bbe0-43b8-8f95-7fe25de3041c {"service":"back-end"}
+2026-06-02T06:37:03.921Z [info] GET /api/categories/shop-cho-meo 304 408.885 ms - - req=268eb1b1-7268-427b-8831-0bd0f1140e20 {"service":"back-end"}
+2026-06-02T06:37:04.277Z [info] GET /api/products 304 768.366 ms - - req=30c60526-af8a-4923-9cba-163897c16fe3 {"service":"back-end"}
+2026-06-02T06:37:04.282Z [info] GET /api/users/profile 200 91.804 ms - 746 req=69829bc7-ee48-4ef1-b8d6-d6d00b3efeb1 {"service":"back-end"}
+2026-06-02T06:37:04.305Z [info] GET /api/products/product/sales 200 96.234 ms - 30146 req=3b783617-ede3-4284-98de-0c0172ded928 {"service":"back-end"}
+2026-06-02T06:37:04.711Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 410.231 ms - 18955 req=e0fa570f-a829-4560-86d5-cdb0efbe947c {"service":"back-end"}
+2026-06-02T06:37:04.835Z [info] GET /api/categories/shop-cho-cun 200 633.044 ms - 81965 req=7906007d-6666-4fc8-b602-530a476401d9 {"service":"back-end"}
+2026-06-02T06:37:05.172Z [info] GET /api/categories/shop-cho-meo 200 964.803 ms - 102387 req=7c7e9e76-d201-4f8d-9b37-4c4dc5c6cb23 {"service":"back-end"}
+2026-06-02T06:37:05.221Z [info] GET /api/products 200 1023.447 ms - 184351 req=5609b6b3-894b-4239-8f5f-dc5431b96202 {"service":"back-end"}
+2026-06-02T06:37:05.249Z [info] GET /api/categories 200 47.438 ms - 2785 req=ee82b503-5028-4f70-8a27-6f12ec6e8bf4 {"service":"back-end"}
+2026-06-02T06:37:05.348Z [info] GET /api/users/profile 200 90.507 ms - 746 req=f7a6cb9f-9989-4756-abb1-198a77c2a614 {"service":"back-end"}
+2026-06-02T06:37:05.401Z [info] GET /api/carts/me 200 138.171 ms - 8064 req=6c86e37d-cbd1-40af-9696-43591335ef29 {"service":"back-end"}
+2026-06-02T06:37:05.405Z [info] GET /api/carts/me 200 139.818 ms - 8064 req=4842200e-ff87-4bda-9024-6bb0ded02056 {"service":"back-end"}
+2026-06-02T06:37:05.411Z [info] GET /api/carts/me 200 143.718 ms - 8064 req=ae530353-ec28-41a9-beea-548f3436986f {"service":"back-end"}
+2026-06-02T06:37:13.081Z [info] GET /api/categories 304 44.093 ms - - req=86bde572-4bed-4e63-a867-3eb75394a01b {"service":"back-end"}
+2026-06-02T06:37:13.087Z [info] GET /api/categories/catetory/shop-cho-cun 304 47.006 ms - - req=efe82224-0092-441e-a0c9-d5871067e7ba {"service":"back-end"}
+2026-06-02T06:37:13.129Z [info] GET /api/categories 304 45.865 ms - - req=45fbcdff-bb30-4c23-b18c-72299e3cb9d0 {"service":"back-end"}
+2026-06-02T06:37:13.176Z [info] GET /api/categories 304 45.599 ms - - req=40fbcf6d-d4fa-4d61-b431-385f4c7c77f1 {"service":"back-end"}
+2026-06-02T06:37:13.187Z [info] GET /api/products/product/sales 304 138.508 ms - - req=4a4bea8e-14ab-4d9c-8a97-1527190986ee {"service":"back-end"}
+2026-06-02T06:37:13.367Z [info] GET /api/categories/shop-cho-meo 304 319.682 ms - - req=5b330ad7-682f-4ad6-b3b1-6a647d13f64b {"service":"back-end"}
+2026-06-02T06:37:13.436Z [info] GET /api/categories/shop-cho-cun 304 390.368 ms - - req=05e7b77f-cde2-4929-b816-0966e20eae69 {"service":"back-end"}
+2026-06-02T06:37:13.624Z [info] GET /api/products 304 580.573 ms - - req=14f750c6-512b-4b8e-a9f9-cb873dced33c {"service":"back-end"}
+2026-06-02T06:37:13.728Z [info] GET /api/users/profile 200 96.067 ms - 746 req=e557ac13-516b-4b33-aaa8-e2bc5d5c01db {"service":"back-end"}
+2026-06-02T06:37:13.806Z [info] GET /api/products/product/sales 200 133.584 ms - 30146 req=12d5df33-d825-4d25-ba5b-1ced1e47c7a2 {"service":"back-end"}
+2026-06-02T06:37:13.880Z [info] GET /api/categories/shop-cho-cun 200 234.958 ms - 81965 req=2e73aadd-d62f-489c-ba40-04d154790cbb {"service":"back-end"}
+2026-06-02T06:37:13.893Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 147.443 ms - 18955 req=8b3db3a6-9d57-40ad-8531-72cc81745f22 {"service":"back-end"}
+2026-06-02T06:37:14.017Z [info] GET /api/categories/shop-cho-meo 200 367.961 ms - 102387 req=f2fb8eb0-83d5-44ee-9a19-383d702a8e6b {"service":"back-end"}
+2026-06-02T06:37:14.171Z [info] GET /api/products 200 529.517 ms - 184351 req=7e392967-69c0-4a5e-b667-1e4f878a98f6 {"service":"back-end"}
+2026-06-02T06:37:14.264Z [info] GET /api/categories 200 45.275 ms - 2785 req=881ff107-3273-4821-83b4-c30ec32e1dca {"service":"back-end"}
+2026-06-02T06:37:14.313Z [info] GET /api/users/profile 200 91.935 ms - 746 req=cb4cd0dd-108b-46a4-85da-76a47b0c9bec {"service":"back-end"}
+2026-06-02T06:37:14.363Z [info] GET /api/carts/me 200 139.714 ms - 8064 req=7f911fb2-3e66-486f-a86e-51b0c80b57f5 {"service":"back-end"}
+2026-06-02T06:37:14.366Z [info] GET /api/carts/me 200 139.087 ms - 8064 req=574d2eeb-f076-4f1f-8e27-0319fabc7619 {"service":"back-end"}
+2026-06-02T06:37:14.370Z [info] GET /api/carts/me 200 139.420 ms - 8064 req=40cc79cf-7c82-466a-a62e-b3c8f60b522c {"service":"back-end"}
+2026-06-02T06:38:29.773Z [info] GET /api/users/profile 200 92.089 ms - 746 req=5812541e-d08a-4478-aa63-bb9c8180c36d {"service":"back-end"}
+2026-06-02T06:38:29.930Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 144.712 ms - 18955 req=069a102e-f1f0-40d2-ac29-c19d4a43dddb {"service":"back-end"}
+2026-06-02T06:38:52.608Z [info] GET /api/users/profile 200 95.616 ms - 746 req=49ac4d12-c090-413d-923b-028e5f474bbb {"service":"back-end"}
+2026-06-02T06:38:53.035Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 411.345 ms - 18955 req=7982585e-aa85-44f9-a6da-142d23bd8900 {"service":"back-end"}
+2026-06-02T06:39:00.574Z [info] GET /api/users/profile 200 99.202 ms - 746 req=6b0d7da2-ef2c-4a68-b71d-a96c85cd0ce3 {"service":"back-end"}
+2026-06-02T06:39:00.599Z [info] GET /api/products/product/sales 200 105.784 ms - 30146 req=4f72e0a8-86a3-4a69-98f0-63797ef35a6e {"service":"back-end"}
+2026-06-02T06:39:00.734Z [info] GET /api/categories/shop-cho-cun 200 250.448 ms - 81965 req=d90fbf7f-b67c-4a30-b093-b0635b32b4cd {"service":"back-end"}
+2026-06-02T06:39:00.778Z [info] GET /api/categories/shop-cho-meo 200 291.693 ms - 102387 req=80c5806d-e375-4fd3-b36d-8c105ff07303 {"service":"back-end"}
+2026-06-02T06:39:00.835Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 150.409 ms - 18955 req=71b2c080-a2b7-4ea5-b12a-820f74b5c516 {"service":"back-end"}
+2026-06-02T06:39:01.122Z [info] GET /api/categories 200 50.344 ms - 2785 req=8449024c-84a9-40a1-a304-4d3e62b3eaa2 {"service":"back-end"}
+2026-06-02T06:39:01.168Z [info] GET /api/products 200 687.364 ms - 184351 req=041fb9a2-777f-48b1-8622-d378d48fd54c {"service":"back-end"}
+2026-06-02T06:39:01.175Z [info] GET /api/users/profile 200 100.447 ms - 746 req=621133dd-a5f4-4f95-8e6b-edde34015820 {"service":"back-end"}
+2026-06-02T06:39:01.228Z [info] GET /api/carts/me 200 148.489 ms - 8064 req=e13bc738-6b7f-4e8b-8616-e511a2a8b0c5 {"service":"back-end"}
+2026-06-02T06:39:01.231Z [info] GET /api/carts/me 200 144.769 ms - 8064 req=2526c786-804e-4c82-868b-777b7baaf17d {"service":"back-end"}
+2026-06-02T06:39:01.476Z [info] GET /api/carts/me 200 393.217 ms - 8064 req=c8300f1b-f0f3-4fa8-94cb-fdf2c76d5088 {"service":"back-end"}
+2026-06-02T06:39:25.720Z [info] GET /api/users/shipping-address 200 90.819 ms - 334 req=9527c777-0ffe-40b9-a31e-215fbdb6c0bf {"service":"back-end"}
+2026-06-02T06:39:46.227Z [info] PUT /api/users/shipping-address 200 148.712 ms - 326 req=c2897f5b-4e3d-4aa6-aa1e-71ebaec43cdd {"service":"back-end"}
+2026-06-02T06:39:48.604Z [info] PUT /api/users/shipping-address 200 139.987 ms - 326 req=fd421bc2-de25-46fc-8882-6d8b0193f4ad {"service":"back-end"}
+2026-06-02T06:39:56.852Z [info] PUT /api/users/shipping-address 200 137.467 ms - 326 req=31c321d4-6920-49b2-ae1c-0f76bcc69b94 {"service":"back-end"}
+2026-06-02T06:40:55.697Z [info] GET /api/users/shipping-address 200 89.891 ms - 326 req=6dbe7ca3-39f0-4b89-9fc7-c158fc3f7b2c {"service":"back-end"}
+2026-06-02T06:41:03.702Z [info] GET /api/users/shipping-address 200 91.296 ms - 326 req=89214efe-5c2e-4a6b-8398-08a4fdb41e15 {"service":"back-end"}
+2026-06-02T06:41:05.874Z [info] PUT /api/users/shipping-address 200 138.021 ms - 350 req=38e0a107-0007-40c3-8fd8-efd2f4a8bca9 {"service":"back-end"}
+2026-06-02T06:41:07.806Z [info] PUT /api/users/shipping-address 200 142.158 ms - 350 req=8b63ff46-9f05-46dc-9a57-2f7aadc3042e {"service":"back-end"}
+2026-06-02T06:42:43.635Z [info] GET /api/users/profile 200 130.367 ms - 762 req=b41faf15-c566-49d7-9252-3116025c7cba {"service":"back-end"}
+2026-06-02T06:42:43.667Z [info] GET /api/products/product/sales 200 146.436 ms - 30146 req=91a960b4-25de-4cb3-9adc-5c7ff2b196bc {"service":"back-end"}
+2026-06-02T06:42:43.786Z [info] GET /api/categories/shop-cho-cun 200 271.447 ms - 81965 req=fb2d90fd-4f7a-45ae-8728-33d1ab7c8bbe {"service":"back-end"}
+2026-06-02T06:42:43.841Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 137.577 ms - 19067 req=f7308d42-e44e-4e39-9b7b-eb647e21400d {"service":"back-end"}
+2026-06-02T06:42:43.848Z [info] GET /api/categories/shop-cho-meo 200 330.890 ms - 102387 req=497b7a7b-bcb6-4bf9-830b-70307c9b59f9 {"service":"back-end"}
+2026-06-02T06:42:44.074Z [info] GET /api/categories 200 44.777 ms - 2785 req=64d1b669-5e9f-4bb6-b98f-e18043e831d9 {"service":"back-end"}
+2026-06-02T06:42:44.106Z [info] GET /api/products 200 594.080 ms - 184351 req=50956448-ed37-4ab9-83db-c83180ef9eb7 {"service":"back-end"}
+2026-06-02T06:42:44.397Z [info] GET /api/users/profile 200 362.848 ms - 762 req=3725d2b1-1344-43f0-b0c1-7fb43536f9de {"service":"back-end"}
+2026-06-02T06:42:44.453Z [info] GET /api/carts/me 200 407.977 ms - 8064 req=0b5871f2-b0b7-437a-b145-b0b70c65b0b3 {"service":"back-end"}
+2026-06-02T06:42:44.752Z [info] GET /api/carts/me 200 714.098 ms - 8064 req=3722ee74-faeb-40ea-96be-fed005c4c2d9 {"service":"back-end"}
+2026-06-02T06:42:44.893Z [info] GET /api/carts/me 200 851.621 ms - 8064 req=0c8a0668-d512-432a-95ab-be474dc9c38a {"service":"back-end"}
+2026-06-02T06:42:48.618Z [info] PUT /api/users/profile 200 139.091 ms - 760 req=0ca90a71-5efd-4aaa-9633-2747403dfb23 {"service":"back-end"}
+2026-06-02T06:42:50.848Z [info] GET /api/users/shipping-address 200 378.203 ms - 350 req=0eb9bf46-9cb9-4605-8c0b-276dcd2aac0f {"service":"back-end"}
+2026-06-02T06:42:54.578Z [info] PUT /api/users/shipping-address 200 136.878 ms - 351 req=f6871225-7324-4cc4-b2c1-0f76d62bef80 {"service":"back-end"}
+2026-06-02T06:42:55.817Z [info] PUT /api/users/shipping-address 200 136.637 ms - 351 req=bde6401b-bfd3-40c8-bde3-3d14d8ff7ff3 {"service":"back-end"}
+2026-06-02T06:43:03.008Z [info] PUT /api/users/shipping-address 200 138.472 ms - 351 req=d9d91cec-61e2-466e-a992-0971a3b2aee5 {"service":"back-end"}
+2026-06-02T06:43:06.035Z [info] PUT /api/users/shipping-address 200 138.959 ms - 351 req=08fae47b-b141-4889-8194-de21e172fe92 {"service":"back-end"}
+2026-06-02T06:43:51.485Z [info] GET /api/products/product/sales 200 143.582 ms - 30146 req=7c69d880-5c75-478c-92c6-ea269a6f3aeb {"service":"back-end"}
+2026-06-02T06:43:51.895Z [info] GET /api/categories/shop-cho-meo 200 554.986 ms - 102387 req=e2d9f93c-a5c7-40e5-87a6-c60868627be1 {"service":"back-end"}
+2026-06-02T06:43:51.961Z [info] GET /api/categories/shop-cho-cun 200 623.488 ms - 81965 req=82453bda-dc2e-4ebe-a023-b03150da3145 {"service":"back-end"}
+2026-06-02T06:43:52.235Z [info] GET /api/products 200 898.289 ms - 184351 req=e1a2e145-f89a-4b6d-b4d3-4817824c8840 {"service":"back-end"}
+2026-06-02T06:43:52.319Z [info] GET /api/products/product/sales 304 94.702 ms - - req=b61eb202-7b9a-4c6d-95ac-86d187cfd2dd {"service":"back-end"}
+2026-06-02T06:43:52.505Z [info] GET /api/categories/shop-cho-meo 304 282.313 ms - - req=8e783e03-eb66-430f-b46c-a1fc1da520f9 {"service":"back-end"}
+2026-06-02T06:43:52.542Z [info] GET /api/categories/shop-cho-cun 200 321.064 ms - 81965 req=6881f2b2-eddc-4483-9894-ee5e63dd73c9 {"service":"back-end"}
+2026-06-02T06:43:52.888Z [info] GET /api/products 200 671.019 ms - 184351 req=eba8e82b-70b0-4a47-8fd8-802c65d98e7e {"service":"back-end"}
+2026-06-02T06:44:32.396Z [info] GET /api/users/profile 200 90.176 ms - 761 req=2df89146-bf6c-4c2b-87c3-323142e52d32 {"service":"back-end"}
+2026-06-02T06:44:32.647Z [info] GET /api/orders?user_id=6a00b69d0af467688ea55f1b 200 136.806 ms - 19060 req=e353f4b5-97ec-4992-b520-edf1c82ff1f8 {"service":"back-end"}

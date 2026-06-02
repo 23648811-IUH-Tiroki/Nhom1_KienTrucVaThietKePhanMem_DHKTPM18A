@@ -86,7 +86,7 @@ const UserDetailView = ({ user, onBack, onEdit }) => {
               <div className="space-y-1">
                 <p className="text-sm text-gray-700">Giới tính</p>
                 <p className="font-medium text-gray-800">
-                  {user.gender == true ? "Nam" : "Nữ"}
+                  {user.gender === "male" ? "Nam" : user.gender === "female" ? "Nữ" : ""}
                 </p>
               </div>
               <div className="space-y-1">

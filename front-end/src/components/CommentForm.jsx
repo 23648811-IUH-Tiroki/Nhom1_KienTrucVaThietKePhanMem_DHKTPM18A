@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaFacebookF, FaGoogle, FaTwitter } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const CommentForm = () => {
   const [formData, setFormData] = useState({
@@ -35,8 +34,7 @@ const CommentForm = () => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      {/* Thông báo Toast */}
-      <ToastContainer />
+
 
       {/* Chia sẻ mạng xã hội */}
       <div className="flex items-center space-x-4 text-gray-600 text-sm mb-6">

@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import { Link, useNavigate } from "react-router-dom";
 import "../page.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { signIn } from "../../services/authService";
 import { fetchProfile } from "../../services/userService";
 import {
@@ -306,18 +306,7 @@ const Login = () => {
           </p>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+
       <ScrollToTopButton />
     </>
   );

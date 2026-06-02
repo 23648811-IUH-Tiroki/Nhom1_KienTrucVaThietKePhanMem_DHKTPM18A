@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://localhost:5000
 const RATE_LIMIT_LOCK_PREFIX = 'rateLimitLock:';
 const RATE_LIMIT_COUNTER_PREFIX = 'rateLimitCounter:';
 const CLIENT_WINDOW_MS = 60 * 1000; // 1 minute
-const CLIENT_MAX_REQUESTS = 5; // after 5 requests in window, lock
+const CLIENT_MAX_REQUESTS = 100; // after 100 requests in window, lock
 
 const getRequestScope = (config) => {
   const method = (config.method || 'get').toUpperCase();

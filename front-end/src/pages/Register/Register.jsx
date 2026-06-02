@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import { Link, useNavigate } from "react-router-dom";
 import "../page.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { checkDuplicate, sendSignupCode, verifySignup } from "../../services/authService";
 import {
   EMAIL_RULE_MESSAGE,
@@ -465,18 +465,7 @@ const Register = () => {
       </div>
 
       <ScrollToTopButton />
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+
     </>
   );
 };

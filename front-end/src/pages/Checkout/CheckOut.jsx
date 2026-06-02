@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MainLayout from "../../layout/MainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../page.scss";
 import "./Checkout.scss";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -473,7 +473,7 @@ const CheckOut = () => {
 
   return (
     <MainLayout>
-      <ToastContainer />
+
       <Breadcrumb items={links} />
       <div className="max-w-6xl mx-auto px-4 py-8 checkout-page">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Pet Station</h1>
