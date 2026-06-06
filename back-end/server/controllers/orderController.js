@@ -3,7 +3,7 @@ import { sendControllerError } from "../utils/controllerError.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const result = await orderService.createOrder(req.body);
+    const result = await orderService.createOrder(req.body, req.user);
     return res.status(201).json(result);
   } catch (error) {
     return sendControllerError(res, error, 400);
@@ -40,6 +40,33 @@ export const updateOrder = async (req, res) => {
 export const deleteOrder = async (req, res) => {
   try {
     const result = await orderService.deleteOrder(req.params.id);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendControllerError(res, error, 400);
+  }
+};
+
+export const confirmOrderPayment = async (req, res) => {
+  try {
+    const result = await orderService.confirmOrderPayment(req.params.id, req.user);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendControllerError(res, error, 400);
+  }
+};
+
+export const expireOrder = async (req, res) => {
+  try {
+    const result = await orderService.expireOrderById(req.params.id, req.user);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendControllerError(res, error, 400);
+  }
+};
+
+export const getActivePaymentOrder = async (req, res) => {
+  try {
+    const result = await orderService.getActivePaymentOrder(req.user);
     return res.status(200).json(result);
   } catch (error) {
     return sendControllerError(res, error, 400);

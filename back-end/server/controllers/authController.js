@@ -37,7 +37,7 @@ export const signIn = async (req, res) => {
     });
   } catch (error) {
     logger.warn("Lỗi khi gọi signIn", { message: error.message, email: req.body?.email });
-    return sendControllerError(res, error, 401);
+    return sendControllerError(res, error, 400);
   }
 };
 

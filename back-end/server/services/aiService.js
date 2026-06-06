@@ -19,11 +19,8 @@ export const createChatAI = async (message) => {
     );
   }
 
-  const MAX_RETRIES = 3;
-  const BASE_DELAY_MS = 3000;
-
-  const makeRequest = async () => {
-    return axios.post(
+  try {
+    const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "openrouter/free",
@@ -39,35 +36,30 @@ export const createChatAI = async (message) => {
           "X-Title": "PetShop AI",
           "Content-Type": "application/json",
         },
-        timeout: 10000, // Timeout sau 10 giây để kích hoạt cơ chế retry
+        timeout: 10000,
       }
     );
-  };
 
-  let attempt = 0;
-  let response;
+    const aiMessage = response?.data?.choices?.[0]?.message?.content || "AI không phản hồi.";
+    return { reply: aiMessage };
+  } catch (error) {
+    logger.warn("AI request failed", { message: error.message || error });
+    let reply = error.response?.data?.error?.message || "";
 
-  while (attempt < MAX_RETRIES) {
-    try {
-      response = await makeRequest();
-      break;
-    } catch (error) {
-      attempt += 1;
-      logger.warn(`AI request attempt ${attempt} failed`, { message: error.message || error });
-
-      if (attempt >= MAX_RETRIES) {
-        const reply = error.response?.data?.error?.message || "AI hiện không khả dụng.";
-        throw createServiceError(reply, 500, { reply });
-      }
-
-      const jitter = Math.floor(Math.random() * 2000);
-      const delayMs = BASE_DELAY_MS + jitter;
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    if (!reply && error.code === "ECONNABORTED") {
+      reply = "Yêu cầu tới AI đã hết thời gian chờ. Vui lòng thử lại sau.";
     }
-  }
 
-  const aiMessage = response?.data?.choices?.[0]?.message?.content || "AI không phản hồi.";
-  return { reply: aiMessage };
+    if (!reply && !error.response) {
+      reply = "Không thể kết nối tới AI lúc này. Vui lòng thử lại sau.";
+    }
+
+    if (!reply) {
+      reply = "AI hiện không khả dụng.";
+    }
+
+    throw createServiceError(reply, 500, { reply, message: reply });
+  }
 };
 
 export default {

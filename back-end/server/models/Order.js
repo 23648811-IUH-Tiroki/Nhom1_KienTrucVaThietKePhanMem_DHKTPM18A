@@ -5,6 +5,11 @@ const normalizeStatus = (value) => {
     const normalized = String(value).trim();
 
     switch (normalized) {
+        case "waiting_payment":
+        case "Chờ thanh toán":
+        case "PENDING_PAYMENT":
+        case "WAITING_PAYMENT":
+            return "waiting_payment";
         case "pending":
         case "Chờ xử lý":
         case "Chờ xác nhận":
@@ -25,6 +30,10 @@ const normalizeStatus = (value) => {
         case "cancelled":
         case "Đã hủy":
             return "cancelled";
+        case "expired":
+        case "Hết hạn":
+        case "Đơn hết hạn":
+            return "expired";
         default:
             return normalized;
     }
@@ -54,11 +63,15 @@ const orderSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
     status: {
         type: String,
         required: true,
         default: "pending",
-        enum: ["pending", "confirmed", "shipping", "delivered", "cancelled"],
+        enum: ["waiting_payment", "pending", "confirmed", "shipping", "delivered", "cancelled", "expired"],
         set: normalizeStatus,
     },
     payment_method: {
@@ -71,7 +84,15 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "pending",
-        enum: ["pending", "paid", "refunded"],
+        enum: ["pending", "paid", "refunded", "expired"],
+    },
+    payment_expires_at: {
+        type: Date,
+        default: null,
+    },
+    payment_completed_at: {
+        type: Date,
+        default: null,
     },
     order_date: {
         type: Date,
@@ -86,6 +107,18 @@ const orderSchema = new mongoose.Schema({
 
 orderSchema.index({ status: 1, order_date: -1 });
 orderSchema.index({ user_id: 1, order_date: -1 });
+orderSchema.index({ payment_expires_at: 1, status: 1, payment_status: 1 });
+
+orderSchema.set("toJSON", {
+    virtuals: true,
+    transform: (_doc, ret) => {
+        ret.paymentExpiredAt = ret.payment_expires_at ?? null;
+        ret.paymentCompletedAt = ret.payment_completed_at ?? null;
+        return ret;
+    },
+});
+
+orderSchema.set("toObject", { virtuals: true });
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

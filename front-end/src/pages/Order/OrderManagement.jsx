@@ -46,6 +46,11 @@ const OrderManagement = () => {
     const normalized = String(status).trim();
 
     switch (normalized) {
+      case "waiting_payment":
+      case "Chờ thanh toán":
+      case "PENDING_PAYMENT":
+      case "WAITING_PAYMENT":
+        return "waiting_payment";
       case "pending":
 
       case "Chờ xử lý":
@@ -67,6 +72,10 @@ const OrderManagement = () => {
       case "cancelled":
       case "Đã hủy":
         return "cancelled";
+      case "expired":
+      case "Hết hạn":
+      case "Đơn hết hạn":
+        return "expired";
       default:
         return "pending";
     }
@@ -202,6 +211,12 @@ const OrderManagement = () => {
 
   const getStatusInfo = (status) => {
     switch (status) {
+      case "waiting_payment":
+        return {
+          icon: <FaClock className="text-orange-500" />,
+          label: "Chờ thanh toán",
+          color: "bg-orange-100 text-orange-800",
+        };
       case "pending":
         return {
           icon: <FaClock className="text-yellow-500" />,
@@ -231,6 +246,12 @@ const OrderManagement = () => {
           icon: <FaTimesCircle className="text-red-500" />,
           label: "Đã hủy",
           color: "bg-red-100 text-red-800",
+        };
+      case "expired":
+        return {
+          icon: <FaTimesCircle className="text-slate-500" />,
+          label: "Hết hạn",
+          color: "bg-slate-100 text-slate-600",
         };
       default:
         return {

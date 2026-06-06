@@ -178,3 +178,5 @@ MongooseError: Operation `products.aggregate()` buffering timed out after 10000m
 2026-06-02T06:30:21.302Z [error] Queue Redis error {"service":"back-end"}
 2026-06-02T06:30:23.314Z [error] Queue Redis error {"service":"back-end"}
 2026-06-02T10:15:15.376Z [error] MongoDB connection error Server selection timed out after 5000 ms {"service":"back-end"}
+2026-06-02T11:35:33.966Z [error] Failed to load .env file ENOENT: no such file or directory, open 'D:\KTTKPM_CK\Nhom1_KienTrucVaThietKePhanMem_DHKTPM18A\back-end\.env' {"service":"back-end"}
+2026-06-02T11:35:33.986Z [error] MongoDB connection error The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string. {"service":"back-end"}

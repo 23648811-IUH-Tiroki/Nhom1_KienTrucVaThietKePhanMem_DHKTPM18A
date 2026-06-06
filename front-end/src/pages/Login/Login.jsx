@@ -27,8 +27,6 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [lockUntil, setLockUntil] = useState(0);
-  const [lockRemainingSeconds, setLockRemainingSeconds] = useState(0);
   const errorTimeoutRef = useRef(null);
 
   const navigate = useNavigate();
@@ -48,27 +46,6 @@ const Login = () => {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (!lockUntil) {
-      setLockRemainingSeconds(0);
-      return;
-    }
-
-    const updateRemaining = () => {
-      const remaining = Math.max(0, Math.ceil((lockUntil - Date.now()) / 1000));
-      setLockRemainingSeconds(remaining);
-
-      if (remaining === 0) {
-        setLockUntil(0);
-      }
-    };
-
-    updateRemaining();
-    const timer = setInterval(updateRemaining, 1000);
-
-    return () => clearInterval(timer);
-  }, [lockUntil]);
 
   useEffect(() => {
     if (success) {
@@ -134,34 +111,6 @@ const Login = () => {
     setErrors({});
     setSuccess(false);
 
-    if (lockUntil && lockUntil > Date.now()) {
-      const remainingMs = lockUntil - Date.now();
-      const seconds = Math.ceil(remainingMs / 1000);
-      let durationText = "";
-      
-      if (seconds < 60) {
-        durationText = `${seconds} giây`;
-      } else {
-        const minutes = Math.ceil(remainingMs / 60000);
-        if (minutes < 60) {
-          durationText = `${minutes} phút`;
-        } else {
-          const hours = Math.floor(minutes / 60);
-          const remMinutes = minutes % 60;
-          if (remMinutes === 0) {
-            durationText = `${hours} giờ`;
-          } else {
-            durationText = `${hours} giờ ${remMinutes} phút`;
-          }
-        }
-      }
-
-      showApiError(
-        `Tài khoản đang bị khóa tạm thời. Vui lòng thử lại sau ${durationText}.`,
-      );
-      return;
-    }
-
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -188,7 +137,6 @@ const Login = () => {
       if (profileRes?.data) {
         localStorage.setItem("user", JSON.stringify(profileRes.data));
       }
-      setLockUntil(0);
       setSuccess(true);
       toast.success("Đăng nhập thành công!");
       setTimeout(() => {
@@ -197,21 +145,9 @@ const Login = () => {
     } catch (err) {
       console.error("API Error:", err.response?.data || err.message);
       const responseStatus = err.response?.status;
-      const responseLockUntil = Number(err.response?.data?.lockUntil || 0);
       const errorMessage = err.response?.data?.message;
 
-      if (responseLockUntil > Date.now()) {
-        setLockUntil(responseLockUntil);
-      } else {
-        setLockUntil(0);
-      }
-
-      if (responseStatus === 429 || responseStatus === 423) {
-        showApiError(
-          errorMessage ||
-            "Tài khoản đang tạm thời bị khóa. Vui lòng thử lại sau.",
-        );
-      } else if (responseStatus === 401) {
+      if (responseStatus === 401) {
         showApiError("Email hoặc mật khẩu không chính xác.");
       } else if (responseStatus === 403) {
         showApiError(errorMessage || "Tài khoản đã bị khóa.");

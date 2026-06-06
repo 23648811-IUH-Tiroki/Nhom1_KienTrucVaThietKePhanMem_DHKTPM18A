@@ -28,11 +28,15 @@ import {
     updateOrder as updateOrderRequest
 } from "../../services/orderService";
 import { isValidPhone, isValidGmailAddress } from "../../utils/validation";
-    
+
 import ShippingInfo from "./components/ShippingInfo";
 import OrderHistory from "./components/OrderHistory";
 
 const STATUS_META = {
+    waiting_payment: {
+        label: "Chờ thanh toán",
+        badge: "bg-orange-50 text-orange-700 border-orange-200",
+    },
     pending: {
         label: "Chờ xác nhận",
         badge: "bg-amber-50 text-amber-700 border-amber-200",
@@ -53,19 +57,25 @@ const STATUS_META = {
         label: "Đã hủy",
         badge: "bg-rose-50 text-rose-600 border-rose-200",
     },
+    expired: {
+        label: "Hết hạn thanh toán",
+        badge: "bg-slate-100 text-slate-600 border-slate-200",
+    },
 };
 
 const ORDER_TABS = [
     { key: "all", label: "Tất cả" },
+    { key: "waiting_payment", label: "Chờ thanh toán" },
     { key: "pending", label: "Chờ xác nhận" },
     { key: "confirmed", label: "Đã xác nhận" },
     { key: "shipping", label: "Đang giao" },
     { key: "delivered", label: "Đã giao" },
     { key: "cancelled", label: "Đã hủy" },
+    { key: "expired", label: "Hết hạn" },
 ];
 
 const IN_PROGRESS_TABS = ORDER_TABS.filter((tab) =>
-    ["pending", "confirmed", "shipping"].includes(tab.key)
+    ["waiting_payment", "pending", "confirmed", "shipping"].includes(tab.key)
 );
 
 const normalizeStatus = (status) => {
@@ -73,6 +83,11 @@ const normalizeStatus = (status) => {
     const normalized = String(status).trim();
 
     switch (normalized) {
+        case "waiting_payment":
+        case "Chờ thanh toán":
+        case "PENDING_PAYMENT":
+        case "WAITING_PAYMENT":
+            return "waiting_payment";
         case "pending":
         case "Chờ xử lý":
         case "Chờ xác nhận":
@@ -93,6 +108,10 @@ const normalizeStatus = (status) => {
         case "cancelled":
         case "Đã hủy":
             return "cancelled";
+        case "expired":
+        case "Hết hạn":
+        case "Đơn hết hạn":
+            return "expired";
         default:
             return "pending";
     }
@@ -135,29 +154,29 @@ const UserProfile = () => {
         deliveredOrders: 0,
         totalSpent: 0,
     });
-    
+
     const [errors, setErrors] = useState({});
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
-        
+
         // Parse the date string
         let date = new Date(dateString);
-        
+
         // If date is invalid, try parsing it as is
         if (isNaN(date.getTime())) {
             return "";
         }
-        
+
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
-        
+
         // Validate year is reasonable (between 1900 and current year + 1)
         if (year < 1900 || year > new Date().getFullYear() + 1) {
             return "";
         }
-        
+
         return `${year}-${month}-${day}`;
     };
 
@@ -218,7 +237,7 @@ const UserProfile = () => {
         setUser(initialUser);
         setErrors({});
     };
-    
+
     const convertBase64ToImage = (value) => {
         if (!value) return "/avatar.png";
         if (typeof value !== "string") return "/avatar.png";
@@ -267,7 +286,7 @@ const UserProfile = () => {
             });
 
             const inProgressOrders = normalizedOrders.filter((order) =>
-                ["pending", "confirmed", "shipping"].includes(order.statusNormalized)
+                ["waiting_payment", "pending", "confirmed", "shipping"].includes(order.statusNormalized)
             );
             const deliveredOrders = normalizedOrders.filter(
                 (order) => order.statusNormalized === "delivered"
@@ -307,11 +326,6 @@ const UserProfile = () => {
             }, 2000);
         } catch (err) {
             console.error("Logout Error:", err.response?.data || err.message);
-            if (err.response?.status === 429) {
-                setIsLoggingOut(false);
-                return;
-            }
-
             localStorage.removeItem("accessToken");
             toast.error("Đăng xuất thất bại. Vui lòng thử lại!");
             setIsLoggingOut(false);
@@ -670,7 +684,7 @@ const UserProfile = () => {
                             {activeTab === "shipping" && (
                                 <ShippingInfo onAddressUpdated={handleShippingUpdated} />
                             )}
-{/* 
+                            {/* 
                             {activeTab === "orders" && (
                                 <OrderHistory
                                     title="Đơn hàng của bạn"

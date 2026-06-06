@@ -6,12 +6,6 @@ import { generateOTP } from "../utils/generateOTP.js";
 import redisClient from "../configs/redisClient.js";
 import { enqueueOtpEmail } from "../queues/otpQueue.js";
 import { hasMailerConfig } from "../utils/mailer.js";
-import {
-  getLockStatus,
-  recordFailedLogin,
-  resetLoginState,
-  getAttemptCount,
-} from "../utils/redisLoginLock.js";
 import { logger } from "../logger/logger.js";
 import { createServiceError } from "../utils/serviceError.js";
 import {
@@ -64,39 +58,6 @@ const getForgotPasswordKey = (email) =>
 
 const getForgotPasswordCooldownKey = (email) =>
   `${FORGOT_PASSWORD_KEY_PREFIX}:cooldown:${String(email).trim().toLowerCase()}`;
-
-const normalizeLegacyLockUntil = (value) => {
-  if (value === undefined || value === null || value === "") {
-    return null;
-  }
-  const timestamp = value instanceof Date ? value.getTime() : Number(value);
-  return Number.isFinite(timestamp) ? timestamp : null;
-};
-
-const cleanupLegacyMongoLockFields = async (user) => {
-  if (!user) return;
-  const hasLegacyLockUntil = user.lockUntil !== undefined && user.lockUntil !== null;
-  const hasLegacyAttempts = user.loginAttempts !== undefined && user.loginAttempts !== null;
-  if (!hasLegacyLockUntil && !hasLegacyAttempts) return;
-
-  try {
-    await User.updateOne(
-      { _id: user._id },
-      { $set: { loginAttempts: 0, lockUntil: null } },
-    );
-
-    logger.debug("Legacy MongoDB login lock fields cleaned", {
-      email: user.email,
-      userLoginAttempts: user.loginAttempts,
-      userLockUntil: user.lockUntil,
-    });
-  } catch (error) {
-    logger.warn("Failed to clean legacy MongoDB login lock fields", {
-      email: user.email,
-      message: error.message,
-    });
-  }
-};
 
 const readForgotPasswordState = async (email) => {
   const rawState = await redisClient.get(getForgotPasswordKey(email));
@@ -239,25 +200,6 @@ export const signIn = async (userData, req) => {
     ip: req?.ip || req?.headers?.["x-forwarded-for"],
   });
 
-  const redisAttempts = await getAttemptCount(email);
-  const lockStatus = await getLockStatus(email);
-  logger.debug("signIn lockStatus", {
-    email,
-    isLocked: lockStatus.isLocked,
-    lockUntil: lockStatus.lockUntil,
-    remainingMs: lockStatus.remainingMs,
-    ttl: lockStatus.ttl,
-    attempts: redisAttempts,
-  });
-
-  if (lockStatus.isLocked) {
-    throw createServiceError(lockStatus.message, 429, {
-      message: lockStatus.message,
-      lockUntil: lockStatus.lockUntil,
-      retryAfterSeconds: Math.max(0, Math.ceil(lockStatus.remainingMs / 1000)),
-    });
-  }
-
   const user = await User.findOne({ email });
   
   // Check if account is inactive - block immediately without recording attempts
@@ -273,57 +215,24 @@ export const signIn = async (userData, req) => {
     });
   }
 
-  const mongoLoginAttempts = Number(user?.loginAttempts ?? 0);
-  const mongoLockUntil = normalizeLegacyLockUntil(user?.lockUntil);
-  const now = Date.now();
-  const mongoIsLocked = Boolean(mongoLockUntil && mongoLockUntil > now);
-
-  logger.debug("signIn legacy mongo lock state", {
-    email,
-    mongoLoginAttempts,
-    mongoLockUntil,
-    now,
-    mongoIsLocked,
-  });
-
   logger.debug("signIn user lookup", {
     email,
     userFound: Boolean(user),
     isBlocked: user?.isBlocked,
-    lockUntil: user?.lockUntil,
-    loginAttempts: mongoLoginAttempts,
-    mongoIsLocked,
   });
-
-  if (user && (user.lockUntil !== undefined || user.loginAttempts !== undefined)) {
-    await cleanupLegacyMongoLockFields(user);
-  }
 
   const passwordCorrect = user
     ? verifyPassword(password, user.password ?? user.passWord)
     : false;
 
   if (!user || !passwordCorrect) {
-    const failure = await recordFailedLogin(email);
-
-    if (failure.isLocked) {
-      throw createServiceError(failure.message, 429, {
-        message: failure.message,
-        lockUntil: failure.lockUntil,
-        retryAfterSeconds: Math.max(0, Math.ceil(failure.remainingMs / 1000)),
-      });
-    }
-
     logger.warn("Failed login attempt", {
       email,
-      attempts: failure.attempts,
       ip: req.ip,
     });
 
     throw createServiceError("Email hoặc mật khẩu không đúng.", 401, {
       message: "Email hoặc mật khẩu không đúng.",
-      loginAttempts: failure.attempts,
-      remainingAttempts: failure.remainingAttempts,
     });
   }
 
@@ -332,8 +241,6 @@ export const signIn = async (userData, req) => {
       message: "Tài khoản của bạn đã bị khóa bởi hệ thống.",
     });
   }
-
-  await resetLoginState(email);
 
   const accessToken = jwt.sign(
     { userId: user._id },

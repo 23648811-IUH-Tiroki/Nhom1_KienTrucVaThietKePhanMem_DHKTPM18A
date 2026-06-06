@@ -44,7 +44,7 @@ const OrderHistory = ({
     }, [activeTab, orders]);
 
     const canCancelStatus = (status) =>
-        status !== "delivered" && status !== "cancelled";
+        status !== "delivered" && status !== "cancelled" && status !== "expired";
 
     return (
         <div className="space-y-5">

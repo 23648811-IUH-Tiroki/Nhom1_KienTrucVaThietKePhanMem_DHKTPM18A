@@ -1,6 +1,7 @@
 import { logger } from "../logger/logger.js";
 import { startNotificationWorker } from "./notificationWorker.js";
 import { startOtpWorker } from "./otpWorker.js";
+import { startOrderExpiryWorker } from "./orderExpiryWorker.js";
 
 let workers = null;
 
@@ -13,6 +14,7 @@ export const initializeWorkers = () => {
     workers = {
       otpWorker: startOtpWorker(),
       notificationWorker: startNotificationWorker(),
+      orderExpiryWorker: startOrderExpiryWorker(),
     };
 
     logger.info("Background workers initialized");

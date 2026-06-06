@@ -84,7 +84,10 @@ const ContactSidebar = () => {
         ...prev,
         {
           role: "ai",
-          text: "Xin lỗi, hiện tại AI đang bận. Vui lòng thử lại sau.",
+          text:
+            error.response?.data?.reply ||
+            error.response?.data?.message ||
+            "Xin lỗi, hiện tại AI đang bận. Vui lòng thử lại sau.",
         },
       ]);
     } finally {

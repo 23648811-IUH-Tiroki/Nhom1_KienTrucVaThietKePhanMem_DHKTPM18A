@@ -126,6 +126,60 @@
   color: #64748b;
 }
 
+.payment-hold-card {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 18px rgba(251, 146, 60, 0.08);
+}
+
+.payment-hold-header {
+  font-size: 16px;
+  font-weight: 700;
+  color: #9a3412;
+  margin-bottom: 6px;
+}
+
+.payment-hold-timer {
+  font-size: 18px;
+  font-weight: 700;
+  color: #b45309;
+  margin-bottom: 8px;
+}
+
+.payment-hold-note {
+  font-size: 13px;
+  color: #7c2d12;
+  margin-bottom: 12px;
+}
+
+.payment-hold-action {
+  width: 100%;
+  background: #ea580c;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-hold-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(234, 88, 12, 0.2);
+}
+
+.payment-hold-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 @media (max-width: 768px) {
   .shipping-grid {
     grid-template-columns: 1fr;

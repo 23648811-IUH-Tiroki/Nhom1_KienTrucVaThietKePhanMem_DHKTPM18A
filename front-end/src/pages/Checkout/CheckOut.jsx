@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "../../layout/MainLayout";
 import Breadcrumb from "../../components/Breadcrumb";
 import { toast } from "react-toastify";
@@ -7,10 +7,14 @@ import "./Checkout.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import boxCard from "../../assets/images/box-card.png";
-import bankCard from "../../assets/images/bank-card.png";
 import { CheckCheck, ChevronDown } from "lucide-react";
 import { BsBox2 } from "react-icons/bs";
-import { createOrder } from "../../services/orderService";
+import {
+  confirmOrderPayment,
+  createOrder,
+  expireOrder,
+  fetchActivePaymentOrder,
+} from "../../services/orderService";
 import {
   fetchShippingAddress,
   updateShippingAddress,
@@ -27,6 +31,14 @@ const CheckOut = () => {
   const [isAddressLoading, setIsAddressLoading] = useState(false);
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [addressError, setAddressError] = useState("");
+  const [pendingOrder, setPendingOrder] = useState(null);
+  const [paymentExpiresAt, setPaymentExpiresAt] = useState(null);
+  const [paymentRemainingSeconds, setPaymentRemainingSeconds] = useState(null);
+  const [isPaymentExpired, setIsPaymentExpired] = useState(false);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+  const [isConfirmingPayment, setIsConfirmingPayment] = useState(false);
+  const [isLoadingPendingOrder, setIsLoadingPendingOrder] = useState(false);
+  const hasExpiredRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { cartItems, clearCart, removeFromCart } = useCart();
@@ -43,6 +55,10 @@ const CheckOut = () => {
       : cartItems);
 
   const isBuyNowMode = Boolean(buyNowItems && buyNowItems.length > 0);
+  const onlinePaymentMethods = ["momo", "paypal"];
+  const isOnlinePaymentMethod = onlinePaymentMethods.includes(
+    String(selectedMethod || "").toLowerCase()
+  );
 
   const subtotal = checkoutItems.reduce(
     (total, item) => total + (item.product_id?.price || 0) * item.quantity,
@@ -51,6 +67,19 @@ const CheckOut = () => {
   const calculateTotal = () => {
     return deliveryOption === "pickup" ? subtotal : subtotal + shippingCost;
   };
+  const summaryItems = pendingOrder?.items?.length ? pendingOrder.items : checkoutItems;
+  const summarySubtotal = summaryItems.reduce(
+    (total, item) => total + (item.product_id?.price || 0) * item.quantity,
+    0
+  );
+  const summaryShippingCost = pendingOrder
+    ? Math.max(0, Number(pendingOrder.total_price || 0) - summarySubtotal)
+    : deliveryOption === "pickup"
+      ? 0
+      : shippingCost;
+  const summaryTotal = pendingOrder
+    ? Number(pendingOrder.total_price || 0)
+    : calculateTotal();
   const links = [
     { label: "Trang chủ", link: "/" },
     { label: "Giỏ hàng", link: "/cart" },
@@ -150,12 +179,79 @@ const CheckOut = () => {
   }, [userId]);
 
   useEffect(() => {
+    const loadActivePaymentOrder = async () => {
+      if (!userId) {
+        return;
+      }
+
+      setIsLoadingPendingOrder(true);
+      try {
+        const response = await fetchActivePaymentOrder();
+        const activeOrder = response?.data;
+
+        if (!activeOrder?._id) {
+          setPendingOrder(null);
+          setPaymentExpiresAt(null);
+          setPaymentRemainingSeconds(null);
+          setIsPaymentExpired(false);
+          return;
+        }
+
+        const expiresAtRaw =
+          activeOrder.payment_expires_at || activeOrder.paymentExpiredAt;
+        const expiresAt = expiresAtRaw ? new Date(expiresAtRaw).getTime() : null;
+
+        if (expiresAt && expiresAt > Date.now()) {
+          setPendingOrder(activeOrder);
+          setPaymentExpiresAt(expiresAt);
+          setPaymentRemainingSeconds(
+            Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)),
+          );
+          setSelectedMethod(String(activeOrder.payment_method || "cod").toLowerCase());
+        }
+      } catch (error) {
+        console.error("Error loading active payment order:", error);
+      } finally {
+        setIsLoadingPendingOrder(false);
+      }
+    };
+
+    loadActivePaymentOrder();
+  }, [userId]);
+
+
+  useEffect(() => {
     if (formData.province) {
       updateShippingCost(formData.province);
     } else {
       setShippingCost(0);
     }
   }, [formData.province]);
+
+  useEffect(() => {
+    if (!paymentExpiresAt || !pendingOrder) {
+      setPaymentRemainingSeconds(null);
+      return;
+    }
+
+    hasExpiredRef.current = false;
+    setIsPaymentExpired(false);
+
+    const updateRemaining = () => {
+      const remaining = Math.max(0, Math.floor((paymentExpiresAt - Date.now()) / 1000));
+      setPaymentRemainingSeconds(remaining);
+
+      if (remaining === 0 && !hasExpiredRef.current) {
+        hasExpiredRef.current = true;
+        handlePaymentExpired();
+      }
+    };
+
+    updateRemaining();
+    const timer = setInterval(updateRemaining, 1000);
+
+    return () => clearInterval(timer);
+  }, [paymentExpiresAt, pendingOrder]);
 
   const shippingRates = {
     "Miền Nam": 10000,
@@ -300,6 +396,36 @@ const CheckOut = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const formatCountdown = (totalSeconds) => {
+    if (!Number.isFinite(totalSeconds) || totalSeconds <= 0) {
+      return "00:00";
+    }
+
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  };
+
+  const finalizeCartAfterOrder = async () => {
+    if (!isBuyNowMode && userId) {
+      if (selectedItems && selectedItems.length > 0) {
+        for (const itemId of selectedItems) {
+          await removeFromCart(userId, itemId);
+        }
+      } else {
+        await clearCart(userId);
+      }
+    }
+  };
+
+  const clearPendingPaymentState = () => {
+    setPendingOrder(null);
+    setPaymentExpiresAt(null);
+    setPaymentRemainingSeconds(null);
+    setIsPaymentExpired(false);
+    hasExpiredRef.current = false;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -400,8 +526,67 @@ const CheckOut = () => {
     }
   };
 
+  const handlePaymentExpired = async () => {
+    if (!pendingOrder?._id) {
+      return;
+    }
+
+    setIsPaymentExpired(true);
+    try {
+      await expireOrder(pendingOrder._id);
+    } catch (error) {
+      console.error("Error expiring order:", error);
+    }
+
+    clearPendingPaymentState();
+    toast.error(
+      "Phiên thanh toán đã hết hạn. Sản phẩm đã được trả lại kho. Vui lòng đặt hàng lại nếu muốn tiếp tục mua."
+    );
+    navigate("/cart");
+  };
+
+  const handleConfirmPayment = async () => {
+    if (!pendingOrder?._id || isConfirmingPayment || isPaymentExpired) {
+      return;
+    }
+
+    setIsConfirmingPayment(true);
+    try {
+      await confirmOrderPayment(pendingOrder._id);
+      await finalizeCartAfterOrder();
+
+      toast.success("Thanh toán thành công!");
+      clearPendingPaymentState();
+      navigate("/userProfile#don-hang-cua-ban");
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+      const isExpiredError =
+        error.response?.data?.code === "PAYMENT_EXPIRED" ||
+        String(error.response?.data?.message || "").toLowerCase().includes("hết hạn");
+
+      if (isExpiredError) {
+        clearPendingPaymentState();
+        toast.error(
+          error.response?.data?.message ||
+            "Phiên thanh toán đã hết hạn. Sản phẩm đã được trả lại kho. Vui lòng đặt hàng lại nếu muốn tiếp tục mua.",
+        );
+        navigate("/cart");
+        return;
+      }
+
+      toast.error(
+        error.response?.data?.message || "Không thể xác nhận thanh toán."
+      );
+    } finally {
+      setIsConfirmingPayment(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isCreatingOrder || pendingOrder) {
+      return;
+    }
     if (validateForm()) {
       if (!user) {
         toast.error("Vui lòng đăng nhập để đặt hàng.");
@@ -428,14 +613,14 @@ const CheckOut = () => {
         shippingCost: deliveryOption === "pickup" ? 0 : shippingCost,
       };
 
+      setIsCreatingOrder(true);
       try {
-        // show loading toast
         const loadingToastId = toast.loading("Đang xử lý đơn hàng...");
-
-        // call API đặt hàng
         const response = await createOrder(orderData);
+        const createdOrder = response?.data;
+        const expiresAtRaw = createdOrder?.payment_expires_at || createdOrder?.paymentExpiredAt;
+        const expiresAt = expiresAtRaw ? new Date(expiresAtRaw).getTime() : null;
 
-        // update toast thành công
         toast.update(loadingToastId, {
           render: "Đặt hàng thành công!",
           type: "success",
@@ -444,18 +629,16 @@ const CheckOut = () => {
           closeButton: true,
         });
 
-        // Chỉ xóa những sản phẩm đã chọn thanh toán khỏi giỏ hàng
-        if (!isBuyNowMode && userId) {
-          if (selectedItems && selectedItems.length > 0) {
-            for (const itemId of selectedItems) {
-              await removeFromCart(userId, itemId);
-            }
-          } else {
-            await clearCart(userId);
-          }
-        }
+        if (isOnlinePaymentMethod && expiresAt) {
+          setPendingOrder(createdOrder);
+          setPaymentExpiresAt(expiresAt);
+        setErrors({});
+        toast.info("Đơn hàng đang chờ thanh toán. Vui lòng hoàn tất trong thời gian còn lại.");
+        return;
+      }
 
-        // Reset form
+        await finalizeCartAfterOrder();
+
         setShippingCost(0);
         setDeliveryOption("delivery");
         setSelectedMethod("cod");
@@ -469,6 +652,8 @@ const CheckOut = () => {
         toast.error(
           error.response?.data?.message || "Có lỗi xảy ra khi đặt hàng."
         );
+      } finally {
+        setIsCreatingOrder(false);
       }
     } else {
       toast.error("Vui lòng điền đầy đủ thông tin trước khi đặt hàng.");
@@ -483,6 +668,9 @@ const CheckOut = () => {
   ];
 
   const handlePaymentSelection = (method) => {
+    if (pendingOrder) {
+      return;
+    }
     setSelectedMethod(method);
   };
 
@@ -823,10 +1011,29 @@ const CheckOut = () => {
           </div>
           {/* Right Checkout */}
           <div className="md:w-2/5 bg-gray-50 rounded-lg p-6">
+            {pendingOrder && (
+              <div className="payment-hold-card">
+                <div className="payment-hold-header">Đơn hàng đang chờ thanh toán</div>
+                <div className="payment-hold-timer">
+                  Thời gian còn lại: {formatCountdown(paymentRemainingSeconds)}
+                </div>
+                <p className="payment-hold-note">
+                  Vui lòng hoàn tất thanh toán trước khi hết hạn để giữ sản phẩm.
+                </p>
+                <button
+                  type="button"
+                  className="payment-hold-action"
+                  onClick={handleConfirmPayment}
+                  disabled={isConfirmingPayment || isPaymentExpired}
+                >
+                  {isConfirmingPayment ? "ĐANG XÁC NHẬN..." : "TÔI ĐÃ THANH TOÁN"}
+                </button>
+              </div>
+            )}
             {/* Product list */}
 
             <div className="border-b border-gray-200 pb-6 mb-4">
-              {checkoutItems.map((item, index) => (
+              {summaryItems.map((item, index) => (
                 <div key={index} className="flex items-start mb-4">
                   <div className="relative mr-4">
                     <div className="bg-gray-200 rounded w-16 h-16 flex items-center justify-center relative">
@@ -856,30 +1063,38 @@ const CheckOut = () => {
             <div className="mb-6">
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Tạm tính</span>
-                <span>{subtotal.toLocaleString()}₫</span>
+                    <span>{summarySubtotal.toLocaleString()}₫</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span>Phí vận chuyển </span>
                 <strong>
-                  {deliveryOption === "pickup"
+                  {summaryShippingCost === 0
                     ? "0đ"
-                    : `${shippingCost.toLocaleString()}đ`}
+                    : `${summaryShippingCost.toLocaleString()}đ`}
                 </strong>
               </div>
               <div className="flex justify-between items-center font-semibold text-lg pt-4 border-t border-gray-200">
                 <span>Tổng cộng</span>
                 <div className="text-right">
                   <span className="text-gray-500 text-sm mr-1">VND</span>
-                  <span>{calculateTotal().toLocaleString()}đ</span>
+                  <span>{summaryTotal.toLocaleString()}đ</span>
                 </div>
               </div>
             </div>
             <button
               type="submit"
-              className="w-full cursor-pointer bg-blue-0 text-white py-3 px-4 rounded text-center hover:bg-blue-600 transition"
+              className={`w-full text-white py-3 px-4 rounded text-center transition ${pendingOrder || isCreatingOrder || isLoadingPendingOrder
+                  ? "bg-slate-400 cursor-not-allowed"
+                  : "bg-blue-0 hover:bg-blue-600 cursor-pointer"
+                }`}
               onClick={handleSubmit}
+              disabled={pendingOrder || isCreatingOrder || isLoadingPendingOrder}
             >
-              Đặt hàng
+              {isLoadingPendingOrder
+                ? "ĐANG KIỂM TRA ĐƠN..."
+                : isCreatingOrder
+                  ? "ĐANG XỬ LÝ..."
+                  : "Đặt hàng"}
             </button>
           </div>
         </div>

@@ -386,7 +386,7 @@ const Header = () => {
         {
           label: "Quản lý cửa hàng",
           icon: <RiAdminFill className="mr-2" />,
-          href: `/dashboard`,
+          href: `/admin/dashboard`,
         },
       ]
       : []),

@@ -38,7 +38,6 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 import dashboadRoutes from "./routes/dashboardRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { protectedRoute } from "./middleware/authMiddleware.js";
-import { rateLimiter } from "./middleware/rateLimiter.js";
 import redisClient from "./configs/redisClient.js";
 import User from "./models/User.js";
 import { createRequire } from "module";
@@ -141,7 +140,6 @@ const ensureBootstrapAdmin = async () => {
 
 mongoose
   .connect(process.env.MONGO_URI, {
-    retryWrites: true,
     w: "majority",
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
@@ -158,25 +156,25 @@ mongoose
     });
   });
 
-  mongoose.connection.on("connecting", () => {
-    logger.info("MongoDB connecting");
-  });
+mongoose.connection.on("connecting", () => {
+  logger.info("MongoDB connecting");
+});
 
-  mongoose.connection.on("connected", () => {
-    logger.info("MongoDB connected");
-  });
+mongoose.connection.on("connected", () => {
+  logger.info("MongoDB connected");
+});
 
-  mongoose.connection.on("reconnected", () => {
-    logger.info("MongoDB reconnected");
-  });
+mongoose.connection.on("reconnected", () => {
+  logger.info("MongoDB reconnected");
+});
 
-  mongoose.connection.on("disconnected", () => {
-    logger.warn("MongoDB disconnected");
-  });
+mongoose.connection.on("disconnected", () => {
+  logger.warn("MongoDB disconnected");
+});
 
-  mongoose.connection.on("error", (err) => {
-    logger.error("MongoDB connection error", { message: err.message });
-  });
+mongoose.connection.on("error", (err) => {
+  logger.error("MongoDB connection error", { message: err.message });
+});
 
 // Routes
 
@@ -219,7 +217,6 @@ app.use(
   }),
 );
 app.set("trust proxy", 1); // Nếu ứng dụng chạy sau proxy (ví dụ: Nginx), để Express biết và xử lý cookie đúng cách
-app.use(rateLimiter); // Apply rate limiter to all routes
 // ===== PUBLIC ROUTES (No authentication required) =====
 // Authentication routes (signup, signin, signout)
 app.use("/api/auth", authRoutes);

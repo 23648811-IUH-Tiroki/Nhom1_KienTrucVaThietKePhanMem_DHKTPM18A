@@ -7,6 +7,9 @@ import {
     deleteOrder,
     getOrderStats,
     getRecentOrders,
+    confirmOrderPayment,
+    expireOrder,
+    getActivePaymentOrder,
 } from "../controllers/orderController.js";
 import { requireAdmin } from "../middleware/authMiddleware.js";
 
@@ -23,6 +26,15 @@ router.get("/stats", requireAdmin, getOrderStats);
 
 // đơn hàng gần đây (admin)
 router.get("/recent", requireAdmin, getRecentOrders);
+
+// đơn đang chờ thanh toán của user hiện tại
+router.get("/active-payment", getActivePaymentOrder);
+
+// xác nhận thanh toán
+router.post("/:id/pay", confirmOrderPayment);
+
+// hết hạn thanh toán
+router.post("/:id/expire", expireOrder);
 
 // lấy đơn hàng theo ID (admin hoặc chủ đơn)
 router.get("/:id", getOrderById);

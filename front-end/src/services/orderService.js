@@ -9,7 +9,16 @@ export const fetchOrdersByUser = (userId) =>
 
 export const fetchOrderStats = () => axiosInstance.get("/api/orders/stats");
 
+export const fetchActivePaymentOrder = () =>
+  axiosInstance.get("/api/orders/active-payment");
+
 export const updateOrder = (orderId, payload) =>
   axiosInstance.put(`/api/orders/${orderId}`, payload);
 
 export const deleteOrder = (orderId) => axiosInstance.delete(`/api/orders/${orderId}`);
+
+export const confirmOrderPayment = (orderId) =>
+  axiosInstance.post(`/api/orders/${orderId}/pay`);
+
+export const expireOrder = (orderId) =>
+  axiosInstance.post(`/api/orders/${orderId}/expire`);
